@@ -1,0 +1,19 @@
+services:
+  agent:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      sqasa:
+        aliases:
+          - go-live-agent
+
+networks:
+  sqasa:
+    name: sqasa
+    external: true
