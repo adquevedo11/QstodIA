@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}QustodIA — Historial de Informes Ejecutivos{% endblock %}
+
+{% block add_styles %}
+{{ block.super }}
+.sqa-er-header {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    border-radius: 8px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 14px rgba(50,68,88,0.18);
+}
+.sqa-er-header h2 { color: #fff; margin: 0 0 4px 0; font-size: 20px; }
+.sqa-er-header p  { color: #afc1d0; margin: 0; font-size: 13px; }
+.sqa-er-header img { height: 40px; filter: none; }
+
+.class-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+}
+.class-Confidencial { background: #c0392b; }
+.class-Interno      { background: #e67e22; }
+.class-Público      { background: #27ae60; }
+
+.er-card {
+    background: #fff;
+    border: 1px solid #dde3ea;
+    border-left: 5px solid #324458;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+}
+.er-card:hover { box-shadow: 0 3px 12px rgba(50,68,88,0.12); }
+.er-card-title { font-size: 15px; font-weight: 700; color: #324458; margin-bottom: 4px; }
+.er-card-meta  { font-size: 12px; color: #6c757d; }
+.er-card-meta span { margin-right: 16px; }
+.er-card-meta i { color: #ffb323; margin-right: 4px; }
+
+.btn-sqa { background: #324458; color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+.btn-sqa:hover { background: #3d5470; color: #fff; }
+.btn-sqa-orange { background: #ffb323; color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+.btn-sqa-orange:hover { background: #e09e1a; color: #fff; }
+.btn-sqa-danger { background: #c0392b; color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+.btn-sqa-danger:hover { background: #a93226; color: #fff; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #aab4be; }
+.empty-state i { font-size: 56px; margin-bottom: 16px; display: block; }
+
+.er-period-badge {
+    display: inline-block;
+    background: #f0f4f8;
+    color: #324458;
+    border: 1px solid #dde3ea;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+}
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+<!-- Header -->
+<div class="sqa-er-header">
+    <div>
+        <h2><i class="fa-solid fa-clock-rotate-left" style="color:#ffb323;margin-right:10px;"></i>Historial de Informes Ejecutivos</h2>
+        <p>QustodIA · Application Security Posture Management · SQA SA</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <a href="{% url 'executive_report_new' %}" class="btn-sqa-orange" style="text-decoration:none;padding:10px 20px;font-size:13px;">
+            <i class="fa-solid fa-plus" style="margin-right:6px;"></i>Nuevo Informe
+        </a>
+        <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA" style="height:38px;">
+    </div>
+</div>
+
+<!-- Búsqueda -->
+<div style="margin-bottom:16px;">
+    <input type="text" id="search-reports" class="form-control"
+        style="max-width:420px;" placeholder="&#128269; Buscar por título o producto...">
+</div>
+
+<!-- Lista de informes -->
+{% if reports %}
+    <div id="reports-container">
+    {% for r in reports %}
+    <div class="er-card" data-search="{{ r.title|lower }} {{ r.product.name|lower }}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+                <div class="er-card-title">
+                    {{ r.title }}
+                </div>
+                <div class="er-card-meta" style="margin-top:6px;">
+                    <span><i class="fa-solid fa-box"></i>{{ r.product.name }}</span>
+                    <span>
+                        <i class="fa-solid fa-calendar-range"></i>
+                        <span class="er-period-badge">{{ r.period_start|date:"d/m/Y" }} — {{ r.period_end|date:"d/m/Y" }}</span>
+                    </span>
+                    {% if r.analyst_name %}
+                    <span><i class="fa-solid fa-user-shield"></i>{{ r.analyst_name }}</span>
+                    {% endif %}
+                    <span><i class="fa-regular fa-calendar"></i>{{ r.created_at|date:"d/m/Y H:i" }}</span>
+                    {% if r.created_by %}
+                    <span><i class="fa-solid fa-user"></i>{{ r.created_by.get_full_name|default:r.created_by.username }}</span>
+                    {% endif %}
+                    {% if r.engagements.count %}
+                    <span><i class="fa-solid fa-bullseye"></i>{{ r.engagements.count }} engagement{{ r.engagements.count|pluralize:"s" }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                <span class="class-badge class-{{ r.classification }}">{{ r.classification }}</span>
+                <a href="{% url 'executive_report_view' r.pk %}" target="_blank"
+                   class="btn-sqa" style="text-decoration:none;" title="Ver / Imprimir PDF">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </a>
+                <form method="post" action="{% url 'executive_report_delete' r.pk %}"
+                      style="display:inline;"
+                      onsubmit="return confirm('¿Eliminar este informe ejecutivo?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-sqa-danger" title="Eliminar">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+
+{% else %}
+    <div class="empty-state">
+        <i class="fa-solid fa-file-chart-column" style="color:#dde3ea;"></i>
+        <p style="font-size:15px;font-weight:600;color:#324458;">No hay informes ejecutivos emitidos aún</p>
+        <p style="font-size:13px;">Crea el primero usando el botón <strong>Nuevo Informe</strong></p>
+        <a href="{% url 'executive_report_new' %}" class="btn-sqa-orange"
+           style="text-decoration:none;padding:12px 28px;font-size:14px;display:inline-block;margin-top:12px;">
+            <i class="fa-solid fa-plus" style="margin-right:6px;"></i>Crear Informe Ejecutivo
+        </a>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block postscript %}
+{{ block.super }}
+<script>
+document.getElementById('search-reports').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('.er-card').forEach(function(card) {
+        card.style.display = card.dataset.search.includes(q) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

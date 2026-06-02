@@ -4,334 +4,541 @@
 {% load static %}
 
 {% block add_styles %}
-    {{ block.super }}
-    .chart {height: 300px}
-    .status .panel {min-height: 140px;background-color: #f5f5f5;}
-    #punchcard {height: 350px}
+{{ block.super }}
+
+/* ── Dashboard SQA ── */
+
+/* Bienvenida header */
+.sqa-dash-welcome {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    border-radius: 10px;
+    padding: 24px 30px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 16px rgba(50,68,88,0.18);
+}
+.sqa-dash-welcome h2 {
+    color: #ffffff;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+.sqa-dash-welcome p {
+    color: #afc1d0;
+    margin: 0;
+    font-size: 13px;
+}
+.sqa-dash-welcome-logo {
+    height: 42px;
+    filter: none;
+    opacity: 1;
+}
+.sqa-dash-welcome-badge {
+    background: rgba(255,179,35,0.18);
+    border: 1px solid #ffb323;
+    color: #ffb323;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
+    display: inline-block;
+}
+
+/* ── Tarjetas modernas QustodIA ── */
+.vmaas-kpi {
+    background: #ffffff;
+    border-radius: 14px;
+    border: none !important;
+    box-shadow: 0 2px 12px rgba(50,68,88,0.08), 0 1px 3px rgba(0,0,0,0.05);
+    padding: 0;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), box-shadow 0.22s ease;
+    position: relative;
+    cursor: default;
+}
+.vmaas-kpi:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(50,68,88,0.16), 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Barra lateral de color */
+.vmaas-kpi::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    border-radius: 14px 0 0 14px;
+}
+.vmaas-kpi-blue::before   { background: linear-gradient(180deg, #324458, #5b8faa); }
+.vmaas-kpi-red::before    { background: linear-gradient(180deg, #e74c3c, #ff6b6b); }
+.vmaas-kpi-green::before  { background: linear-gradient(180deg, #27ae60, #55d98d); }
+.vmaas-kpi-orange::before { background: linear-gradient(180deg, #ffb323, #ffd06b); }
+
+/* Cuerpo */
+.vmaas-kpi-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 22px 14px 26px;
+}
+.vmaas-kpi-text {}
+.vmaas-kpi-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8fa3b8;
+    margin-bottom: 6px;
+}
+.vmaas-kpi-number {
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1;
+    color: #324458;
+    letter-spacing: -1px;
+}
+.vmaas-kpi-sub {
+    font-size: 11px;
+    color: #aab4be;
+    margin-top: 4px;
+}
+
+/* Ícono círculo flotante */
+.vmaas-kpi-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+.vmaas-kpi-blue   .vmaas-kpi-icon { background: rgba(50,68,88,0.10);  color: #324458; }
+.vmaas-kpi-red    .vmaas-kpi-icon { background: rgba(231,76,60,0.10);  color: #e74c3c; }
+.vmaas-kpi-green  .vmaas-kpi-icon { background: rgba(39,174,96,0.10);  color: #27ae60; }
+.vmaas-kpi-orange .vmaas-kpi-icon { background: rgba(255,179,35,0.14); color: #e09e1a; }
+
+/* Pie de tarjeta con link */
+.vmaas-kpi-footer {
+    border-top: 1px solid #f0f4f8;
+    padding: 10px 22px 10px 26px;
+}
+.vmaas-kpi-footer a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: color 0.15s;
+}
+.vmaas-kpi-blue   .vmaas-kpi-footer a { color: #324458 !important; }
+.vmaas-kpi-red    .vmaas-kpi-footer a { color: #e74c3c !important; }
+.vmaas-kpi-green  .vmaas-kpi-footer a { color: #27ae60 !important; }
+.vmaas-kpi-orange .vmaas-kpi-footer a { color: #e09e1a !important; }
+
+.vmaas-kpi-footer a:hover { opacity: 0.75; }
+.vmaas-kpi-footer .fa-arrow-right {
+    transition: transform 0.2s;
+}
+.vmaas-kpi-footer a:hover .fa-arrow-right {
+    transform: translateX(4px);
+}
+
+/* Panels de gráficas */
+.sqa-chart-panel {
+    border-radius: 10px !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+    border: 1px solid #dde3ea !important;
+    margin-bottom: 20px;
+}
+.sqa-chart-panel .panel-heading {
+    background: linear-gradient(135deg, #324458, #3d5470) !important;
+    border-radius: 9px 9px 0 0 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.3px;
+    color: #ffffff !important;
+}
+.sqa-chart-panel .panel-heading i { color: #ffb323 !important; }
+.sqa-surveys-panel .panel-heading { color: #ffffff !important; }
+.sqa-chart-panel .panel-body {
+    padding: 20px !important;
+    background: #ffffff !important;
+}
+
+.chart { height: 300px; }
+#punchcard { height: 350px; }
+
+/* Tabla de cuestionarios */
+.sqa-surveys-panel {
+    border-radius: 10px !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07) !important;
+}
+
+/* Separador de sección */
+.sqa-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #7a9bb5;
+    margin: 24px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.sqa-section-label::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid #dde3ea;
+}
+
+/* Punchcard footer note */
+.punchcard-note {
+    font-size: 11px;
+    color: #aab4be;
+    margin-top: 8px;
+}
 {% endblock %}
 
 {% block content %}
-    {{ block.super }}
-    {% block finding_stats_tiles %}
-        <div class="row status">
-            {% block active_engagements %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-blue">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa-solid fa-bullseye fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ engagement_count }}</div>
-                                    <div>{% trans "Active Engagements" %}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="{% url 'engagement' %}">
-                            <div class="panel-footer">
-                                <span class="pull-left">{% trans "View Engagement Details" %}</span>
-                                <span class="pull-right"><i class="fa-solid fa-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
+{{ block.super }}
+
+<!-- Bienvenida -->
+<div class="sqa-dash-welcome">
+    <div>
+        <h2>QustodIA</h2>
+        <p>Application Security Posture Management · SQA SA</p>
+        <span class="sqa-dash-welcome-badge">
+            <i class="fa-solid fa-shield-halved" style="margin-right:4px;"></i>
+            {% trans "Panel de Control" %}
+        </span>
+    </div>
+    <img src="{% static 'dojo/img/logo.png' %}" alt="SQA" class="sqa-dash-welcome-logo" style="filter: none; opacity: 1;" />
+</div>
+
+<!-- Tarjetas de estadísticas -->
+<p class="sqa-section-label"><i class="fa-solid fa-chart-line"></i> {% trans "Últimos 7 días" %}</p>
+
+{% block finding_stats_tiles %}
+<div class="row status">
+
+    {% block active_engagements %}
+    <div class="col-lg-3 col-md-6">
+        <div class="vmaas-kpi vmaas-kpi-blue">
+            <div class="vmaas-kpi-body">
+                <div class="vmaas-kpi-text">
+                    <div class="vmaas-kpi-label">{% trans "Compromisos Activos" %}</div>
+                    <div class="vmaas-kpi-number">{{ engagement_count }}</div>
+                    <div class="vmaas-kpi-sub">{% trans "Últimos 7 días" %}</div>
                 </div>
-            {% endblock %}
-            {% block last_seven_days %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-red">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa-solid fa-bug fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ finding_count }}</div>
-                                    <div>{% trans "Last Seven Days" %}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="{% url 'all_findings' %}?duplicate=2&date=2&o=-date">
-                            <div class="panel-footer">
-                                <span class="pull-left">{% trans "View Finding Details" %}</span>
-                                <span class="pull-right"><i class="fa-solid fa-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            {% endblock %}
-            {% block closed_last_seven_days %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-green">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa-solid fa-fire-extinguisher fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ mitigated_count }}</div>
-                                    <div>{% trans "Closed In Last Seven Days" %}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="{% url 'closed_findings' %}?duplicate=2&mitigated=2">
-                            <div class="panel-footer">
-                                <span class="pull-left">{% trans "View Finding Details" %}</span>
-                                <span class="pull-right"><i class="fa-solid fa-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            {% endblock %}
-            {% block risk_accepted_last_seven_days %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa-solid fa-check fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">{{ accepted_count }}</div>
-                                    <div>{% trans "Risk Accepted In Last Seven Days" %}</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="{% url 'accepted_findings' %}?duplicate=2&risk_acceptance__created__date=2">
-                            <div class="panel-footer">
-                                <span class="pull-left">{% trans "View Finding Details" %}</span>
-                                <span class="pull-right"><i class="fa-solid fa-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            {% endblock %}
-        </div>
-    {% endblock %}
-    {% block graph_row %}
-        <div class="row">
-            {% block historical_finding_severity %}
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" id="homepage_pie_chart_heading">
-                            {% trans "Historical Finding Severity" %}
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <p id="chart-description" class="sr-only">
-                                This pie chart represents findings categorized by severity: 
-                                critical ({{critical}}), high ({{high}}), medium ({{medium}}), 
-                                low ({{low}}), and informational ({{info}}).
-                            </p>
-                            <div 
-                                aria-describedby="chart-description"
-                                aria-labelledby="homepage_pie_chart_heading"
-                                class="chart" 
-                                id="homepage_pie_chart" 
-                                role="img"
-                                tabindex="0" >
-                            </div>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-            {% endblock %}
-            {% block reported_finding_severity_by_month %}
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" id="severity-chart-heading">
-                            {% trans "Reported Finding Severity by Month" %}
-                        </div>
-                        <p id="severity-chart-description" class="sr-only">
-                            This severity trend chart shows monthly data for findings categorized by severity:
-                            critical, high, medium, and low. The table below the chart provides the data in text format.
-                        </p>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="chart" id="homepage_severity_plot" aria-describedby="severity-chart-description"
-                                aria-labelledby="severity-chart-heading" role="img" tabindex="0">
-                            </div>
-                            <div class="sr-only">
-                                <h3 id="severity-table-title">{% trans "Reported finding severity breakdown by month" %}</h3>
-                                <table id="severity-table" aria-labelledby="severity-table-title" tabindex="0">
-                                    <caption>{% trans "Reported finding severity breakdown" %}</caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">{% trans "Month" %}</th>
-                                            <th scope="col">{% trans "Critical" %}</th>
-                                            <th scope="col">{% trans "High" %}</th>
-                                            <th scope="col">{% trans "Medium" %}</th>
-                                            <th scope="col">{% trans "Low" %}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for month in by_month %}
-                                        <tr>
-                                            <td>{{ month.y|slice:"5:" }} {{ month.y|slice:":4" }}</td>
-                                            <td>{{ month.a|default_if_none:0 }}</td>
-                                            <td>{{ month.b|default_if_none:0 }}</td>
-                                            <td>{{ month.c|default_if_none:0 }}</td>
-                                            <td>{{ month.d|default_if_none:0 }}</td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-            {% endblock %}
-            <!-- /.col-lg-6 -->
-        </div>
-    {% endblock %}
-    {% block surveys %}
-        {% if system_settings.enable_questionnaires and "dojo.view_engagement_survey"|has_configuration_permission:request  %}
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            {% trans "Unassigned Answered Engagement Questionnaires" %}
-                        </div>
-                        <div class="panel-body">
-                            {% if surveys %}
-                                <table id="surveys" class="tablesorter-bootstrap table table-condensed table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>{% trans "Name" %}</th>
-                                            <th>{% trans "Product" %}</th>
-                                            <th>{% trans "Engagement" %}</th>
-                                            <th>{% trans "Responder" %}</th>
-                                            <th>{% trans "Status" %}</th>
-                                            <th>{% trans "Completion" %} Date</th>
-                                            <th>{% trans "Actions" %}</th>
-                                        </tr>
-                                    </thead>
-                                    {% for survey in surveys %}
-                                        <tr>
-                                            <td>
-                                                {% if survey.engagement %}
-                                                    <a href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}">{{ survey.survey.name }}</a>
-                                                {% else %}
-                                                    <a href="/empty_questionnaire/{{ survey.id }}">{{ survey.survey.name }}</a>
-                                                {% endif %}
-                                            </td> 
-                                            <td><a href="/product/{{ survey.engagement.product_id }}">{{ survey.engagement.product.name }}</a></td>
-                                            <td>
-                                                <a href="/engagement/{{ survey.engagement.id }}">{{ survey.engagement.name }}</a> 
-                                            </td> 
-                                            <td>
-                                                {% if survey.responder %}
-                                                    {{ survey.responder }}
-                                                {% else %}
-                                                    {% trans "Anonymous" %}
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if survey.completed %}
-                                                    <span class="pass_fail Pass">{% trans "Completed" %}</span>
-                                                {% else %}
-                                                    <span class="pass_fail">{% trans "Unanswered" %}</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>{{ survey.answered_on }}</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    {% if survey.engagement %}
-                                                        <a class="btn btn-sm btn-secondary"
-                                                        href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}">{% trans "View Responses" %}</a>
-                                                        <a class="btn btn-sm btn-info"
-                                                        href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}/assign">{% trans "Assign User" %}</a>
-                                                    {% else %}
-                                                        <a class="btn btn-sm btn-secondary"
-                                                        href="/empty_questionnaire/{{ survey.id }}">{% trans "View Responses" %}</a>
-                                                        <a class="btn btn-sm btn-success" href="/empty_questionnaire/{{ survey.id }}/new_engagement">{% trans "Create Engagement" %}</a>
-                                                        <a class="btn btn-sm btn-success" href="/empty_questionnaire/{{ survey.id }}/existing_engagement">{% trans "Link to Existing Engagement" %}</a>
-                                                        <button class="btn btn-sm btn-info" disabled
-                                                        href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}/assign">{% trans "Assign User" %}</button>
-                                                    {% endif %}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
-                            {% else %}
-                                <div class="panel-body">
-                                    <p>{% trans "No questionnaires found." %}</p>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
+                <div class="vmaas-kpi-icon">
+                    <i class="fa-solid fa-satellite-dish"></i>
                 </div>
             </div>
-        {% endif %}
-    {% endblock %}    
-    {% block punchcard %}
-        <div class="row">
-            {% if punchcard %}
-                <div class="col-lg-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" id="punchcard-heading">
-                            {% trans "Weekly activity, displayed by day, of findings you reported." %}*
-                        </div>
-                        <div class="panel-body">
-                            <p id="punchcard-description" class="sr-only">
-                                This punchcard chart represents findings distribution over time by week.
-                                The table below the chart provides the data in text format.
-                            </p>
-                            <div class="chart" id="punchcard" role="img" aria-labelledby="punchcard-heading"
-                                aria-describedby="punchcard-description">
-                            </div>
-                            <table class="sr-only" id="punchcard-table" aria-labelledby="punchcard-table-caption" tabindex="0">
-                                <caption id="punchcard-table-caption">Weekly findings activity breakdown</caption>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Week</th>
-                                        <th scope="col">Monday</th>
-                                        <th scope="col">Tuesday</th>
-                                        <th scope="col">Wednesday</th>
-                                        <th scope="col">Thursday</th>
-                                        <th scope="col">Friday</th>
-                                        <th scope="col">Saturday</th>
-                                        <th scope="col">Sunday</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for week, values in punchcard.items %}
-                                    <tr>
-                                        <td scope="row">{{ week }}</td>
-                                        <td>{{ values.Sunday|default:"0" }}</td>
-                                        <td>{{ values.Monday|default:"0" }}</td>
-                                        <td>{{ values.Tuesday|default:"0" }}</td>
-                                        <td>{{ values.Wednesday|default:"0" }}</td>
-                                        <td>{{ values.Thursday|default:"0" }}</td>
-                                        <td>{{ values.Friday|default:"0" }}</td>
-                                        <td>{{ values.Saturday|default:"0" }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            <p class="text-center text-muted small">{% trans "Week begins on date displayed." %}</p>
-                            <p>
-                                <br/>
-                                <span class="text-muted small">* {% trans "Weeks are only displayed if findings are available." %}</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+            <div class="vmaas-kpi-footer">
+                <a href="{% url 'engagement' %}">
+                    <span>{% trans "Ver compromisos" %}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
         </div>
+    </div>
     {% endblock %}
+
+    {% block last_seven_days %}
+    <div class="col-lg-3 col-md-6">
+        <div class="vmaas-kpi vmaas-kpi-red">
+            <div class="vmaas-kpi-body">
+                <div class="vmaas-kpi-text">
+                    <div class="vmaas-kpi-label">{% trans "Nuevos Hallazgos" %}</div>
+                    <div class="vmaas-kpi-number">{{ finding_count }}</div>
+                    <div class="vmaas-kpi-sub">{% trans "Últimos 7 días" %}</div>
+                </div>
+                <div class="vmaas-kpi-icon">
+                    <i class="fa-solid fa-biohazard"></i>
+                </div>
+            </div>
+            <div class="vmaas-kpi-footer">
+                <a href="{% url 'all_findings' %}?duplicate=2&date=2&o=-date">
+                    <span>{% trans "Ver hallazgos" %}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block closed_last_seven_days %}
+    <div class="col-lg-3 col-md-6">
+        <div class="vmaas-kpi vmaas-kpi-green">
+            <div class="vmaas-kpi-body">
+                <div class="vmaas-kpi-text">
+                    <div class="vmaas-kpi-label">{% trans "Hallazgos Cerrados" %}</div>
+                    <div class="vmaas-kpi-number">{{ mitigated_count }}</div>
+                    <div class="vmaas-kpi-sub">{% trans "Últimos 7 días" %}</div>
+                </div>
+                <div class="vmaas-kpi-icon">
+                    <i class="fa-solid fa-vault"></i>
+                </div>
+            </div>
+            <div class="vmaas-kpi-footer">
+                <a href="{% url 'closed_findings' %}?duplicate=2&mitigated=2">
+                    <span>{% trans "Ver cerrados" %}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block risk_accepted_last_seven_days %}
+    <div class="col-lg-3 col-md-6">
+        <div class="vmaas-kpi vmaas-kpi-orange">
+            <div class="vmaas-kpi-body">
+                <div class="vmaas-kpi-text">
+                    <div class="vmaas-kpi-label">{% trans "Riesgos Aceptados" %}</div>
+                    <div class="vmaas-kpi-number">{{ accepted_count }}</div>
+                    <div class="vmaas-kpi-sub">{% trans "Últimos 7 días" %}</div>
+                </div>
+                <div class="vmaas-kpi-icon">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+            </div>
+            <div class="vmaas-kpi-footer">
+                <a href="{% url 'accepted_findings' %}?duplicate=2&risk_acceptance__created__date=2">
+                    <span>{% trans "Ver riesgos" %}</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+</div>
 {% endblock %}
+
+<!-- Gráficas -->
+<p class="sqa-section-label"><i class="fa-solid fa-chart-bar"></i> {% trans "Análisis de hallazgos" %}</p>
+
+{% block graph_row %}
+<div class="row">
+
+    {% block historical_finding_severity %}
+    <div class="col-lg-6">
+        <div class="panel sqa-chart-panel">
+            <div class="panel-heading" id="homepage_pie_chart_heading">
+                <i class="fa-solid fa-chart-pie" style="margin-right:8px; color:#ffb323;"></i>
+                {% trans "Severidad histórica de hallazgos" %}
+            </div>
+            <div class="panel-body">
+                <p id="chart-description" class="sr-only">
+                    {% trans "Gráfico de torta de hallazgos por severidad:" %}
+                    critical ({{critical}}), high ({{high}}), medium ({{medium}}),
+                    low ({{low}}), informational ({{info}}).
+                </p>
+                <div aria-describedby="chart-description"
+                     aria-labelledby="homepage_pie_chart_heading"
+                     class="chart"
+                     id="homepage_pie_chart"
+                     role="img"
+                     tabindex="0">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block reported_finding_severity_by_month %}
+    <div class="col-lg-6">
+        <div class="panel sqa-chart-panel">
+            <div class="panel-heading" id="severity-chart-heading">
+                <i class="fa-solid fa-chart-line" style="margin-right:8px; color:#ffb323;"></i>
+                {% trans "Severidad de hallazgos por mes" %}
+            </div>
+            <p id="severity-chart-description" class="sr-only">
+                {% trans "Tendencia mensual de hallazgos por severidad: critical, high, medium, low." %}
+            </p>
+            <div class="panel-body">
+                <div class="chart" id="homepage_severity_plot"
+                     aria-describedby="severity-chart-description"
+                     aria-labelledby="severity-chart-heading"
+                     role="img" tabindex="0">
+                </div>
+                <div class="sr-only">
+                    <h3 id="severity-table-title">{% trans "Desglose mensual por severidad" %}</h3>
+                    <table id="severity-table" aria-labelledby="severity-table-title" tabindex="0">
+                        <caption>{% trans "Desglose de hallazgos por severidad" %}</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">{% trans "Mes" %}</th>
+                                <th scope="col">{% trans "Crítico" %}</th>
+                                <th scope="col">{% trans "Alto" %}</th>
+                                <th scope="col">{% trans "Medio" %}</th>
+                                <th scope="col">{% trans "Bajo" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for month in by_month %}
+                            <tr>
+                                <td>{{ month.y|slice:"5:" }} {{ month.y|slice:":4" }}</td>
+                                <td>{{ month.a|default_if_none:0 }}</td>
+                                <td>{{ month.b|default_if_none:0 }}</td>
+                                <td>{{ month.c|default_if_none:0 }}</td>
+                                <td>{{ month.d|default_if_none:0 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+</div>
+{% endblock %}
+
+<!-- Cuestionarios -->
+{% block surveys %}
+{% if system_settings.enable_questionnaires and "dojo.view_engagement_survey"|has_configuration_permission:request %}
+<p class="sqa-section-label"><i class="fa-solid fa-clipboard-list"></i> {% trans "Cuestionarios" %}</p>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel sqa-surveys-panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-solid fa-clipboard-question" style="margin-right:8px; color:#ffb323;"></i>
+                {% trans "Cuestionarios de compromiso sin asignar" %}
+            </div>
+            <div class="panel-body">
+                {% if surveys %}
+                    <table id="surveys" class="tablesorter-bootstrap table table-condensed table-striped">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Nombre" %}</th>
+                                <th>{% trans "Producto" %}</th>
+                                <th>{% trans "Compromiso" %}</th>
+                                <th>{% trans "Respondedor" %}</th>
+                                <th>{% trans "Estado" %}</th>
+                                <th>{% trans "Fecha de completado" %}</th>
+                                <th>{% trans "Acciones" %}</th>
+                            </tr>
+                        </thead>
+                        {% for survey in surveys %}
+                            <tr>
+                                <td>
+                                    {% if survey.engagement %}
+                                        <a href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}">{{ survey.survey.name }}</a>
+                                    {% else %}
+                                        <a href="/empty_questionnaire/{{ survey.id }}">{{ survey.survey.name }}</a>
+                                    {% endif %}
+                                </td>
+                                <td><a href="/product/{{ survey.engagement.product_id }}">{{ survey.engagement.product.name }}</a></td>
+                                <td><a href="/engagement/{{ survey.engagement.id }}">{{ survey.engagement.name }}</a></td>
+                                <td>{% if survey.responder %}{{ survey.responder }}{% else %}{% trans "Anónimo" %}{% endif %}</td>
+                                <td>
+                                    {% if survey.completed %}
+                                        <span class="pass_fail Pass">{% trans "Completado" %}</span>
+                                    {% else %}
+                                        <span class="pass_fail">{% trans "Sin respuesta" %}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ survey.answered_on }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        {% if survey.engagement %}
+                                            <a class="btn btn-sm btn-secondary" href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}">{% trans "Ver respuestas" %}</a>
+                                            <a class="btn btn-sm btn-info" href="/engagement/{{ survey.engagement.id }}/questionnaire/{{ survey.id }}/assign">{% trans "Asignar usuario" %}</a>
+                                        {% else %}
+                                            <a class="btn btn-sm btn-secondary" href="/empty_questionnaire/{{ survey.id }}">{% trans "Ver respuestas" %}</a>
+                                            <a class="btn btn-sm btn-success" href="/empty_questionnaire/{{ survey.id }}/new_engagement">{% trans "Crear compromiso" %}</a>
+                                            <a class="btn btn-sm btn-success" href="/empty_questionnaire/{{ survey.id }}/existing_engagement">{% trans "Vincular compromiso" %}</a>
+                                            <button class="btn btn-sm btn-info" disabled>{% trans "Asignar usuario" %}</button>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p class="text-muted" style="padding: 10px 0;">{% trans "No se encontraron cuestionarios." %}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+<!-- Punchcard -->
+{% block punchcard %}
+{% if punchcard %}
+<p class="sqa-section-label"><i class="fa-solid fa-calendar-days"></i> {% trans "Actividad semanal" %}</p>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel sqa-chart-panel">
+            <div class="panel-heading" id="punchcard-heading">
+                <i class="fa-solid fa-calendar-week" style="margin-right:8px; color:#ffb323;"></i>
+                {% trans "Actividad semanal de hallazgos reportados" %}*
+            </div>
+            <div class="panel-body">
+                <p id="punchcard-description" class="sr-only">
+                    {% trans "Distribución de hallazgos por semana y día." %}
+                </p>
+                <div class="chart" id="punchcard" role="img"
+                     aria-labelledby="punchcard-heading"
+                     aria-describedby="punchcard-description">
+                </div>
+                <table class="sr-only" id="punchcard-table" aria-labelledby="punchcard-table-caption" tabindex="0">
+                    <caption id="punchcard-table-caption">{% trans "Desglose de actividad semanal" %}</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">{% trans "Semana" %}</th>
+                            <th scope="col">{% trans "Lun" %}</th>
+                            <th scope="col">{% trans "Mar" %}</th>
+                            <th scope="col">{% trans "Mié" %}</th>
+                            <th scope="col">{% trans "Jue" %}</th>
+                            <th scope="col">{% trans "Vie" %}</th>
+                            <th scope="col">{% trans "Sáb" %}</th>
+                            <th scope="col">{% trans "Dom" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week, values in punchcard.items %}
+                        <tr>
+                            <td scope="row">{{ week }}</td>
+                            <td>{{ values.Sunday|default:"0" }}</td>
+                            <td>{{ values.Monday|default:"0" }}</td>
+                            <td>{{ values.Tuesday|default:"0" }}</td>
+                            <td>{{ values.Wednesday|default:"0" }}</td>
+                            <td>{{ values.Thursday|default:"0" }}</td>
+                            <td>{{ values.Friday|default:"0" }}</td>
+                            <td>{{ values.Saturday|default:"0" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="punchcard-note text-center">
+                    * {% trans "Las semanas se muestran solo si hay hallazgos disponibles. La semana inicia en la fecha indicada." %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% endblock %}
+
 {% block postscript %}
     {{ block.super }}
-    <!-- Flot Charts JavaScript -->
     <script src="{% static "flot/excanvas.min.js" %}"></script>
     <script src="{% static "flot/jquery.flot.js" %}"></script>
     <script src="{% static "flot/jquery.flot.pie.js" %}"></script>
@@ -373,6 +580,5 @@
                 updatePunchcardTable(punchcardData, ticksData);
             {% endif %}
         });
-
     </script>
 {% endblock %}

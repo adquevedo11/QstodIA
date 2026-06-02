@@ -5,120 +5,191 @@
     <meta charset="UTF-8">
     <title>{{ report_name }}</title>
     <link rel="stylesheet" href="{% static "dojo/css/bootswatch/yeti/bootstrap.min.css" %}">
-    <!-- Custom Fonts -->
     <link href="{% static "font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
 
     <style type="text/css">
-        @import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,700);
+        @import url(https://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Open+Sans:400,600);
 
-        .label {
-          border-color: #DEE1E6;
-          color: #ffffff !important;
+        /* ── Variables corporativas SQA SA ── */
+        :root {
+            --sqa-blue:   #324458;
+            --sqa-dark:   #1e2d3a;
+            --sqa-orange: #ffb323;
+            --sqa-light:  #f4f6f9;
+            --sqa-border: #dde3ea;
         }
 
+        /* ── Forzar impresión de colores de fondo en todos los navegadores ── */
+        * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            font-family: 'Open Sans', 'Roboto Slab', sans-serif !important;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        .raw_request {
+            font-family: "Courier New", Courier, monospace !important;
+        }
+
+        body {
+            background: #ffffff;
+            color: #2c3e50;
+        }
+
+        /* ── Header fijo — aparece en cada página al imprimir ── */
+        .sqa-report-header {
+            background: var(--sqa-blue);
+            border-bottom: 4px solid var(--sqa-orange);
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .sqa-report-header img {
+            height: 36px;
+            filter: none;
+        }
+
+        .sqa-report-header-title {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .sqa-report-header-subtitle {
+            color: var(--sqa-orange);
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .sqa-report-header-meta {
+            text-align: right;
+            color: #afc1d0;
+            font-size: 11px;
+        }
+
+        /* ── Footer fijo ── */
+        .sqa-report-footer {
+            border-top: 2px solid var(--sqa-orange);
+            background: var(--sqa-blue);
+            color: #afc1d0;
+            font-size: 10px;
+            padding: 6px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .sqa-report-footer span { color: var(--sqa-orange); font-weight: 600; }
+
+        /* ── Contenido ── */
         .container {
             margin: 0 auto;
             max-width: 960px;
+            padding: 0 20px;
         }
 
-        .page-cover {
-            margin-bottom: 600px !important;
-        }
-
-        .page-cover-spacer {
-            height: 400px !important;
-        }
-
+        /* ── Paneles con colores SQA ── */
         .panel-default {
-            border-color: #A1C0D7 !important;
+            border-color: var(--sqa-border) !important;
+            border-radius: 4px !important;
+            box-shadow: 0 1px 4px rgba(50,68,88,0.08);
         }
 
         .panel-default > .panel-heading {
-            color: #333 !important;
-            background-color: rgba(32, 166, 216, 0.75)!important;
-            border-color: rgba(32, 166, 216, 0.75) !important;
-            border-radius: 0px !important;
+            background: var(--sqa-blue) !important;
+            border-color: var(--sqa-blue) !important;
+            border-radius: 4px 4px 0 0 !important;
+            padding: 8px 12px;
+        }
+
+        .panel-default > .panel-heading h5,
+        .panel-default > .panel-heading h6,
+        .panel-default > .panel-heading .panel-title {
+            color: #ffffff !important;
+            font-weight: 600;
         }
 
         .panel-info {
-            border-color: #DEE1E6 !important;
-            border-radius: 0px !important;
+            border-color: var(--sqa-border) !important;
+            border-radius: 4px !important;
         }
 
         .panel-info > .panel-heading {
-            color: #333 !important;
-            background-color: #DEE1E6 !important;
-            border-color: #DEE1E6 !important;
-            border-radius: 0px !important;
-        }
-
-        .panel-body {
-            border-radius: 0px !important;
-        }
-
-        .severity {
-            font-size: 100%;
-        }
-
-        .severity- {
-            color: black !important;
-        }
-
-        .severity-Info {
-            background-color: #888888 !important;
-        }
-
-        .severity-Low {
-            background-color: #337ab7 !important;
-        }
-
-        .severity-Medium {
-            background-color: #FBE413 !important;
-        }
-
-        .severity-High {
-            background-color: #f09835 !important;
-        }
-
-        .severity-Critical {
-            background-color: #d9534f !important;
+            background: #e8edf2 !important;
+            border-color: var(--sqa-border) !important;
+            color: var(--sqa-blue) !important;
+            border-radius: 4px 4px 0 0 !important;
         }
 
         .panel-heading {
-            padding: 1px 5px;
+            padding: 6px 12px;
         }
 
-        .page-cover {
-            page-break-after: always
-        }
-
-        .keep-together {
-            page-break-inside: avoid
-        }
-
-        #findings, #executive {
-            page-break-before: always;
-        }
-
-        .graph {
-            height: 250px;
-            width: 418px;
-        }
-
-        .graph-2x {
-            height: 250px;
-            width: 898px;
-        }
-
-        h6{
-            font-size: 120%;
-            border-bottom: 1px solid black;
-            padding-bottom: 8px;
-        }
-
-        .panel-heading h6{
+        .panel-heading h5 { color: #ffffff !important; }
+        .panel-heading h6 {
             border-bottom: 0;
             padding-bottom: 0;
+            color: #ffffff !important;
+        }
+
+        .panel-body {
+            border-radius: 0 0 4px 4px !important;
+            padding: 12px;
+        }
+
+        .panel-warning .panel-heading h4 { color: #fff; }
+
+        /* ── Severidades ── */
+        .label {
+            border-color: #DEE1E6;
+            color: #ffffff !important;
+        }
+
+        .severity           { font-size: 100%; }
+        .severity-          { color: black !important; }
+        .severity-Info      { background-color: #6c757d !important; color: #fff !important; }
+        .severity-Low       { background-color: #2980b9 !important; color: #fff !important; }
+        .severity-Medium    { background-color: #d4ac0d !important; color: #fff !important; }
+        .severity-High      { background-color: #e67e22 !important; color: #fff !important; }
+        .severity-Critical  { background-color: #c0392b !important; color: #fff !important; }
+
+        /* ── Tipografía ── */
+        h3 {
+            color: var(--sqa-blue);
+            border-bottom: 2px solid var(--sqa-orange);
+            padding-bottom: 6px;
+            margin-top: 28px;
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        h4 {
+            color: var(--sqa-blue);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            border-left: 4px solid var(--sqa-orange);
+            padding-left: 8px;
+        }
+
+        h4, .h4, h5, .h5, h6, .h6 {
+            margin-top: 20px;
+            margin-bottom: 11px;
+        }
+
+        h6 {
+            font-size: 120%;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 8px;
         }
 
         pre, p {
@@ -134,60 +205,65 @@
             padding: 0 !important;
             overflow: visible !important;
             word-break: normal !important;
+            background: #f8f9fa;
+            border-left: 3px solid var(--sqa-orange);
+            padding: 8px 12px !important;
+            border-radius: 0 4px 4px 0;
         }
 
-        ul{
-            margin-bottom: 15px !important;
+        ul { margin-bottom: 15px !important; }
+
+        /* ── Disclaimer ── */
+        .sqa-disclaimer {
+            background: #fff8e1;
+            border-left: 4px solid var(--sqa-orange);
+            border-radius: 0 4px 4px 0;
+            padding: 12px 16px;
+            margin-bottom: 20px;
         }
 
-        h4, .h4, h5, .h5, h6, .h6 {
-            margin-top: 20px;
-            margin-bottom: 11px;
+        .sqa-disclaimer-title {
+            color: #c0392b;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
-        .panel-heading h5 {
-          color: white !important;
-        }
+        /* ── Gráficas ── */
+        .graph   { height: 250px; width: 418px; }
+        .graph-2x { height: 250px; width: 898px; }
+
+        .flot-tick-label.tickLabel { font-size: 11px; }
+
+        /* ── Paginación / saltos ── */
+        .page-cover        { margin-bottom: 600px !important; page-break-after: always; }
+        .page-cover-spacer { height: 400px !important; }
+        .keep-together     { page-break-inside: avoid; }
+
+        #findings, #executive { page-break-before: always; }
 
         div.pretty-graphs, .panel, .panel-body {
             page-break-inside: avoid;
         }
 
-        *, pre {
-            font-family: 'Roboto Slab', monospace !important;
-            font-size: 13px;
-        }
-
-        .flot-tick-label.tickLabel {
-            font-size: 11px;
-        }
-
-        .raw_request {
-            font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace !important;
-        }
-
-        .panel-warning .panel-heading h4{
-            color: #fff;
-        }
-
+        /* ── Separador visual (pantalla) / salto de página (impresión) ── */
         @media not print {
             .report-page-break {
                 display: flex;
                 align-items: center;
                 text-align: center;
+                margin: 24px 0;
+                color: #999;
+                font-size: 11px;
             }
             .report-page-break::before,
             .report-page-break::after {
                 content: '';
                 flex: 1;
-                border-bottom: 1px dashed #000;
+                border-bottom: 1px dashed #ccc;
             }
-            .report-page-break:not(:empty)::before {
-                margin-right: 0.25em;
-            }
-            .report-page-break:not(:empty)::after {
-                margin-left: 0.25em;
-            }
+            .report-page-break:not(:empty)::before { margin-right: 0.4em; }
+            .report-page-break:not(:empty)::after  { margin-left: 0.4em; }
         }
 
         @media print {
@@ -195,14 +271,61 @@
                 page-break-after: always;
                 visibility: hidden;
             }
+
+            /* Header fijo en cada página impresa */
+            .sqa-report-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                margin-bottom: 0;
+            }
+
+            /* Footer fijo en cada página impresa */
+            .sqa-report-footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                margin-top: 0;
+            }
+
+            /* Espacio para header y footer fijos */
+            body {
+                margin-top: 70px;
+                margin-bottom: 40px;
+            }
         }
     </style>
 </head>
 <body>
-{% block content %}
-    {{ block.super }}
-{% endblock %}
-{% block js %}
-{% endblock %}
+
+    <!-- Encabezado corporativo SQA SA -->
+    <div class="sqa-report-header">
+        <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA">
+        <div style="flex: 1; margin-left: 20px;">
+            <div class="sqa-report-header-title">QustodIA — Application Security Posture Management</div>
+            <div class="sqa-report-header-subtitle">{{ report_name }}</div>
+        </div>
+        <div class="sqa-report-header-meta">
+            SQA SA · sqasa.co<br>
+            Generado: {% now "d/m/Y" %}
+        </div>
+    </div>
+
+    {% block content %}
+        {{ block.super }}
+    {% endblock %}
+
+    <!-- Pie de página corporativo SQA SA -->
+    <div class="sqa-report-footer">
+        <span>SQA SA</span> &nbsp;·&nbsp; QustodIA · Application Security Posture Management
+        <span style="color:#afc1d0; font-weight:400;">Documento confidencial — solo para uso interno</span>
+        <span>sqasa.co</span>
+    </div>
+
+{% block js %}{% endblock %}
 </body>
 </html>

@@ -19,7 +19,7 @@
             {% elif product_tab.title %}
                 {{ product_tab.title }} |
             {% endif %}
-            DefectDojo
+            QustodIA
         </title>
         {% block add_css_before %}
         {% endblock %}
@@ -91,6 +91,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -116,8 +117,8 @@
                         </button>
                         <a class="navbar-brand" href="{% url 'home' %}">
                         {% block header_logo %}
-                            <div style="padding: 10px;">
-                                <img src="{% static "dojo/img/logo.png" %}" alt="DefectDojo Logo" width="240"/>
+                            <div style="padding: 0 10px;">
+                                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA Logo" height="52"/>
                             </div>
                         {% endblock %}
                         </a>
@@ -196,14 +197,6 @@
                                             <a href="{{ SAML2_LOGOUT_URL }}">
                                                 <i class="fa-solid fa-right-from-bracket fa-fw"></i>
                                                 {% trans "SAML Logout" %}
-                                            </a>
-                                        </li>
-                                    {% endif %}
-                                    {% if CREATE_CLOUD_BANNER %}
-                                        <li>
-                                            <a href="https://cloud.defectdojo.com/accounts/onboarding/plg_step_1">
-                                                <i class="fa-solid fa-level-up fa-fw"></i>
-                                                {% trans "Try Pro for Free!" %}
                                             </a>
                                         </li>
                                     {% endif %}
@@ -412,6 +405,44 @@
                                                 {% endif %}
                                             </ul>
                                         </li>
+                                        <li>
+                                            <a href="{% url 'security_concept' %}" aria-expanded="false" aria-label="Concepto de Seguridad">
+                                                <i class="fa-solid fa-file-shield fa-fw"></i>
+                                                <span>{% trans "Concepto Seguridad" %}</span>
+                                                <span class="glyphicon arrow"></span>
+                                            </a>
+                                            <ul class="nav nav-second-level">
+                                                <li>
+                                                    <a href="{% url 'security_concept' %}">
+                                                        <i class="fa-solid fa-plus fa-fw"></i> {% trans "Nuevo Concepto" %}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'security_concept_list' %}">
+                                                        <i class="fa-solid fa-clock-rotate-left fa-fw"></i> {% trans "Historial" %}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'executive_report_list' %}" aria-expanded="false" aria-label="Informe Ejecutivo">
+                                                <i class="fa-solid fa-file-lines fa-fw"></i>
+                                                <span>{% trans "Informe Ejecutivo" %}</span>
+                                                <span class="glyphicon arrow"></span>
+                                            </a>
+                                            <ul class="nav nav-second-level">
+                                                <li>
+                                                    <a href="{% url 'executive_report_new' %}">
+                                                        <i class="fa-solid fa-plus fa-fw"></i> {% trans "Nuevo Informe" %}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="{% url 'executive_report_list' %}">
+                                                        <i class="fa-solid fa-clock-rotate-left fa-fw"></i> {% trans "Historial" %}
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
                                         {% block reports_tab %}
                                         <li>
                                             <a href="{% url 'report_builder' %}" aria-expanded="false" aria-label="Reports">
@@ -429,6 +460,11 @@
                                                 <span class="glyphicon arrow"></span>
                                             </a>
                                             <ul class="nav nav-second-level">
+                                                <li>
+                                                    <a href="{% url 'sqa_metrics' %}" style="color:#ffb323;font-weight:700;">
+                                                        <i class="fa-solid fa-star fa-fw"></i> Métricas SQA
+                                                    </a>
+                                                </li>
                                                 <li>
                                                     <a href="{% url 'metrics' %}?date=5&view=dashboard">
                                                         {% trans "Metrics Dashboard" %}
@@ -624,14 +660,7 @@
                                             </ul>
                                         </li>
                                     {% endblock %}
-                                    {% block support-tab %}
-                                        <li>
-                                            <a href="{% url 'support' %}" aria-disabled="true" aria-expanded="false" aria-label="Support">
-                                                <i class="fa-solid fa-level-up fa-fw"></i>
-                                                <span>{% trans "Upgrade" %}</span>
-                                            </a>
-                                        </li>
-                                    {% endblock %}
+                                    {% block support-tab %}{% endblock %}
                                     <li id="min-menu">
                                         <a href="#" id="minimize-menu" title="Expand/Collapse Menu" aria-label="Expand/Collapse Menu">
                                             <i id="nav-minimize-menu-li" class="fa-solid fa-circle-right fa-fw"></i>
@@ -648,17 +677,6 @@
             {% endblock %}
             <!-- Page Content -->
             <div id="page-wrapper">
-                {% if request.user.is_authenticated and announcement %}
-                    {% load announcement_banner_tags %}
-                    <div role="alert" class="announcement-banner alert alert-{{ announcement.style }} {% if announcement.dismissable %}alert-dismissible{% endif %} show">
-                    {% if announcement.dismissable %}
-                        <a href="{% url 'dismiss_announcement' %}" class="close" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </a>
-                    {% endif %}
-                    {{ announcement.message|bleach_announcement_message }}
-                    </div>
-                {% endif %}
                 <div class="container-fluid">
                     <!-- start of tabs -->
                     {% block tab_bar %}
@@ -1096,26 +1114,24 @@
                 <footer class="footer">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12 text-center text-">
+                            <div class="col-md-4 text-center" style="padding: 10px 0;">
+                                <a href="{% url 'home' %}">
+                                    <img src="{% static "dojo/img/logo.png" %}" alt="SQA Logo" height="50" style="filter: none; opacity: 1;"/>
+                                </a>
+                                <p style="margin-top: 6px; color: #ffb323; font-size: 14px; font-weight: 700; letter-spacing: 1px;">QustodIA</p>
+                                <p style="color: #cdd8e3; font-size: 11px; margin-top: 2px;">Application Security Posture Management</p>
+                            </div>
+                            <div class="col-md-4 text-center" style="padding: 10px 0; color: #cdd8e3; font-size: 12px;">
                                 <p>
-                                    <a href="{% url 'home' %}">
-                                        <img class="logo" src="{% static "dojo/img/chop.png" %}" alt="{% trans "DefectDojo Chop" %}" height="45"/>
-                                    </a>
-                                    <br/>
-                                    <br/>
-                                    {% dojo_version %} ( {% dojo_current_hash %} )
+                                    <strong style="color: #ffb323;">QustodIA</strong><br/>
+                                    <span style="font-size:11px;">Application Security Posture Management</span>
                                 </p>
+                            </div>
+                            <div class="col-md-4 text-center" style="padding: 10px 0; color: #cdd8e3; font-size: 12px;">
                                 <p>
-                                    Detailed DefectDojo documentation can be found in our <a
-                                        href="{% dojo_docs_url %}">GitHub Pages</a>.
-                                </p>
-                                <p>
-                                    DefectDojo is licensed under the <a
-                                        href="https://github.com/DefectDojo/django-DefectDojo/blob/master/LICENSE.md">3-Clause BSD
-                            License</a>. | <a href="https://github.com/DefectDojo/django-DefectDojo/blob/master/NOTICE"> Dependencies Notice.</a>
-                                </p>
-                                <p>
-                                    &copy; 2015-{% now "Y" %} DefectDojo, Inc. All rights reserved. DefectDojo is trademark of DefectDojo, Inc.
+                                    <strong style="color: #ffb323;">SQA SA</strong><br/>
+                                    <a href="https://sqasa.co/" target="_blank">sqasa.co</a><br/>
+                                    &copy; {% now "Y" %} SQA SA. {% trans "Todos los derechos reservados." %}
                                 </p>
                             </div>
                         </div>

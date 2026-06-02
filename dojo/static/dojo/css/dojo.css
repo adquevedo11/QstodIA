@@ -48,7 +48,7 @@ textarea,
 }
 
 a {
-  color: #546474;
+  color: #324458;
 }
 
 .panel-default .btn-primary {
@@ -66,23 +66,23 @@ a {
 
 .btn-primary {
     color: #fff;
-    background-color: #546474;
+    background-color: #324458;
 	  /*border-style: none!important;*/
 }
 
 .btn-primary:hover {
-    background-color: #38434d!important;
+    background-color: #1e2d3a!important;
 }
 
 .btn-secondary {
     color: #fff;
-    background-color: #546474;
+    background-color: #324458;
 	border-style: none!important;
 }
 
 .btn-secondary:hover {
     color: #fff;
-    background-color: #38434d!important;
+    background-color: #1e2d3a!important;
 }
 
 .panel-heading .dropdown-toggle:focus {
@@ -112,7 +112,7 @@ a {
 */
 
 .secondary-color {
-  background-color: #546474!important;
+  background-color: #324458!important;
   color: white;
 }
 
@@ -154,8 +154,8 @@ a:hover {
 .nav-tabs > li.active > a:focus,
 .nav-tabs > li.active > a:hover {
     color: #fff;
-    background-color: #73879c;
-    border: 1px solid #73879c;
+    background-color: #324458;
+    border: 1px solid #324458;
 
 }
 .nav-tabs > li > a {
@@ -167,11 +167,11 @@ a:hover {
 
 .nav-tabs .dropdown .badge{
     color: #fff;
-    background-color: #546474;
+    background-color: #324458;
 }
 
 .nav-tabs .active-color .badge{
-    color: #72879b;
+    color: #324458;
     background-color: #ffffff;
 }
 
@@ -350,16 +350,16 @@ form.metric_form p label {
 .panel-blue .panel-heading,
 .panel-blue {
     color: #f5f5f5;
-    background-color: #546474!important;
-    border-color: #546474!important;
+    background-color: #324458!important;
+    border-color: #324458!important;
 }
 
 .panel-blue a {
-    color: #546474;
+    color: #324458;
 }
 
 .panel-blue a:hover {
-    color: #38434d;
+    color: #1e2d3a;
 }
 
 .nowrap {
@@ -592,7 +592,7 @@ form ul#id_accepted_findings input {
 }
 
 .severity-Low {
-    background-color: #546474;
+    background-color: #324458;
 }
 
 .severity-Medium {
@@ -636,8 +636,8 @@ form ul#id_accepted_findings input {
 
 .pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover
 {
-  background-color: #546474;
-  border-color: #546474;
+  background-color: #324458;
+  border-color: #324458;
 }
 
 .pagination-in-panel {
@@ -748,7 +748,7 @@ input#simple_search {
 }
 
 .community {
-    color: #546474!important;
+    color: #324458!important;
     background-color: #e7e7e7!important;
 }
 
@@ -771,7 +771,7 @@ input#simple_search {
 }
 
 .btn-primary.support.dark:hover {
-    color: #546474!important;
+    color: #324458!important;
     background-color: #f7f7f7!important;
 }
 
@@ -786,7 +786,7 @@ input#simple_search {
 }
 
 .divider.dark {
-    border-color: #546474!important
+    border-color: #324458!important
 }
 
 .divider.light {
@@ -807,9 +807,10 @@ input#simple_search {
 }
 
 .footer {
-    background-color: #F8F8F8;
-    border-top: 1px solid #dcdcdc;
+    background-color: #324458;
+    border-top: 1px solid #1e2d3a;
     padding: 30px 0;
+    color: #ffffff;
 }
 
 .footer img {
@@ -930,7 +931,7 @@ table.centered td {
 }
 
 .text-low {
-    color: #546474
+    color: #324458
 }
 
 input[type="checkbox"] {
@@ -1369,8 +1370,8 @@ div.custom-search-form {
 .panel-default > .panel-heading {
     color: white;
     font-size: 16px;
-    background-color: rgba(32, 166, 216, 0.75);
-    border-color: #A1C0D7;
+    background-color: #ffb323;
+    border-color: #e09e1a;
 }
 
 .panel-default > .panel-heading a,
@@ -1383,7 +1384,7 @@ div.custom-search-form {
 }
 
 .panel-default > .panel-heading a:hover{
-	color: #546474;
+	color: #324458;
 }
 
 .panel-default-secondary{
@@ -1393,9 +1394,9 @@ div.custom-search-form {
 
 .panel-default-secondary > .panel-heading {
   color: white;
-  background-color: #546474;
+  background-color: #324458;
 	border-style: solid;
-	border-color: #536473;
+	border-color: #243347;
 }
 
 .panel-heading .text-muted {
@@ -1444,13 +1445,13 @@ div.dt-search {
 }
 
 table#product_types .btn-success{
-	background-color: #546474;
-	border-color: #546474;
+	background-color: #324458;
+	border-color: #324458;
 }
 
 table#product_types .btn-success:hover{
-	background-color: #3d4a58;
-	border-color: #3d4a58;
+	background-color: #1e2d3a;
+	border-color: #1e2d3a;
 }
 
 table#product_types .btn-warning{
@@ -1464,7 +1465,7 @@ table#product_types .btn-warning:hover{
 }
 
 span.pull-right.clickable i.glyphicon-chevron-up, span.pull-right.clickable i.glyphicon-chevron-down {
-    color: #546474;
+    color: #324458;
 }
 
 .finding-description {
@@ -1512,28 +1513,30 @@ form#quick-add-form {
 }
 
 .dojo-filter-heading {
-    background-color: #EBF4FB;
+    background-color: #ffb323;
     margin: 0px;
     padding: 5px 10px;
     border-radius: 0px;
-    border: 1px solid #A1C0D7;
+    border: 1px solid #e09e1a;
     margin-left: -16px;
     margin-right: -16px;
     margin-top: -16px;
     font-size: 15px;
     margin-bottom: 15px;
+    color: #ffffff;
 }
 
 .dojo-report-heading {
     margin-top: 15px;
     margin-left: -16px;
     margin-right: -16px;
-    background-color: #EBF4FB;
+    background-color: #ffb323;
     border-radius: 0px;
-    border: 1px solid #A1C0D7;
+    border: 1px solid #e09e1a;
     font-size: 15px;
     padding: 5px 10px;
     margin-bottom: 15px;
+    color: #ffffff;
 }
 
 div.potential-finding, div.potential-finding div.panel-heading {
@@ -1715,7 +1718,7 @@ div.tags .label {
 }
 
 .tag-version {
-    background: rgba(32, 166, 216, 0.7);
+    background: rgba(255, 179, 35, 0.85);
     border: 1px solid #fff!important;
 }
 
@@ -1911,4 +1914,131 @@ input[type=number]::-webkit-outer-spin-button {
         color: ButtonText;
     }
  }
-    
+
+/* ============================================================
+   SQA CORPORATE BRANDING OVERRIDES
+   Primary Dark Blue: #324458
+   Orange Accent: #ffb323
+   ============================================================ */
+
+/* Navbar top bar */
+.navbar.navbar-default {
+    background-color: #324458 !important;
+    border-color: #1e2d3a !important;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-top-links > li > a {
+    color: #ffffff !important;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    background-color: #1e2d3a !important;
+    color: #ffffff !important;
+}
+
+/* Sidebar */
+.navbar-default.sidebar {
+    background-color: #324458 !important;
+    border-right: 1px solid #1e2d3a !important;
+}
+
+.navbar-default.sidebar .nav > li > a {
+    color: #cdd8e3 !important;
+}
+
+.navbar-default.sidebar .nav > li > a:hover,
+.navbar-default.sidebar .nav > li > a:focus {
+    color: #ffffff !important;
+    background-color: #1e2d3a !important;
+}
+
+.navbar-default.sidebar .nav > li.active > a,
+.navbar-default.sidebar .nav > li.active > a:hover {
+    color: #ffffff !important;
+    background-color: #ffb323 !important;
+}
+
+/* Sub-menu sidebar */
+#side-menu > li ul {
+    background-color: #243347 !important;
+}
+
+#side-menu > li ul li a {
+    color: #cdd8e3 !important;
+}
+
+#side-menu > li ul li a:hover {
+    color: #ffffff !important;
+    background-color: #1e2d3a !important;
+}
+
+/* Navbar toggle button */
+.navbar-default .navbar-toggle {
+    border-color: #ffffff !important;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ffffff !important;
+}
+
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #1e2d3a !important;
+}
+
+/* Search bar in navbar */
+#simple_search {
+    border-color: #1e2d3a !important;
+}
+
+/* Top links (alerts, user icon) */
+.navbar-top-links .dropdown-toggle {
+    color: #ffffff !important;
+}
+
+.navbar-top-links .dropdown-toggle:hover {
+    color: #ffb323 !important;
+    background-color: #1e2d3a !important;
+}
+
+/* Badge alerts */
+.badge.badge-count {
+    background-color: #ffb323 !important;
+    color: #ffffff !important;
+}
+
+/* Footer text links */
+.footer a {
+    color: #ffb323 !important;
+}
+
+.footer a:hover {
+    color: #ffffff !important;
+}
+
+/* Table header accent */
+.table-bordered th {
+    background-color: #eef2f5 !important;
+}
+
+/* Button search */
+#simple_search_submit {
+    background-color: #ffb323 !important;
+    border-color: #e09e1a !important;
+    color: #ffffff !important;
+}
+
+#simple_search_submit:hover {
+    background-color: #e09e1a !important;
+}
+
+/* Minimize menu icon */
+#min-menu {
+    color: #ffb323 !important;
+}

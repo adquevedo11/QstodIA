@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}QustodIA — Concepto de Seguridad{% endblock %}
+
+{% block add_styles %}
+{{ block.super }}
+/* ── Concepto de Seguridad ── */
+.sqa-cs-header {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    border-radius: 8px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 14px rgba(50,68,88,0.18);
+}
+.sqa-cs-header h2 { color: #fff; margin: 0 0 4px 0; font-size: 20px; }
+.sqa-cs-header p  { color: #afc1d0; margin: 0; font-size: 13px; }
+.sqa-cs-header img { height: 40px; filter: none; }
+
+.sqa-cs-section {
+    background: #fff;
+    border: 1px solid #dde3ea;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.sqa-cs-section-title {
+    background: #324458;
+    color: #fff;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    border-left: 4px solid #ffb323;
+}
+.sqa-cs-section-title i { color: #ffb323; margin-right: 8px; }
+.sqa-cs-section-body { padding: 18px 20px; }
+
+.sqa-cs-section .form-group label {
+    font-weight: 600;
+    color: #324458;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.sqa-cs-section .form-control {
+    border-color: #c5d0da;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.sqa-cs-section .form-control:focus {
+    border-color: #ffb323;
+    box-shadow: 0 0 0 2px rgba(255,179,35,0.2);
+}
+
+.sqa-risk-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    margin-left: 8px;
+}
+
+/* Tabla de hallazgos */
+#findings-table thead th { background: #f4f6f9; color: #324458; font-size: 12px; }
+#findings-table tbody tr:hover { background: #f0f4f8; }
+#findings-table .cb-finding { cursor: pointer; }
+
+.sqa-sev-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+}
+.sev-Critical  { background: #c0392b; }
+.sev-High      { background: #e67e22; }
+.sev-Medium    { background: #d4ac0d; }
+.sev-Low       { background: #2980b9; }
+.sev-Info      { background: #6c757d; }
+
+.sqa-counter {
+    background: #ffb323;
+    color: #fff;
+    border-radius: 12px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: 8px;
+}
+
+.btn-sqa-generate {
+    background: linear-gradient(135deg, #ffb323, #e09e1a);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 36px;
+    font-size: 15px;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(255,179,35,0.35);
+    transition: all 0.2s;
+}
+.btn-sqa-generate:hover {
+    background: linear-gradient(135deg, #e09e1a, #c8871a);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(255,179,35,0.45);
+}
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+<!-- Header -->
+<div class="sqa-cs-header">
+    <div>
+        <h2><i class="fa-solid fa-file-shield" style="color:#ffb323;margin-right:10px;"></i>Concepto de Seguridad</h2>
+        <p>QustodIA · Application Security Posture Management · SQA SA</p>
+    </div>
+    <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA">
+</div>
+
+<form method="post" action="{% url 'security_concept' %}" target="_blank" id="cs-form">
+{% csrf_token %}
+
+<!-- 1. Datos del documento -->
+<div class="sqa-cs-section">
+    <div class="sqa-cs-section-title">
+        <i class="fa-solid fa-id-card"></i>Datos del Documento
+    </div>
+    <div class="sqa-cs-section-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Número de Referencia</label>
+                    <input type="text" name="reference" class="form-control" placeholder="CSA-2024-001">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Título del Concepto</label>
+                    <input type="text" name="title" class="form-control" required placeholder="Ej: Evaluación de Seguridad — Sistema de Pagos">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Nivel de Riesgo General</label>
+                    <select name="risk_level" class="form-control" id="risk-select">
+                        {% for level in risk_levels %}
+                        <option value="{{ level }}">{{ level }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Cliente / Empresa</label>
+                    <input type="text" name="client" class="form-control" placeholder="Nombre del cliente o área">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Alcance / Sistema Evaluado</label>
+                    <input type="text" name="scope" class="form-control" placeholder="Ej: Aplicación web, API, Infraestructura">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Contexto -->
+<div class="sqa-cs-section">
+    <div class="sqa-cs-section-title">
+        <i class="fa-solid fa-circle-info"></i>Contexto y Antecedentes
+    </div>
+    <div class="sqa-cs-section-body">
+        <div class="form-group">
+            <label>Descripción del contexto, alcance y metodología utilizada</label>
+            <textarea name="context_text" class="form-control" rows="5"
+                placeholder="Describa el contexto de la evaluación, el sistema analizado, la metodología y el período de evaluación..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- 3. Hallazgos -->
+<div class="sqa-cs-section">
+    <div class="sqa-cs-section-title">
+        <i class="fa-solid fa-bug"></i>Hallazgos Incluidos
+        <span class="sqa-counter" id="selected-count">0</span>
+    </div>
+    <div class="sqa-cs-section-body">
+        <p style="color:#6c757d;font-size:12px;margin-bottom:14px;">
+            Seleccione los hallazgos que fundamentan este concepto de seguridad.
+        </p>
+        <input type="text" id="findings-search" class="form-control" style="max-width:360px;margin-bottom:12px;"
+            placeholder="&#128269; Buscar hallazgo...">
+        <div style="max-height:380px; overflow-y:auto; border:1px solid #dde3ea; border-radius:4px;">
+            <table class="table table-condensed" id="findings-table" style="margin-bottom:0;">
+                <thead>
+                    <tr>
+                        <th style="width:36px;">
+                            <input type="checkbox" id="select-all" title="Seleccionar todos">
+                        </th>
+                        <th>ID</th>
+                        <th>Hallazgo</th>
+                        <th>Severidad</th>
+                        <th>Producto</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in findings %}
+                    <tr class="finding-row">
+                        <td>
+                            <input type="checkbox" name="findings" value="{{ f.id }}"
+                                class="cb-finding" data-title="{{ f.title|lower }}"
+                                data-severity="{{ f.severity }}" data-product="{{ f.test.engagement.product.name|lower }}">
+                        </td>
+                        <td>{{ f.id }}</td>
+                        <td>{{ f.title }}</td>
+                        <td>
+                            <span class="sqa-sev-badge sev-{{ f.severity }}">{{ f.severity }}</span>
+                        </td>
+                        <td>{{ f.test.engagement.product.name }}</td>
+                        <td>
+                            {% if f.active %}
+                                <span style="color:#27ae60;font-weight:600;">Activo</span>
+                            {% else %}
+                                <span style="color:#999;">Cerrado</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted" style="padding:20px;">
+                            No hay hallazgos disponibles.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Análisis -->
+<div class="sqa-cs-section">
+    <div class="sqa-cs-section-title">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>Análisis y Concepto de Seguridad
+    </div>
+    <div class="sqa-cs-section-body">
+        <div class="form-group">
+            <label>Análisis técnico, impacto y concepto de seguridad</label>
+            <textarea name="analysis" class="form-control" rows="8"
+                placeholder="Desarrolle el análisis de seguridad, el impacto de los hallazgos identificados, los vectores de ataque relevantes y su criterio técnico..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- 5. Conclusión -->
+<div class="sqa-cs-section">
+    <div class="sqa-cs-section-title">
+        <i class="fa-solid fa-circle-check"></i>Conclusión y Recomendaciones
+    </div>
+    <div class="sqa-cs-section-body">
+        <div class="form-group">
+            <label>Conclusión, recomendaciones y plan de acción sugerido</label>
+            <textarea name="conclusion" class="form-control" rows="6"
+                placeholder="Redacte la conclusión del concepto, las recomendaciones prioritarias y el plan de remediación sugerido..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- 6. Analista -->
+<div class="sqa-cs-section">
+    <div class="sqa-cs-section-title">
+        <i class="fa-solid fa-user-shield"></i>Analista Responsable
+    </div>
+    <div class="sqa-cs-section-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nombre del Analista</label>
+                    <input type="text" name="analyst_name" class="form-control" value="{{ analyst_name }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Cargo / Título</label>
+                    <input type="text" name="analyst_title" class="form-control"
+                        placeholder="Ej: Analista de Seguridad Senior">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botón generar -->
+<div class="text-center" style="margin: 32px 0 40px;">
+    <button type="submit" class="btn btn-sqa-generate">
+        <i class="fa-solid fa-file-pdf" style="margin-right:8px;"></i>
+        Generar Concepto de Seguridad
+    </button>
+    <p style="color:#999;font-size:11px;margin-top:10px;">
+        Se abrirá en una nueva pestaña lista para imprimir o guardar como PDF (Ctrl+P)
+    </p>
+</div>
+
+</form>
+{% endblock %}
+
+{% block postscript %}
+{{ block.super }}
+<script>
+// Contador de seleccionados
+function updateCount() {
+    var n = document.querySelectorAll('.cb-finding:checked').length;
+    document.getElementById('selected-count').textContent = n;
+}
+
+// Seleccionar todos
+document.getElementById('select-all').addEventListener('change', function() {
+    var visible = document.querySelectorAll('.finding-row:not([style*="none"]) .cb-finding');
+    visible.forEach(function(cb) { cb.checked = document.getElementById('select-all').checked; });
+    updateCount();
+});
+
+// Checkboxes individuales
+document.querySelectorAll('.cb-finding').forEach(function(cb) {
+    cb.addEventListener('change', updateCount);
+});
+
+// Búsqueda en tiempo real
+document.getElementById('findings-search').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('.finding-row').forEach(function(row) {
+        var cb = row.querySelector('.cb-finding');
+        var match = cb.dataset.title.includes(q) ||
+                    cb.dataset.severity.toLowerCase().includes(q) ||
+                    cb.dataset.product.includes(q);
+        row.style.display = match ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

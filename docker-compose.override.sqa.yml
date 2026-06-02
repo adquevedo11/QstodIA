@@ -1,0 +1,206 @@
+# docker-compose.override.sqa.yml
+#
+# Protege el diseño corporativo SQA SA / VMaaS 2.0 ante actualizaciones de DefectDojo.
+#
+# Uso:
+#   docker-compose -f docker-compose.yml -f docker-compose.override.sqa.yml up -d
+#
+# Para hacer permanente sin especificar el archivo cada vez,
+# renómbralo a docker-compose.override.yml (Docker Compose lo carga automáticamente).
+#
+# Tras actualizar código Python (models, views, urls) debes reiniciar uwsgi:
+#   docker-compose restart uwsgi
+#
+# Tras agregar migraciones nuevas:
+#   docker-compose exec uwsgi python manage.py migrate
+---
+services:
+
+  # nginx sirve los archivos estáticos (CSS, imágenes)
+  nginx:
+    networks:
+      - default
+      - sqasa
+    volumes:
+      - defectdojo_media:/usr/share/nginx/html/media
+      # CSS personalizado SQA
+      - type: bind
+        source: ./dojo/static/dojo/css/sqa-theme.css
+        target: /usr/share/nginx/html/static/dojo/css/sqa-theme.css
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/css/dojo.css
+        target: /usr/share/nginx/html/static/dojo/css/dojo.css
+        read_only: true
+      # Imágenes corporativas SQA
+      - type: bind
+        source: ./dojo/static/dojo/img/logo.png
+        target: /usr/share/nginx/html/static/dojo/img/logo.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/qustodIA_logo.png
+        target: /usr/share/nginx/html/static/dojo/img/qustodIA_logo.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/chop.png
+        target: /usr/share/nginx/html/static/dojo/img/chop.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/favicon.png
+        target: /usr/share/nginx/html/static/dojo/img/favicon.png
+        read_only: true
+
+  # uwsgi sirve los templates y el código Python
+  uwsgi:
+    environment:
+      GOLIVE_AGENT_URL: "http://go-live-agent:8001"
+      DD_CREATE_CLOUD_BANNER: "False"
+    networks:
+      - default
+      - sqasa
+    volumes:
+      - type: bind
+        source: ./docker/extra_settings
+        target: /app/docker/extra_settings
+      - "defectdojo_media:${DD_MEDIA_ROOT:-/app/media}"
+
+      # ── Código Python principal modificado ──────────────────────────────
+      - type: bind
+        source: ./dojo/models.py
+        target: /app/dojo/models.py
+        read_only: true
+      - type: bind
+        source: ./dojo/urls.py
+        target: /app/dojo/urls.py
+        read_only: true
+      - type: bind
+        source: ./dojo/engagement/views.py
+        target: /app/dojo/engagement/views.py
+        read_only: true
+
+      # ── Módulo Concepto de Seguridad ─────────────────────────────────────
+      - type: bind
+        source: ./dojo/security_concept
+        target: /app/dojo/security_concept
+        read_only: true
+
+      # ── Módulo Métricas SQA ───────────────────────────────────────────────
+      - type: bind
+        source: ./dojo/sqa_metrics
+        target: /app/dojo/sqa_metrics
+        read_only: true
+
+      # ── Módulo Informe Ejecutivo ──────────────────────────────────────────
+      - type: bind
+        source: ./dojo/executive_report
+        target: /app/dojo/executive_report
+        read_only: true
+
+      # ── Módulo Go-Live Readiness ──────────────────────────────────────────
+      - type: bind
+        source: ./dojo/go_live_readiness
+        target: /app/dojo/go_live_readiness
+        read_only: true
+
+      # ── Migración SecurityConcept ────────────────────────────────────────
+      - type: bind
+        source: ./dojo/db_migrations/0249_securityconcept.py
+        target: /app/dojo/db_migrations/0249_securityconcept.py
+        read_only: true
+
+      # ── Migración ExecutiveReport ────────────────────────────────────────
+      - type: bind
+        source: ./dojo/db_migrations/0250_executivereport.py
+        target: /app/dojo/db_migrations/0250_executivereport.py
+        read_only: true
+
+      # ── Templates personalizados SQA ─────────────────────────────────────
+      - type: bind
+        source: ./dojo/templates/base.html
+        target: /app/dojo/templates/base.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/report_base.html
+        target: /app/dojo/templates/report_base.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/login.html
+        target: /app/dojo/templates/dojo/login.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/dashboard.html
+        target: /app/dojo/templates/dojo/dashboard.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/finding_pdf_report.html
+        target: /app/dojo/templates/dojo/finding_pdf_report.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/security_concept_form.html
+        target: /app/dojo/templates/dojo/security_concept_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/security_concept_list.html
+        target: /app/dojo/templates/dojo/security_concept_list.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/security_concept_report.html
+        target: /app/dojo/templates/dojo/security_concept_report.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/executive_report_form.html
+        target: /app/dojo/templates/dojo/executive_report_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/executive_report_list.html
+        target: /app/dojo/templates/dojo/executive_report_list.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/executive_report_pdf.html
+        target: /app/dojo/templates/dojo/executive_report_pdf.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/sqa_metrics.html
+        target: /app/dojo/templates/dojo/sqa_metrics.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/view_product_details.html
+        target: /app/dojo/templates/dojo/view_product_details.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/view_eng.html
+        target: /app/dojo/templates/dojo/view_eng.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/go_live_readiness.html
+        target: /app/dojo/templates/dojo/go_live_readiness.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/go_live_readiness_card.html
+        target: /app/dojo/templates/dojo/go_live_readiness_card.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/go_live_readiness_content.html
+        target: /app/dojo/templates/dojo/go_live_readiness_content.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/400.html
+        target: /app/dojo/templates/400.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/403.html
+        target: /app/dojo/templates/403.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/404.html
+        target: /app/dojo/templates/404.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/500.html
+        target: /app/dojo/templates/500.html
+        read_only: true
+
+networks:
+  sqasa:
+    name: sqasa
+    external: true
