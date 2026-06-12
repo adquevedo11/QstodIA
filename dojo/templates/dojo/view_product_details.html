@@ -128,28 +128,34 @@
       <tbody>
         <tr>
           <td class="col-sm-2 bg-vuln-critical vuln-count text-center">
-              <a aria-label="{{ critical }} critical findings" href="{% url 'product_open_findings' prod.id %}?severity=Critical" style="color:#FFFFFF;text-decoration:none">{{ critical }}<span class="hidden-xs"><br>
-              <small>{% trans "CRITICAL" %}</small></span></a>
+              <a aria-label="{{ critical }} critical findings" href="{% url 'product_open_findings' prod.id %}?severity=Critical">
+                <i class="fa-solid fa-skull sqa-sev-icon"></i>{{ critical }}<span class="hidden-xs"><br><small>{% trans "CRITICAL" %}</small></span>
+              </a>
           </td>
           <td class="col-sm-2 bg-vuln-high vuln-count text-center">
-              <a aria-label="{{ high }} high severity findings" href="{% url 'product_open_findings' prod.id %}?severity=High" style="color:#FFFFFF;text-decoration:none">{{ high }}<span class="hidden-xs"><br>
-              <small>{% trans "HIGH" %}</small></span></a>
+              <a aria-label="{{ high }} high severity findings" href="{% url 'product_open_findings' prod.id %}?severity=High">
+                <i class="fa-solid fa-fire sqa-sev-icon"></i>{{ high }}<span class="hidden-xs"><br><small>{% trans "HIGH" %}</small></span>
+              </a>
           </td>
           <td class="col-sm-2 bg-vuln-medium vuln-count text-center">
-              <a aria-label="{{ medium }} medium severity findings" href="{% url 'product_open_findings' prod.id %}?severity=Medium" style="color:#FFFFFF;text-decoration:none">{{ medium }}<span class="hidden-xs"><br>
-              <small>{% trans "MEDIUM" %}</small></span></a>
+              <a aria-label="{{ medium }} medium severity findings" href="{% url 'product_open_findings' prod.id %}?severity=Medium">
+                <i class="fa-solid fa-triangle-exclamation sqa-sev-icon"></i>{{ medium }}<span class="hidden-xs"><br><small>{% trans "MEDIUM" %}</small></span>
+              </a>
           </td>
           <td class="col-sm-2 bg-vuln-low vuln-count text-center">
-              <a aria-label="{{ low }} low severity findings" href="{% url 'product_open_findings' prod.id %}?severity=Low" style="color:#FFFFFF;text-decoration:none">{{ low }}<span class="hidden-xs"><br>
-              <small>{% trans "LOW" %}</small></span></a>
+              <a aria-label="{{ low }} low severity findings" href="{% url 'product_open_findings' prod.id %}?severity=Low">
+                <i class="fa-solid fa-shield-halved sqa-sev-icon"></i>{{ low }}<span class="hidden-xs"><br><small>{% trans "LOW" %}</small></span>
+              </a>
           </td>
           <td class="col-sm-2 bg-vuln-info vuln-count text-center">
-              <a aria-label="{{ informational }} informational severity findings" href="{% url 'product_open_findings' prod.id %}?severity=Info" style="color:#FFFFFF;text-decoration:none">{{ info }}<span class="hidden-xs"><br>
-              <small>{% trans "INFORMATIONAL" %}</small></span></a>
+              <a aria-label="{{ informational }} informational severity findings" href="{% url 'product_open_findings' prod.id %}?severity=Info">
+                <i class="fa-solid fa-circle-info sqa-sev-icon"></i>{{ info }}<span class="hidden-xs"><br><small>{% trans "INFO" %}</small></span>
+              </a>
           </td>
           <td class="col-sm-2 bg-muted vuln-count text-center">
-              <a href="{% url 'product_open_findings' prod.id %}" style="color:#FFFFFF;text-decoration:none">{{ total }}<span class="hidden-xs"><br>
-              <small>{% trans "TOTAL" %}</small></span></a>
+              <a href="{% url 'product_open_findings' prod.id %}">
+                <i class="fa-solid fa-chart-bar sqa-sev-icon"></i>{{ total }}<span class="hidden-xs"><br><small>{% trans "TOTAL" %}</small></span>
+              </a>
           </td>
         </tr>
       </tbody>
@@ -699,6 +705,82 @@
   </form>
 </div>
 <!-- end Notifications -->
+
+<!-- ── Bolsas de Horas ──────────────────────────────────────────────────── -->
+{% with pools=prod.hour_pools.all %}
+{% if pools %}
+<div class="panel panel-default panel-default-secondary">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <i class="fa-solid fa-clock" style="color:#ffb323;"></i>
+      Bolsas de Horas
+      <a href="{% url 'hour_pool_new' product_id=prod.id %}" class="btn btn-xs btn-default pull-right">
+        <i class="fa-solid fa-plus"></i> Nueva bolsa
+      </a>
+    </h4>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-condensed table-hover" style="margin-bottom:0;">
+      <thead>
+        <tr style="background:#324458;color:#fff;font-size:12px;">
+          <th style="padding:8px 12px;">Bolsa</th>
+          <th style="padding:8px 8px;text-align:center;width:65px;">Total</th>
+          <th style="padding:8px 8px;text-align:center;width:65px;">Usadas</th>
+          <th style="padding:8px 8px;text-align:center;width:75px;">Restantes</th>
+          <th style="padding:8px 12px;min-width:160px;">Consumo</th>
+          <th style="padding:8px 10px;width:90px;">Estado</th>
+          <th style="padding:8px 8px;width:40px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pool in pools %}
+        <tr {% if pool.is_alert %}style="background:#fff8e6;"{% endif %}>
+          <td style="padding:8px 12px;vertical-align:middle;">
+            <a href="{% url 'hour_pool_detail' pk=pool.id %}" style="font-weight:600;color:#324458;">{{ pool.name }}</a>
+          </td>
+          <td style="padding:8px;text-align:center;vertical-align:middle;font-size:12px;">{{ pool.total_hours }}h</td>
+          <td style="padding:8px;text-align:center;vertical-align:middle;font-size:12px;">{{ pool.used_hours }}h</td>
+          <td style="padding:8px;text-align:center;vertical-align:middle;">
+            <strong style="font-size:12px;{% if pool.is_alert %}color:#e67e22;{% endif %}">{{ pool.remaining_hours }}h</strong>
+          </td>
+          <td style="padding:8px 12px;vertical-align:middle;min-width:160px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="flex:1;background:#eee;border-radius:6px;height:12px;overflow:hidden;min-width:80px;">
+                <div style="height:100%;border-radius:6px;background:{% if pool.consumption_pct >= 90 %}#c0392b{% elif pool.consumption_pct >= 70 %}#e67e22{% else %}#27ae60{% endif %};width:{{ pool.consumption_pct }}%;transition:width .3s;"></div>
+              </div>
+              <span style="font-size:11px;font-weight:700;color:{% if pool.consumption_pct >= 90 %}#c0392b{% elif pool.consumption_pct >= 70 %}#e67e22{% else %}#27ae60{% endif %};white-space:nowrap;min-width:32px;">{{ pool.consumption_pct }}%</span>
+            </div>
+          </td>
+          <td style="padding:8px 10px;vertical-align:middle;">
+            <span class="label" style="background:{{ pool.status_color }};font-size:11px;">{{ pool.get_status_display }}</span>
+          </td>
+          <td style="padding:8px;vertical-align:middle;text-align:center;">
+            <a href="{% url 'hour_pool_detail' pk=pool.id %}" class="btn btn-xs btn-default" title="Ver detalle">
+              <i class="fa-solid fa-eye"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="panel panel-default panel-default-secondary">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <i class="fa-solid fa-clock" style="color:#ffb323;"></i>
+      Bolsas de Horas
+    </h4>
+  </div>
+  <div class="panel-body text-center" style="color:#888;padding:20px;">
+    <i class="fa-solid fa-clock fa-2x" style="margin-bottom:8px;display:block;opacity:.3;"></i>
+    Sin bolsas de horas.
+    <a href="{% url 'hour_pool_new' product_id=prod.id %}">Crear primera bolsa</a>
+  </div>
+</div>
+{% endif %}
+{% endwith %}
 
 </div>
 </div>

@@ -54,6 +54,16 @@
                                     </a>
                                 </li>
                                 <li role="presentation">
+                                    <a href="{% url 'go_live_readiness' eng.id %}">
+                                    <i class="fa-solid fa-shield-halved"></i> Go-Live Readiness Report
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a href="{% url 'pentest_new' engagement_id=eng.id %}">
+                                    <i class="fa-solid fa-user-secret"></i> Nuevo Proyecto Pentest
+                                    </a>
+                                </li>
+                                <li role="presentation">
                                     <a href="{% url 'engagement_ics' eng.id %}">
                                     <i class="fa-solid fa-calendar-plus"></i> Add To Calendar
                                     </a>

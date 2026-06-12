@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}QustodIA — {% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Bolsa de Horas{% endblock %}
+
+{% block add_styles %}
+.pt-header {
+    background: linear-gradient(135deg, #324458 0%, #1e2d3a 100%);
+    color: #fff;
+    padding: 24px 28px 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+.pt-header .brand-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffb323;
+    margin-bottom: 8px;
+}
+.pt-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+}
+.pt-header .subtitle { font-size: 13px; color: #b8c8d8; margin-top: 4px; }
+.product-info-box {
+    background: #f4f7fb;
+    border: 1px solid #dde3ea;
+    border-left: 4px solid #ffb323;
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+}
+.product-info-box .label-key {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+}
+.product-info-box .label-val {
+    font-size: 14px;
+    font-weight: 600;
+    color: #324458;
+}
+.form-group label {
+    font-weight: 600;
+    color: #324458;
+    font-size: 13px;
+}
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #324458;
+    border-bottom: 2px solid #ffb323;
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+    margin-top: 24px;
+}
+.btn-sqa {
+    background-color: #324458;
+    border-color: #253344;
+    color: #fff;
+}
+.btn-sqa:hover { background-color: #253344; color: #fff; }
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+        <div class="pt-header">
+            <div class="brand-tag">QustodIA · Gestión de Horas</div>
+            <h2>
+                <i class="fa-solid fa-clock"></i>
+                {% if form.instance.pk %}Editar Bolsa de Horas{% else %}Nueva Bolsa de Horas{% endif %}
+            </h2>
+            {% if product %}
+            <div class="subtitle">Producto: {{ product.name }}</div>
+            {% endif %}
+        </div>
+
+        {% if product %}
+        <div class="product-info-box">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="label-key">Producto</div>
+                    <div class="label-val">{{ product.name }}</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="label-key">Descripción del Producto</div>
+                    <div class="label-val" style="font-size:12px; font-weight:400;">{{ product.description|default:"—"|truncatechars:80 }}</div>
+                </div>
+            </div>
+            <small class="text-muted" style="margin-top:8px; display:block;">
+                <i class="fa-solid fa-circle-info"></i>
+                El producto no puede modificarse una vez creada la bolsa.
+            </small>
+        </div>
+        {% endif %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading" style="background:#f8f9fa; border-bottom:2px solid #dde3ea;">
+                <h4 style="margin:0; color:#324458; font-size:15px;">
+                    <i class="fa-solid fa-pen-to-square"></i> Datos de la Bolsa
+                </h4>
+            </div>
+            <div class="panel-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <!-- IDENTIFICACIÓN -->
+                    <div class="section-title">Identificación</div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                                <label for="{{ form.name.id_for_label }}">Nombre de la Bolsa *</label>
+                                {{ form.name }}
+                                <span class="help-block text-muted" style="font-size:11px;">Ej: "Bolsa Q1 2025 — Proyecto Alpha"</span>
+                                {% if form.name.errors %}<span class="help-block">{{ form.name.errors.0 }}</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group {% if form.status.errors %}has-error{% endif %}">
+                                <label for="{{ form.status.id_for_label }}">Estado</label>
+                                {{ form.status }}
+                                {% if form.status.errors %}<span class="help-block">{{ form.status.errors.0 }}</span>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HORAS -->
+                    <div class="section-title">Configuración de Horas</div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group {% if form.total_hours.errors %}has-error{% endif %}">
+                                <label for="{{ form.total_hours.id_for_label }}">Total de Horas Contratadas *</label>
+                                {{ form.total_hours }}
+                                {% if form.total_hours.errors %}<span class="help-block">{{ form.total_hours.errors.0 }}</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group {% if form.alert_threshold_pct.errors %}has-error{% endif %}">
+                                <label for="{{ form.alert_threshold_pct.id_for_label }}">Umbral de Alerta (%)</label>
+                                {{ form.alert_threshold_pct }}
+                                <span class="help-block text-muted" style="font-size:11px;">
+                                    Se activa alerta cuando el consumo supera este porcentaje. Ej: 75
+                                </span>
+                                {% if form.alert_threshold_pct.errors %}<span class="help-block">{{ form.alert_threshold_pct.errors.0 }}</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group" style="padding-top:26px;">
+                                <div class="well well-sm" style="margin:0; background:#f8f9fa; border:1px solid #dde3ea;">
+                                    <small class="text-muted">
+                                        <i class="fa-solid fa-bell" style="color:#ffb323;"></i>
+                                        La barra de progreso cambiará a naranja/rojo cuando se supere el umbral.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VIGENCIA -->
+                    <div class="section-title">Vigencia</div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group {% if form.valid_from.errors %}has-error{% endif %}">
+                                <label for="{{ form.valid_from.id_for_label }}">Fecha de Inicio *</label>
+                                {{ form.valid_from }}
+                                {% if form.valid_from.errors %}<span class="help-block">{{ form.valid_from.errors.0 }}</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group {% if form.valid_until.errors %}has-error{% endif %}">
+                                <label for="{{ form.valid_until.id_for_label }}">Fecha de Vencimiento <small class="text-muted">(opcional)</small></label>
+                                {{ form.valid_until }}
+                                {% if form.valid_until.errors %}<span class="help-block">{{ form.valid_until.errors.0 }}</span>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if form.description %}
+                    <div class="section-title">Información Adicional</div>
+                    <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+                        <label for="{{ form.description.id_for_label }}">Descripción / Notas</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}<span class="help-block">{{ form.description.errors.0 }}</span>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    <hr style="border-color:#dde3ea;">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-sqa">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                {% if form.instance.pk %}Guardar Cambios{% else %}Crear Bolsa{% endif %}
+                            </button>
+
+                            {% if form.instance.pk %}
+                            <a href="{% url 'hour_pool_detail' form.instance.pk %}" class="btn btn-default" style="margin-left:8px;">
+                                <i class="fa-solid fa-xmark"></i> Cancelar
+                            </a>
+                            {% elif product %}
+                            <a href="{% url 'view_product' product.id %}" class="btn btn-default" style="margin-left:8px;">
+                                <i class="fa-solid fa-xmark"></i> Cancelar
+                            </a>
+                            {% else %}
+                            <a href="{% url 'hour_pool_list' %}" class="btn btn-default" style="margin-left:8px;">
+                                <i class="fa-solid fa-xmark"></i> Cancelar
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block postscript %}
+<script>
+$(document).ready(function() {
+    $('form input[type="text"], form input[type="number"], form input[type="date"], form select, form textarea').addClass('form-control');
+    $('form textarea').attr('rows', 4);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}QustodIA — Tipos de Actividad{% endblock %}
+
+{% block add_styles %}
+.pt-header {
+    background: linear-gradient(135deg, #324458 0%, #1e2d3a 100%);
+    color: #fff;
+    padding: 24px 28px 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+.pt-header .brand-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffb323;
+    margin-bottom: 8px;
+}
+.pt-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+}
+.table > thead > tr > th {
+    background-color: #324458;
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.form-group label {
+    font-weight: 600;
+    color: #324458;
+    font-size: 13px;
+}
+.btn-sqa {
+    background-color: #324458;
+    border-color: #253344;
+    color: #fff;
+}
+.btn-sqa:hover { background-color: #253344; color: #fff; }
+.add-panel {
+    border: 1px solid #dde3ea;
+    border-top: 4px solid #ffb323;
+    border-radius: 4px;
+    padding: 20px;
+    background: #f8f9fa;
+}
+.add-panel h4 {
+    color: #324458;
+    font-weight: 700;
+    margin-top: 0;
+    font-size: 15px;
+}
+.badge-active   { background-color: #27ae60; color: #fff; }
+.badge-inactive { background-color: #95a5a6; color: #fff; }
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: #aaa;
+}
+.empty-state .icon-lg {
+    font-size: 40px;
+    color: #dde3ea;
+    margin-bottom: 14px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="pt-header">
+            <div class="brand-tag">QustodIA · Configuración</div>
+            <h2><i class="fa-solid fa-tags"></i> Tipos de Actividad</h2>
+        </div>
+
+        <div class="row">
+            <!-- LISTADO -->
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background:#f8f9fa; border-bottom:2px solid #dde3ea;">
+                        <h4 style="margin:0; color:#324458; font-size:15px;">
+                            <i class="fa-solid fa-list"></i> Tipos Registrados ({{ activity_types|length }})
+                        </h4>
+                    </div>
+                    <div class="panel-body" style="padding:0;">
+                        {% if activity_types %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-bordered" style="margin:0;">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th style="width:100px; text-align:center;">Activo</th>
+                                        <th style="width:70px;">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for at in activity_types %}
+                                    <tr>
+                                        <td>
+                                            <strong style="color:#324458;">{{ at.name }}</strong>
+                                        </td>
+                                        <td>
+                                            {% if at.description %}
+                                                <span style="color:#555; font-size:12px;">{{ at.description|truncatechars:100 }}</span>
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td style="text-align:center;">
+                                            {% if at.is_active %}
+                                                <span class="badge badge-active">Activo</span>
+                                            {% else %}
+                                                <span class="badge badge-inactive">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'activity_type_delete' at.pk %}"
+                                               class="btn btn-xs btn-danger"
+                                               title="Eliminar tipo de actividad"
+                                               onclick="return confirm('¿Eliminar el tipo de actividad &quot;{{ at.name }}&quot;? Los registros de horas que lo usan perderán su categoría.');">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="empty-state">
+                            <div class="icon-lg"><i class="fa-solid fa-tags"></i></div>
+                            <p style="font-size:14px;"><strong>No hay tipos de actividad registrados.</strong></p>
+                            <p class="text-muted">Usa el formulario de la derecha para agregar el primero.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Tabla de ejemplos sugeridos -->
+                {% if not activity_types %}
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background:#f8f9fa;">
+                        <h5 style="margin:0; color:#888; font-size:13px;">
+                            <i class="fa-solid fa-lightbulb" style="color:#ffb323;"></i>
+                            Ejemplos de tipos de actividad recomendados
+                        </h5>
+                    </div>
+                    <div class="panel-body" style="font-size:12px; color:#666; padding:12px 16px;">
+                        <ul style="margin:0; padding-left:20px;">
+                            <li>Análisis de vulnerabilidades</li>
+                            <li>Explotación y pruebas de penetración</li>
+                            <li>Revisión de código fuente</li>
+                            <li>Elaboración de informe</li>
+                            <li>Reuniones y presentaciones</li>
+                            <li>Remediación y verificación</li>
+                            <li>Gestión de proyecto</li>
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- FORMULARIO DE ALTA -->
+            <div class="col-md-4">
+                <div class="add-panel">
+                    <h4><i class="fa-solid fa-plus"></i> Agregar Nuevo Tipo</h4>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger alert-sm">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
+                            <label for="{{ form.name.id_for_label }}">Nombre *</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}<span class="help-block">{{ form.name.errors.0 }}</span>{% endif %}
+                        </div>
+
+                        <div class="form-group {% if form.description.errors %}has-error{% endif %}">
+                            <label for="{{ form.description.id_for_label }}">Descripción</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}<span class="help-block">{{ form.description.errors.0 }}</span>{% endif %}
+                        </div>
+
+                        {% if form.is_active %}
+                        <div class="checkbox">
+                            <label>
+                                {{ form.is_active }} Activo
+                            </label>
+                        </div>
+                        {% endif %}
+
+                        <div style="margin-top:16px;">
+                            <button type="submit" class="btn btn-sqa btn-block">
+                                <i class="fa-solid fa-plus"></i> Agregar Tipo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="panel panel-default" style="margin-top:16px;">
+                    <div class="panel-body" style="font-size:12px; color:#666;">
+                        <i class="fa-solid fa-circle-info" style="color:#ffb323;"></i>
+                        <strong style="color:#324458;">Nota:</strong> Los tipos de actividad categorizan
+                        los registros de horas en las bolsas (Ej: Análisis, Reporte, Reunión).
+                        Al eliminar un tipo, los registros asociados perderán su categoría pero no serán eliminados.
+                    </div>
+                </div>
+
+                <!-- Link a tipos de pentest -->
+                <div class="panel panel-default">
+                    <div class="panel-body" style="font-size:12px;">
+                        <div style="color:#999; font-size:10px; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
+                            Configuración relacionada
+                        </div>
+                        <a href="{% url 'pentest_type_list' %}" class="btn btn-default btn-block btn-sm">
+                            <i class="fa-solid fa-tag"></i> Tipos de Pentest
+                        </a>
+                        <a href="{% url 'hour_pool_list' %}" class="btn btn-default btn-block btn-sm" style="margin-top:6px;">
+                            <i class="fa-solid fa-clock"></i> Bolsas de Horas
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block postscript %}
+<script>
+$(document).ready(function() {
+    $('form input[type="text"], form textarea').addClass('form-control');
+    $('form textarea').attr('rows', 3);
+});
+</script>
+{% endblock %}

@@ -406,6 +406,28 @@
                                             </ul>
                                         </li>
                                         <li>
+                                            <a href="{% url 'pentest_list' %}" aria-expanded="false" aria-label="Pentest">
+                                                <i class="fa-solid fa-user-secret fa-fw"></i>
+                                                <span>Pentest</span>
+                                                <span class="glyphicon arrow"></span>
+                                            </a>
+                                            <ul class="nav nav-second-level">
+                                                <li><a href="{% url 'pentest_list' %}"><i class="fa-solid fa-list fa-fw"></i> Proyectos</a></li>
+                                                <li><a href="{% url 'pentest_type_list' %}"><i class="fa-solid fa-tags fa-fw"></i> Tipos de Pentest</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'hour_pool_list' %}" aria-expanded="false" aria-label="Bolsa de Horas">
+                                                <i class="fa-solid fa-clock fa-fw"></i>
+                                                <span>Bolsa de Horas</span>
+                                                <span class="glyphicon arrow"></span>
+                                            </a>
+                                            <ul class="nav nav-second-level">
+                                                <li><a href="{% url 'hour_pool_list' %}"><i class="fa-solid fa-list fa-fw"></i> Bolsas</a></li>
+                                                <li><a href="{% url 'activity_type_list' %}"><i class="fa-solid fa-tags fa-fw"></i> Tipos de Actividad</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
                                             <a href="{% url 'security_concept' %}" aria-expanded="false" aria-label="Concepto de Seguridad">
                                                 <i class="fa-solid fa-file-shield fa-fw"></i>
                                                 <span>{% trans "Concepto Seguridad" %}</span>

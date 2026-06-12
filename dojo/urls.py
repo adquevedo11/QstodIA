@@ -98,6 +98,12 @@ from dojo.organization.api.urls import add_organization_urls
 from dojo.organization.urls import urlpatterns as organization_urls
 from dojo.regulations.urls import urlpatterns as regulations
 from dojo.reports.urls import urlpatterns as reports_urls
+from dojo.executive_report.urls import urlpatterns as executive_report_urls
+from dojo.go_live_readiness.urls import urlpatterns as go_live_readiness_urls
+from dojo.security_concept.urls import urlpatterns as security_concept_urls
+from dojo.sqa_metrics.urls import urlpatterns as sqa_metrics_urls
+from dojo.pentest.urls import urlpatterns as pentest_urls
+from dojo.hour_pool.urls import urlpatterns as hour_pool_urls
 from dojo.search.urls import urlpatterns as search_urls
 from dojo.sla_config.urls import urlpatterns as sla_urls
 from dojo.survey.urls import urlpatterns as survey_urls
@@ -197,6 +203,12 @@ ur += home_urls
 ur += metrics_urls
 ur += organization_urls
 ur += reports_urls
+ur += executive_report_urls
+ur += go_live_readiness_urls
+ur += security_concept_urls
+ur += sqa_metrics_urls
+ur += pentest_urls
+ur += hour_pool_urls
 ur += search_urls
 ur += test_type_urls
 ur += test_urls
