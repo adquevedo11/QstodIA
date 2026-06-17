@@ -4864,10 +4864,25 @@ class PentestProject(models.Model):
         ('completed',   'Completado'),
         ('delivered',   'Entregado'),
     ]
+    INDUSTRY_CHOICES = [
+        ('banca',          'Banca y Financiero'),
+        ('fintech',        'Fintech'),
+        ('seguros',        'Seguros'),
+        ('salud',          'Salud'),
+        ('gobierno',       'Gobierno y Sector Público'),
+        ('retail',         'Retail y E-commerce'),
+        ('tecnologia',     'Tecnología'),
+        ('educacion',      'Educación'),
+        ('energia',        'Energía y Utilities'),
+        ('manufactura',    'Manufactura e Industria'),
+        ('telecomunicaciones', 'Telecomunicaciones'),
+        ('otro',           'Otro'),
+    ]
 
     engagement    = models.ForeignKey('Engagement', on_delete=models.CASCADE, related_name='pentest_projects')
     title         = models.CharField(max_length=200, verbose_name="Título")
     pentest_type  = models.ForeignKey(PentestType, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo")
+    industry      = models.CharField(max_length=50, choices=INDUSTRY_CHOICES, blank=True, verbose_name="Sector/Industria del cliente")
     methodology   = models.CharField(max_length=200, blank=True, verbose_name="Metodología")
     scope         = models.TextField(blank=True, verbose_name="Alcance")
     objectives    = models.TextField(blank=True, verbose_name="Objetivos")

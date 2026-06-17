@@ -126,6 +126,12 @@ services:
         target: /app/dojo/db_migrations/0252_hourpool.py
         read_only: true
 
+      # ── Migración PentestProject industry ───────────────────────────────
+      - type: bind
+        source: ./dojo/db_migrations/0253_pentestproject_industry.py
+        target: /app/dojo/db_migrations/0253_pentestproject_industry.py
+        read_only: true
+
       # ── Módulo Pentest ───────────────────────────────────────────────────
       - type: bind
         source: ./dojo/pentest
