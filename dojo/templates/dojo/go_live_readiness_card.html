@@ -1,0 +1,63 @@
+{% with d=decision %}
+<div class="finding-card">
+  <div class="card-head">
+    <span class="ftitle">[{{ d.finding_id }}] {{ d.title }}</span>
+    <span class="sev-badge sev-{{ d.severity }}">{{ d.severity }}</span>
+  </div>
+  <div class="card-body">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+      <div style="min-width:140px">
+        <div class="field-lbl">Categoría</div>
+        <div class="field-val">{{ d.category }}</div>
+      </div>
+      <div style="flex:1">
+        <div class="field-lbl">Owner sugerido</div>
+        <div class="field-val">{{ d.owner_suggestion|default:"—" }}</div>
+      </div>
+    </div>
+
+    <div class="field-lbl">Justificación</div>
+    <div class="field-val">{{ d.rationale }}</div>
+
+    {% if d.remediation_actions %}
+    <div class="field-lbl">Acciones de remediación</div>
+    <ul style="padding-left:16px;margin:2px 0">
+      {% for a in d.remediation_actions %}<li class="field-val">{{ a }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if d.required_evidence %}
+    <div class="field-lbl">Evidencia requerida</div>
+    <ul style="padding-left:16px;margin:2px 0">
+      {% for e in d.required_evidence %}<li class="field-val">{{ e }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if d.llm_enrichment %}
+    <div class="llm-box">
+      {% if d.llm_enrichment.executive_risk_explanation %}
+      <div class="field-lbl">Impacto ejecutivo <span class="ai-tag">IA</span></div>
+      <div class="field-val">{{ d.llm_enrichment.executive_risk_explanation }}</div>
+      {% endif %}
+      {% if d.llm_enrichment.remediation_guidance %}
+      <div class="field-lbl" style="margin-top:8px">Guía de remediación <span class="ai-tag">IA</span></div>
+      <div class="field-val">{{ d.llm_enrichment.remediation_guidance }}</div>
+      {% endif %}
+      {% if d.llm_enrichment.negative_tests %}
+      <div class="field-lbl" style="margin-top:8px">Pruebas negativas sugeridas <span class="ai-tag">IA</span></div>
+      <ul style="padding-left:16px;margin:2px 0">
+        {% for t in d.llm_enrichment.negative_tests %}<li class="field-val">{{ t }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      {% if d.llm_enrichment.compensating_controls %}
+      <div class="field-lbl" style="margin-top:8px">Controles compensatorios <span class="ai-tag">IA</span></div>
+      <ul style="padding-left:16px;margin:2px 0">
+        {% for c in d.llm_enrichment.compensating_controls %}<li class="field-val">{{ c }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endwith %}

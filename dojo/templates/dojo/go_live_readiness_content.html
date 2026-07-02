@@ -1,0 +1,115 @@
+{% load static %}
+<style>
+.stat-pills { margin-bottom: 18px; }
+.stat-pill { display:inline-block; background:#eef1f5; border:1px solid #d0d9e3; border-radius:20px; padding:4px 14px; font-size:12px; font-weight:600; margin-right:6px; margin-bottom:6px; }
+.stat-pill.danger  { background:#fdecea; border-color:#e8b0ad; color:#c0392b; }
+.stat-pill.warning { background:#fef5e7; border-color:#f0d08a; color:#b7770d; }
+.finding-card { border:1px solid #dde3ea; border-radius:6px; margin-bottom:12px; }
+.finding-card .card-head { background:#324458; color:#fff; padding:9px 14px; border-radius:6px 6px 0 0; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.finding-card .card-head .ftitle { font-weight:600; font-size:12px; flex:1; word-break:break-word; }
+.sev-badge { padding:2px 10px; border-radius:4px; font-size:11px; font-weight:700; color:#fff; white-space:nowrap; }
+.sev-Critical{background:#c0392b} .sev-High{background:#e67e22} .sev-Medium{background:#d4ac0d} .sev-Low{background:#27ae60} .sev-Info{background:#2980b9}
+.finding-card .card-body { padding:12px 14px; background:#fff; border-radius:0 0 6px 6px; }
+.field-lbl { font-weight:700; color:#324458; font-size:11px; margin-top:10px; margin-bottom:2px; }
+.field-val { font-size:12px; line-height:1.55; }
+.llm-box { background:#f0f6ff; border-left:3px solid #324458; padding:10px 14px; margin-top:12px; border-radius:0 4px 4px 0; }
+.ai-tag { display:inline-block; background:#ffb323; color:#1e2d3a; font-size:9px; font-weight:700; padding:1px 7px; border-radius:10px; text-transform:uppercase; letter-spacing:1px; vertical-align:middle; margin-left:5px; }
+.section-heading { font-size:14px; font-weight:700; color:#324458; border-bottom:2px solid #ffb323; padding-bottom:6px; margin:24px 0 14px; }
+.section-note { font-style:italic; color:#888; font-size:11px; margin-bottom:12px; }
+.empty-section { color:#aaa; font-style:italic; font-size:12px; padding:10px 0; }
+.plan-table { width:100%; border-collapse:collapse; font-size:12px; }
+.plan-table th { background:#324458; color:#fff; padding:8px 10px; text-align:left; }
+.plan-table td { padding:7px 10px; border-bottom:1px solid #dde3ea; vertical-align:top; }
+.plan-table tr:nth-child(even) td { background:#f9fafb; }
+</style>
+
+{% if error %}
+<div class="alert alert-danger" style="margin-top:16px">
+  <strong>Error:</strong> {{ error }}
+</div>
+
+{% elif report %}
+
+{% with rec=report.overall_recommendation %}
+{% if rec == "No-Go" %}
+<div style="text-align:center;padding:16px;background:#fdecea;border-bottom:3px solid #c0392b;margin-bottom:16px">
+  <span class="label label-danger" style="font-size:14px;padding:8px 24px">🚫 Recomendación: No-Go</span>
+</div>
+{% elif rec == "Go" %}
+<div style="text-align:center;padding:16px;background:#d4edda;border-bottom:3px solid #27ae60;margin-bottom:16px">
+  <span class="label label-success" style="font-size:14px;padding:8px 24px">✅ Recomendación: Go</span>
+</div>
+{% else %}
+<div style="text-align:center;padding:16px;background:#fef9e7;border-bottom:3px solid #d68910;margin-bottom:16px">
+  <span class="label label-warning" style="font-size:14px;padding:8px 24px">⚠️ Recomendación: {{ rec }}</span>
+</div>
+{% endif %}
+{% endwith %}
+
+<div style="text-align:right;margin-bottom:16px">
+  <a href="{% url 'go_live_readiness_pdf' eng.id %}" class="btn btn-danger" target="_blank">
+    <i class="fa-solid fa-file-pdf"></i> Descargar PDF
+  </a>
+</div>
+
+<div class="section-heading">Resumen Ejecutivo</div>
+<div class="panel panel-default"><div class="panel-body" style="font-size:13px;line-height:1.65">{{ report.executive_summary }}</div></div>
+
+<div class="section-heading">Resumen Técnico</div>
+<div class="stat-pills">
+  <span class="stat-pill danger">🚫 {{ report.blockers|length }} bloqueantes</span>
+  <span class="stat-pill warning">⚠️ {{ report.high_pre_go_live|length }} alta prioridad</span>
+  <span class="stat-pill">📋 {{ report.post_go_live|length }} post Go-Live</span>
+  <span class="stat-pill">✅ {{ report.accepted_risks|length }} aceptados</span>
+  <span class="stat-pill">🛡️ {{ report.mitigated|length }} mitigados</span>
+  <span class="stat-pill">📊 {{ report.total_findings }} total</span>
+</div>
+<div class="panel panel-default"><div class="panel-body" style="font-size:13px;line-height:1.65">{{ report.technical_summary|linebreaksbr }}</div></div>
+
+<div class="section-heading">🚫 Hallazgos Bloqueantes</div>
+{% if report.blockers %}
+<p class="section-note">Estos hallazgos deben ser remediados antes del Go-Live.</p>
+{% for d in report.blockers %}{% include "dojo/go_live_readiness_card.html" with decision=d %}{% endfor %}
+{% else %}<p class="empty-section">Sin hallazgos bloqueantes.</p>{% endif %}
+
+<div class="section-heading">⚠️ Alta Prioridad — Antes del Go-Live</div>
+{% if report.high_pre_go_live %}
+<p class="section-note">Deben remediarse antes del Go-Live o contar con plan de mitigación aprobado.</p>
+{% for d in report.high_pre_go_live %}{% include "dojo/go_live_readiness_card.html" with decision=d %}{% endfor %}
+{% else %}<p class="empty-section">Sin hallazgos de alta prioridad.</p>{% endif %}
+
+{% if report.post_go_live %}
+<div class="section-heading">📋 Post Go-Live</div>
+<p class="section-note">Pueden remediarse después del Go-Live con seguimiento formal.</p>
+{% for d in report.post_go_live %}{% include "dojo/go_live_readiness_card.html" with decision=d %}{% endfor %}
+{% endif %}
+
+{% if report.accepted_risks %}
+<div class="section-heading">✅ Riesgos Aceptados</div>
+{% for d in report.accepted_risks %}{% include "dojo/go_live_readiness_card.html" with decision=d %}{% endfor %}
+{% endif %}
+
+{% if report.mitigated %}
+<div class="section-heading">🛡️ Mitigados</div>
+<p class="section-note">Hallazgos resueltos o inactivos al momento del análisis.</p>
+{% for d in report.mitigated %}{% include "dojo/go_live_readiness_card.html" with decision=d %}{% endfor %}
+{% endif %}
+
+{% if report.blockers or report.high_pre_go_live %}
+<div class="section-heading">Plan de Remediación Recomendado</div>
+<table class="plan-table">
+  <tr><th>#</th><th>ID</th><th>Hallazgo</th><th>Owner</th><th>Categoría</th></tr>
+  {% for d in report.blockers %}
+  <tr><td>{{ forloop.counter }}</td><td>{{ d.finding_id }}</td><td>{{ d.title|truncatechars:70 }}</td><td>{{ d.owner_suggestion|default:"—" }}</td><td><span class="label label-danger">{{ d.category }}</span></td></tr>
+  {% endfor %}
+  {% for d in report.high_pre_go_live %}
+  <tr><td>{{ report.blockers|length|add:forloop.counter }}</td><td>{{ d.finding_id }}</td><td>{{ d.title|truncatechars:70 }}</td><td>{{ d.owner_suggestion|default:"—" }}</td><td><span class="label label-warning">{{ d.category }}</span></td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+<div style="text-align:center;margin-top:32px;padding-top:12px;border-top:1px solid #dde3ea;color:#aaa;font-size:11px">
+  Reporte generado automáticamente por Go-Live Readiness Agent &nbsp;·&nbsp; SQA SA &nbsp;·&nbsp; Confidencial
+</div>
+
+{% endif %}

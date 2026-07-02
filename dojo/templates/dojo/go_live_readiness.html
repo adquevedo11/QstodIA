@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block add_styles %}
+.glr-header {
+    background: linear-gradient(135deg, #324458 0%, #1e2d3a 100%);
+    color: #fff; padding: 28px 32px 22px;
+    border-radius: 6px 6px 0 0; margin-bottom: 0;
+}
+.glr-header .brand-tag { font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: #ffb323; margin-bottom: 10px; }
+.glr-header h2 { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #fff; }
+.glr-header .subtitle { font-size: 13px; color: #b8c8d8; }
+.glr-header .meta-row { margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; }
+.glr-header .meta-item .key { font-size: 9px; text-transform: uppercase; color: #ffb323; letter-spacing: 1px; }
+.glr-header .meta-item .val { font-size: 12px; color: #d0dce8; font-weight: 600; }
+
+.glr-spinner-box {
+    text-align: center; padding: 60px 20px;
+    background: #f4f6f9; border: 1px solid #dde3ea;
+    border-radius: 0 0 6px 6px;
+}
+.glr-spinner-box .spinner-title { font-size: 16px; font-weight: 600; color: #324458; margin-bottom: 8px; }
+.glr-spinner-box .spinner-sub { font-size: 13px; color: #888; margin-bottom: 28px; }
+.glr-spinner { width: 50px; height: 50px; border: 5px solid #dde3ea; border-top-color: #ffb323; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 20px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.glr-steps { display: inline-block; text-align: left; margin-top: 12px; }
+.glr-steps li { font-size: 12px; color: #aaa; margin-bottom: 5px; list-style: none; padding-left: 20px; position: relative; }
+.glr-steps li::before { content: "○"; position: absolute; left: 0; color: #ccc; }
+.glr-steps li.done::before { content: "✓"; color: #27ae60; }
+.glr-steps li.active::before { content: "●"; color: #ffb323; }
+
+#glr-result { display: none; }
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="glr-header">
+      <div class="brand-tag">SQA SA · Security Quality Assurance</div>
+      <h2>Go-Live Security Readiness Report</h2>
+      <div class="subtitle">{{ product.name }}</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="key">Engagement</div>
+          <div class="val">{{ eng.name }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="key">Fecha objetivo Go-Live</div>
+          <div class="val">{% if eng.target_end %}{{ eng.target_end|date:"d/m/Y" }}{% else %}No definida{% endif %}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="glr-loading" class="glr-spinner-box">
+      <div class="glr-spinner"></div>
+      <div class="spinner-title">Generando análisis de seguridad...</div>
+      <div class="spinner-sub">El agente está consultando los hallazgos y aplicando inteligencia artificial.<br>Este proceso puede tomar entre 1 y 5 minutos.</div>
+      <ul class="glr-steps">
+        <li id="step-1" class="active">Consultando hallazgos en DefectDojo</li>
+        <li id="step-2">Clasificando por reglas determinísticas</li>
+        <li id="step-3">Enriqueciendo con IA (GPT-4o)</li>
+        <li id="step-4">Compilando reporte final</li>
+      </ul>
+    </div>
+
+    <!-- Resultado (se llena via JS) -->
+    <div id="glr-result"></div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  const dataUrl = "{% url 'go_live_readiness_data' eng.id %}";
+  const steps = [
+    document.getElementById('step-1'),
+    document.getElementById('step-2'),
+    document.getElementById('step-3'),
+    document.getElementById('step-4'),
+  ];
+  let stepIdx = 0;
+
+  const stepTimer = setInterval(function() {
+    if (stepIdx < steps.length) {
+      if (stepIdx > 0) steps[stepIdx - 1].classList.replace('active', 'done');
+      steps[stepIdx].classList.add('active');
+      stepIdx++;
+    }
+  }, 15000);
+
+  fetch(dataUrl)
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      clearInterval(stepTimer);
+      steps.forEach(function(s) { s.classList.remove('active'); s.classList.add('done'); });
+      document.getElementById('glr-loading').style.display = 'none';
+      const result = document.getElementById('glr-result');
+      result.innerHTML = html;
+      result.style.display = 'block';
+    })
+    .catch(function(err) {
+      clearInterval(stepTimer);
+      document.getElementById('glr-loading').innerHTML =
+        '<div class="alert alert-danger" style="margin:20px"><strong>Error:</strong> No se pudo conectar con el agente. ' + err + '</div>';
+    });
+})();
+</script>
+{% endblock %}
