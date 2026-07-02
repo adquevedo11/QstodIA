@@ -1,17 +1,60 @@
 {% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block add_styles %}
+.sqa-error-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    padding: 40px 20px;
+}
+.sqa-error-code {
+    font-size: 90px;
+    font-weight: 700;
+    color: #324458;
+    line-height: 1;
+    margin-bottom: 0;
+}
+.sqa-error-code span { color: #ffb323; }
+.sqa-error-icon {
+    font-size: 64px;
+    color: #ffb323;
+    margin-bottom: 20px;
+}
+.sqa-error-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: #324458;
+    margin: 12px 0 8px;
+}
+.sqa-error-subtitle {
+    font-size: 15px;
+    color: #7a9bb5;
+    margin-bottom: 30px;
+}
+.sqa-error-divider {
+    width: 60px;
+    border-top: 3px solid #ffb323;
+    margin: 0 auto 28px;
+}
+{% endblock %}
+
 {% block content %}
-    {{ block.super }}
-    <div class="error-page-box">
-        <i class="fa-solid fa-5x fa-magnifying-glass"></i>
+<div class="sqa-error-wrapper">
+    <div class="sqa-error-icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
     </div>
-    <div class="error-page-box">
-        <h1>
-            Well...
-        </h1>
-        <h2>
-            ...we can't find what you're looking for.
-        </h2>
-    </div>
-    <hr/>
-    <p class="lightgrey">404 Not Found</p>
+    <p class="sqa-error-code">4<span>0</span>4</p>
+    <div class="sqa-error-divider"></div>
+    <h2 class="sqa-error-title">{% trans "Página no encontrada" %}</h2>
+    <p class="sqa-error-subtitle">{% trans "El recurso que buscas no existe o fue movido." %}</p>
+    <a href="/" class="btn btn-success">
+        <i class="fa-solid fa-house" style="margin-right: 6px;"></i>
+        {% trans "Volver al inicio" %}
+    </a>
+</div>
 {% endblock %}

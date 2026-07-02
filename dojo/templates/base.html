@@ -100,6 +100,42 @@
             {% block add_styles %}
             {% endblock %}
         </style>
+        <style>
+            /* QustodIA: encabezados de tabla — fondo azul + texto blanco (override definitivo) */
+            .table > thead > tr > th,
+            table thead th,
+            table thead tr th,
+            table.dataTable thead th,
+            table.dataTable thead th.sorting,
+            table.dataTable thead th.sorting_asc,
+            table.dataTable thead th.sorting_desc,
+            table.dataTable thead th.sorting_asc_disabled,
+            table.dataTable thead th.sorting_desc_disabled,
+            .dataTables_scrollHead table thead th {
+                color: #ffffff !important;
+                background-color: #324458 !important;
+                border-bottom: 2px solid #ffb323 !important;
+            }
+            table.dataTable thead th.sorting::after,
+            table.dataTable thead th.sorting_asc::after,
+            table.dataTable thead th.sorting_desc::after {
+                color: rgba(255,255,255,0.65) !important;
+                opacity: 1 !important;
+            }
+            table.dataTable thead th.sorting_asc::after,
+            table.dataTable thead th.sorting_desc::after {
+                color: #ffb323 !important;
+            }
+            /* Links dentro de encabezados: siempre blanco */
+            .table > thead > tr > th a,
+            table thead th a,
+            table thead th a:hover,
+            table thead th a:visited,
+            table thead th a:focus {
+                color: #ffffff !important;
+                text-decoration: none !important;
+            }
+        </style>
     </head>
     <body class="{% dojo_body_class %}">
         {% block pre_wrapper %}
@@ -1294,5 +1330,31 @@
         {% endblock %}
         {% block postscript %}
         {% endblock %}
+        <script>
+        /* QustodIA: columna de acción (⋮) — ancho mínimo en DataTables con primera columna vacía */
+        $(document).on('preInit.dt', function(e, settings) {
+            var $thead = $(settings.nTHead);
+            var $firstTh = $thead.find('tr th:first-child');
+            if ($firstTh.text().trim() === '') {
+                var exists = false;
+                if (settings.aoColumnDefs) {
+                    $.each(settings.aoColumnDefs, function(i, def) {
+                        var t = def.targets !== undefined ? def.targets : def.aTargets;
+                        if ($.isArray(t) && $.inArray(0, t) !== -1) { def.sWidth = '40px'; exists = true; }
+                    });
+                }
+                if (!exists) {
+                    if (!settings.aoColumnDefs) settings.aoColumnDefs = [];
+                    settings.aoColumnDefs.push({ targets: [0], width: '40px', sWidth: '40px' });
+                }
+            }
+        });
+        $(document).on('draw.dt', function(e, settings) {
+            var $table = $(settings.nTable);
+            if ($table.find('thead tr th:first-child').text().trim() === '') {
+                $table.find('colgroup col:first-child').css('width', '40px');
+            }
+        });
+        </script>
     </body>
 </html>

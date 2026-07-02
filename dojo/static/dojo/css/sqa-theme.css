@@ -93,8 +93,14 @@ span#alert_count,
     top: 33px !important;
     height: calc(100vh - 33px) !important;
     z-index: 99 !important;
-    overflow: visible !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
 }
+/* Scrollbar delgada y discreta en el sidebar */
+.navbar-default.sidebar::-webkit-scrollbar { width: 4px; }
+.navbar-default.sidebar::-webkit-scrollbar-track { background: transparent; }
+.navbar-default.sidebar::-webkit-scrollbar-thumb { background: rgba(255,179,35,0.35); border-radius: 4px; }
+.navbar-default.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(255,179,35,0.6); }
 
 #side-menu > li > a {
     color: #afc1d0 !important;
@@ -565,6 +571,53 @@ div.prod_info {
     border-color: #1e2d3a !important;
 }
 
+/* ── 29b. DataTables Column Visibility dropdown ─────────────── */
+div.dt-button-collection {
+    background-color: #ffffff !important;
+    border: 1px solid #dde3ea !important;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important;
+    border-radius: 6px !important;
+    padding: 6px !important;
+    min-width: 180px !important;
+}
+
+div.dt-button-collection .dt-button,
+div.dt-button-collection button.dt-button,
+div.dt-button-collection a.dt-button {
+    background: #f4f6f9 !important;
+    background-color: #f4f6f9 !important;
+    border: 1px solid #dde3ea !important;
+    border-color: #dde3ea !important;
+    color: #324458 !important;
+    text-align: left !important;
+    display: block !important;
+    width: calc(100% - 4px) !important;
+    margin: 2px !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    padding: 5px 10px !important;
+    box-shadow: none !important;
+}
+
+div.dt-button-collection .dt-button:hover {
+    background: rgba(50,68,88,0.10) !important;
+    background-color: rgba(50,68,88,0.10) !important;
+    border-color: #324458 !important;
+    color: #1e2d3a !important;
+}
+
+div.dt-button-collection .dt-button.dt-button-active,
+div.dt-button-collection .dt-button-active {
+    background: #324458 !important;
+    background-color: #324458 !important;
+    border-color: #253344 !important;
+    color: #ffffff !important;
+}
+
+div.dt-button-collection .dt-button-active:after {
+    color: #ffb323 !important;
+}
+
 /* ── 30. Nav pills ──────────────────────────────────────────── */
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
@@ -661,6 +714,51 @@ div.prod_info {
     color: #324458 !important;
 }
 
+/* Excepción: dropdown-menu DENTRO de panel-heading — texto oscuro sobre fondo blanco */
+.panel-heading .dropdown-menu,
+.panel-heading .dropdown-menu > li > a,
+.panel-heading .dropdown-menu > li > a:hover,
+.panel-heading .dropdown-menu > li > a:focus,
+.panel-heading .dropdown-menu > li > span,
+.panel-heading .dropdown-menu > li > div {
+    color: #324458 !important;
+    font-weight: normal !important;
+}
+.panel-heading .dropdown-menu > li > a:hover,
+.panel-heading .dropdown-menu > li > a:focus {
+    background-color: rgba(50,68,88,0.07) !important;
+    color: #1e2d3a !important;
+}
+.panel-heading .dropdown-menu > li.text-danger > a,
+.panel-heading .dropdown-menu > li > a.text-danger,
+.panel-heading .dropdown-menu > li > a[style*="color:red"],
+.panel-heading .dropdown-menu > li:last-child > a {
+    color: #d9534f !important;
+}
+
+/* ── 34b. Columna de acciones (⋮) — ancho mínimo ────────────── */
+/* table-layout:fixed hace que el browser respete los anchos de <col> */
+table#products {
+    table-layout: fixed !important;
+}
+table#products colgroup col:first-child {
+    width: 40px !important;
+}
+table#products thead tr th:first-child,
+table#products tbody tr td:first-child {
+    width: 40px !important;
+    min-width: 32px !important;
+    max-width: 48px !important;
+    overflow: hidden !important;
+    padding: 6px 4px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+table#products tbody tr td:first-child > div {
+    width: 28px !important;
+    overflow: visible !important;
+}
+
 /* ── 35. Inline product type buttons ────────────────────────── */
 table#product_types .btn-success {
     background-color: #324458 !important;
@@ -750,3 +848,49 @@ table#product_types .btn-warning:hover {
    El contenido arranca exactamente donde termina la línea amarilla,
    igual que el sidebar (top: 63px). Alineación perfecta. ─────── */
 body { padding-top: 63px !important; }
+
+/* ── 43. DataTables — encabezados siempre blancos sobre azul ──── */
+table.dataTable thead th,
+table.dataTable thead td,
+.dataTables_wrapper table thead th,
+.dataTables_wrapper table thead td,
+table.dataTable thead th.sorting,
+table.dataTable thead th.sorting_asc,
+table.dataTable thead th.sorting_desc,
+table.dataTable thead th.sorting_asc_disabled,
+table.dataTable thead th.sorting_desc_disabled,
+.dataTables_scrollHead table thead th,
+.dataTables_scrollHead table thead th.sorting,
+.dataTables_scrollHead table thead th.sorting_asc,
+.dataTables_scrollHead table thead th.sorting_desc {
+    background-color: #324458 !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #ffb323 !important;
+    border-top: none !important;
+}
+
+/* Iconos de flecha de ordenamiento: blancos semitransparentes */
+table.dataTable thead th.sorting::after,
+table.dataTable thead th.sorting_asc::after,
+table.dataTable thead th.sorting_desc::after,
+table.dataTable thead th.sorting::before,
+table.dataTable thead th.sorting_asc::before,
+table.dataTable thead th.sorting_desc::before {
+    color: rgba(255, 255, 255, 0.65) !important;
+    opacity: 1 !important;
+}
+table.dataTable thead th.sorting_asc::after,
+table.dataTable thead th.sorting_desc::after {
+    color: #ffb323 !important;
+}
+
+/* Forzar blanco en ANY th dentro de tablas con encabezado azul ── */
+.panel-heading + .panel-body table thead th,
+.panel-heading + .panel-body table thead td,
+.panel > table thead th,
+.panel > table thead td,
+.panel > .table-responsive table thead th {
+    background-color: #324458 !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #ffb323 !important;
+}
