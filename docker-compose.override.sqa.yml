@@ -55,6 +55,9 @@ services:
     environment:
       GOLIVE_AGENT_URL: "http://go-live-agent:8001"
       DD_CREATE_CLOUD_BANNER: "False"
+      # ── Correo / SMTP ────────────────────────────────────────────────────
+      DD_EMAIL_URL: "smtp+tls://adquevedo11%40gmail.com:zpwrpfmgjtpqrcum@smtp.gmail.com:587"
+      DD_DEFAULT_FROM_EMAIL: "adquevedo11@gmail.com"
     networks:
       - default
       - sqasa

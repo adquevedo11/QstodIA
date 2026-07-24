@@ -1355,6 +1355,84 @@
                 $table.find('colgroup col:first-child').css('width', '40px');
             }
         });
+
+        /* Portal: mueve dropdown-menu al body para escapar tabla */
+        function sqaPortalClean() {
+            $('.sqa-portal').each(function() {
+                var $m = $(this), $p = $m.data('sqa-parent');
+                $m.css({ position:'', top:'', left:'', 'z-index':'', display:'' })
+                  .removeClass('sqa-portal').removeData('sqa-parent');
+                if ($p && $p.length && $.contains(document, $p[0])) { $m.appendTo($p); }
+                else { $m.hide(); }
+            });
+        }
+        $(document).on('show.bs.dropdown', function(e) {
+            sqaPortalClean(); // limpia portales anteriores sin cerrar
+            var $dd = $(e.target);
+            if (!$dd.closest('table').length) return;
+            var $toggle = $dd.children('[data-toggle="dropdown"]');
+            var $menu   = $dd.children('.dropdown-menu');
+            if (!$toggle.length || !$menu.length) return;
+            var pos = $toggle.offset();
+            var h   = $toggle.outerHeight(true);
+            $menu.data('sqa-parent', $dd)
+                 .addClass('sqa-portal')
+                 .appendTo('body')
+                 .css({ position:'absolute', top:(pos.top+h)+'px', left:pos.left+'px', 'z-index':99999, display:'block' });
+        });
+        $(document).on('hidden.bs.dropdown', sqaPortalClean);
+        $(document).on('hide.bs.dropdown', sqaPortalClean);
+
+        /* Sidebar: flyout para ítems con href real y submenú (overflow-x:hidden los mataba en CSS) */
+        (function() {
+            var $fly = $('<ul class="nav sqa-fly"></ul>').appendTo('body');
+            var hideT, $cur;
+            function pos($li) {
+                var r = $li[0].getBoundingClientRect();
+                var sr = $('.navbar-default.sidebar')[0].getBoundingClientRect();
+                var top = r.top;
+                var maxH = window.innerHeight - top - 10;
+                $fly.css({ top: top, left: sr.right, maxHeight: maxH, overflowY: maxH < 120 ? 'auto' : 'visible' });
+            }
+            function show($li) {
+                clearTimeout(hideT);
+                if ($cur && $cur[0] === $li[0] && $fly.is(':visible')) return;
+                $cur = $li;
+                $fly.empty();
+                $li.find('> ul.nav-second-level').children().each(function() {
+                    $fly.append($(this).clone(true));
+                });
+                pos($li);
+                $fly.show();
+            }
+            function hide() { hideT = setTimeout(function(){ $fly.hide(); $cur = null; }, 160); }
+            $(document).on('mouseenter', '#side-menu > li', function() {
+                var $li = $(this);
+                if (!$li.find('> ul.nav-second-level').length) { hide(); return; }
+                if (($li.find('> a').attr('href') || '') === '#') { hide(); return; }
+                show($li);
+            }).on('mouseleave', '#side-menu > li', hide);
+            $fly.on('mouseenter', function(){ clearTimeout(hideT); }).on('mouseleave', hide);
+        })();
+
+        /* MetisMenu: scroll sidebar para mostrar submenú expandido */
+        $('#side-menu').on('click', '> li > a', function() {
+            var $li     = $(this).parent();
+            var $scroll = $('.navbar-default.sidebar');
+            setTimeout(function() {
+                var $ul = $li.find('> ul.nav-second-level');
+                if (!$ul.length) return;
+                var ulH = $ul.outerHeight(true) || 0;
+                if (ulH < 5) return; // aún colapsado o cerrando
+                var sTop   = $scroll.scrollTop();
+                var sH     = $scroll.innerHeight();
+                var liTop  = $li.offset().top - $scroll.offset().top + sTop;
+                var needed = liTop + $li.outerHeight(true) + ulH + 10;
+                if (needed > sTop + sH) {
+                    $scroll.stop(true).animate({ scrollTop: needed - sH }, 200);
+                }
+            }, 500);
+        });
         </script>
     </body>
 </html>

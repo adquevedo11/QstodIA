@@ -894,3 +894,80 @@ table.dataTable thead th.sorting_desc::after {
     color: #ffffff !important;
     border-bottom: 2px solid #ffb323 !important;
 }
+
+/* DataTables: overflow visible para que el portal JS funcione */
+.dataTables_wrapper,
+.dataTables_scroll,
+.dataTables_scrollBody,
+.dataTables_scrollHead,
+.dataTables_scrollFoot { overflow: visible !important; }
+
+table.dataTable tbody td { overflow: visible !important; }
+
+/* La fila con el dropdown abierto sube al frente */
+table.dataTable tbody tr { position: static; }
+table.dataTable tbody td .dropdown.open { position: relative; z-index: 9999 !important; }
+
+table.dataTable tbody tr td .dropdown-menu,
+table tbody tr td .dropdown-menu {
+    z-index: 9999 !important;
+    position: absolute !important;
+    left: 0 !important;
+}
+
+/* ── 44. Sidebar flyout JS (hover panel para ítems con href real) ── */
+/* Se posiciona en el body vía JS, fuera del overflow-x:hidden del sidebar */
+.sqa-fly {
+    display: none;
+    position: fixed;
+    background: #1e2d3a;
+    border-left: 3px solid #ffb323;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 4px 4px 14px rgba(0,0,0,0.35);
+    min-width: 180px;
+    padding: 4px 0;
+    z-index: 99998;
+    list-style: none;
+    margin: 0;
+}
+.sqa-fly > li > a {
+    display: block;
+    padding: 8px 16px 8px 18px;
+    color: #afc1d0;
+    font-size: 12px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.sqa-fly > li > a:hover {
+    color: #ffb323;
+    background: rgba(255,255,255,0.06);
+}
+.sqa-fly > li > a i { margin-right: 6px; width: 14px; }
+
+/* ── 46. Sidebar accordion (reemplaza flyout de dojo.css ≥795px) ── */
+/* dojo.css convierte el sidebar a flyout con left:100% en @media(min-width:795px).
+   Eso rompe con overflow-x:hidden. Lo revertimos a acordeón in-flow.         */
+@media (min-width: 795px) {
+    #side-menu > li > ul {
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        min-width: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        border-top: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+        border-left: 3px solid #ffb323 !important;
+        background-color: #1e2d3a !important;
+        z-index: auto !important;
+    }
+    /* Desactiva el hover-flyout cuando MetisMenu no lo abrió */
+    #side-menu > li:hover > ul:not(.mm-show) {
+        display: none !important;
+    }
+    /* MetisMenu controla la visibilidad cuando el submenú está activo */
+    #side-menu > li > ul.mm-show {
+        display: block !important;
+    }
+}
