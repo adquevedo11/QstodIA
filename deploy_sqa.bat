@@ -39,6 +39,7 @@ scp -i %KEY% dojo/templates/dojo/go_live_readiness_card.html                  %S
 scp -i %KEY% dojo/templates/dojo/go_live_readiness_content.html               %SERVER%:%REMOTE%/dojo/templates/dojo/go_live_readiness_content.html
 scp -i %KEY% dojo/templates/dojo/pentest_list.html                            %SERVER%:%REMOTE%/dojo/templates/dojo/pentest_list.html
 scp -i %KEY% dojo/templates/dojo/pentest_form.html                            %SERVER%:%REMOTE%/dojo/templates/dojo/pentest_form.html
+scp -i %KEY% dojo/templates/dojo/pentest_form_standalone.html                 %SERVER%:%REMOTE%/dojo/templates/dojo/pentest_form_standalone.html
 scp -i %KEY% dojo/templates/dojo/pentest_detail.html                          %SERVER%:%REMOTE%/dojo/templates/dojo/pentest_detail.html
 scp -i %KEY% dojo/templates/dojo/pentest_finding_form.html                    %SERVER%:%REMOTE%/dojo/templates/dojo/pentest_finding_form.html
 scp -i %KEY% dojo/templates/dojo/pentest_finding_detail.html                  %SERVER%:%REMOTE%/dojo/templates/dojo/pentest_finding_detail.html
