@@ -15,8 +15,11 @@ def _cache_path(engagement_id: int, findings_hash: str) -> Path:
 
 
 def findings_hash(findings: list) -> str:
-    ids = sorted(str(f.id) for f in findings)
-    return hashlib.md5("|".join(ids).encode()).hexdigest()[:12]
+    parts = sorted(
+        f"{f.id}:{f.severity}:{f.active}:{f.verified}:{f.risk_accepted}:{f.false_positive}"
+        for f in findings
+    )
+    return hashlib.md5("|".join(parts).encode()).hexdigest()[:12]
 
 
 def get(engagement_id: int, fhash: str) -> dict | None:
