@@ -1,50 +1,67 @@
 /*
  * ============================================================
- *  SQA SA — Corporate Identity Theme for DefectDojo
- *  Primary Dark Blue : #324458
- *  Hover Dark Blue   : #1e2d3a
- *  Orange Accent     : #ffb323
- *  Light BG          : #f4f6f9
+ *  QustodIA — Dark Theme v2
+ *  SQA SA · Security Quality Assurance
+ *  Navy Deep  : #0c1820
+ *  Navy Mid   : #152230
+ *  Navy Light : #1e3347
+ *  Amber      : #ffb323
  * ============================================================
  */
 
-/* ── 1. CSS Variables (Bootstrap 5) ────────────────────────── */
+/* ── 1. CSS Variables ───────────────────────────────────────── */
 :root {
-    --bs-primary:         #324458;
-    --bs-primary-rgb:     50, 68, 88;
-    --bs-link-color:      #324458;
-    --bs-link-hover-color:#1e2d3a;
-    --bs-body-bg:         #f4f6f9;
-    --bs-body-color:      #3a3a3a;
-    --sqa-blue:           #324458;
-    --sqa-blue-dark:      #1e2d3a;
-    --sqa-orange:         #ffb323;
-    --sqa-orange-dark:    #e09e1a;
-    --sqa-light:          #f4f6f9;
-    --sqa-text:           #3a3a3a;
-    --sqa-border:         #dde3ea;
+    --bg-deep:      #0c1820;
+    --bg-surface:   #152230;
+    --bg-elevated:  #1e3347;
+    --bg-hover:     #243d54;
+    --navy:         #1a2b39;
+    --navy-mid:     #253b4e;
+    --navy-light:   #324d66;
+    --amber:        #ffb323;
+    --amber-dim:    #d9941a;
+    --amber-glow:   rgba(255,179,35,0.15);
+    --text-primary: #dce8f0;
+    --text-sec:     #7e9fb5;
+    --text-muted:   #4e6a80;
+    --border:       #1e3244;
+    --border-light: #253b4e;
+    --sqa-blue:     #324458;
+    --sqa-orange:   #ffb323;
+
+    /* Severity */
+    --sev-critical: #c0392b;
+    --sev-high:     #e67e22;
+    --sev-medium:   #f1c40f;
+    --sev-low:      #27ae60;
+    --sev-info:     #2980b9;
 }
 
-/* ── 2. Body ────────────────────────────────────────────────── */
-body {
-    background-color: #f4f6f9 !important;
-    color: #3a3a3a;
-    font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+/* ── 2. Google Fonts ────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── 3. Base & Body ─────────────────────────────────────────── */
+html, body {
+    background-color: var(--bg-deep) !important;
+    color: var(--text-primary) !important;
+    font-family: 'Inter', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
 }
 
-/* ── 3. Links ───────────────────────────────────────────────── */
-a { color: #324458; }
-a:hover, a:focus { color: #1e2d3a; }
+/* ── 4. Links ───────────────────────────────────────────────── */
+a { color: #7eb8d4; }
+a:hover, a:focus { color: var(--amber); text-decoration: none; }
 
-/* ── 4. Top Navbar ──────────────────────────────────────────── */
+/* ── 5. Top Navbar ──────────────────────────────────────────── */
 .navbar.navbar-default {
-    background-color: #324458 !important;
-    border-bottom: 3px solid #ffb323 !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25) !important;
-    min-height: 60px !important;
+    background-color: #0a1520 !important;
+    border-bottom: 2px solid var(--amber) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5) !important;
+    min-height: 58px !important;
     z-index: 1030 !important;
 }
-/* El header y los links del navbar deben aparecer SOBRE el sidebar (que tiene z-index:99) */
+
 .navbar-header,
 .navbar-top-links {
     position: relative !important;
@@ -52,922 +69,728 @@ a:hover, a:focus { color: #1e2d3a; }
 }
 
 .navbar-default .navbar-brand { padding: 4px 15px !important; }
-/* Sin filtro: se muestran los colores originales del logo SQA (incluyendo la franja amarilla) */
 .navbar-default .navbar-brand img { filter: none; }
 
 .navbar-default .navbar-nav > li > a,
 .navbar-top-links > li > a {
-    color: #cdd8e3 !important;
+    color: #8ab0c8 !important;
+    transition: color .15s !important;
 }
-
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus,
 .navbar-top-links > li > a:hover {
-    color: #ffb323 !important;
-    background-color: rgba(0,0,0,0.15) !important;
+    color: var(--amber) !important;
+    background-color: rgba(255,179,35,0.08) !important;
 }
 
 .navbar-default .navbar-toggle {
-    border-color: rgba(255,255,255,0.4) !important;
+    border-color: rgba(255,255,255,0.3) !important;
 }
 .navbar-default .navbar-toggle .icon-bar { background-color: #fff !important; }
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
-    background-color: rgba(0,0,0,0.2) !important;
+
+/* Alert badge */
+span#alert_count,
+.badge.badge-count         { background-color: var(--amber) !important; color: #0c1820 !important; font-weight: 700 !important; }
+.badge.badge-count.badge-count0 { background-color: #27ae60 !important; }
+
+/* Top navbar dropdowns */
+.navbar-top-links .dropdown-toggle { color: #8ab0c8 !important; }
+.navbar-top-links .dropdown-toggle:hover { color: var(--amber) !important; }
+
+.dropdown-menu {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-light) !important;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5) !important;
+    border-radius: 4px !important;
+}
+.dropdown-menu > li > a {
+    color: var(--text-primary) !important;
+    font-size: 13px !important;
+    padding: 8px 16px !important;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+    background-color: var(--amber-glow) !important;
+    color: var(--amber) !important;
+}
+.dropdown-menu .divider { background-color: var(--border) !important; }
+
+/* Search bar */
+.custom-search-form .form-control {
+    background-color: rgba(255,255,255,0.07) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px 0 0 4px !important;
+}
+.custom-search-form .form-control::placeholder { color: var(--text-muted) !important; }
+.custom-search-form .btn-primary {
+    background-color: var(--amber) !important;
+    border-color: var(--amber) !important;
+    color: #0c1820 !important;
 }
 
-/* Dropdown de usuario / alertas */
-.navbar-top-links .dropdown-toggle { color: #cdd8e3 !important; }
-.navbar-top-links .dropdown-toggle:hover { color: #ffb323 !important; }
-
-/* Badge de alertas */
-span#alert_count,
-.badge.badge-count { background-color: #ffb323 !important; color: #fff !important; }
-.badge.badge-count.badge-count0 { background-color: #43ac6a !important; }
-
-/* ── 5. Sidebar ─────────────────────────────────────────────── */
+/* ── 6. Sidebar ─────────────────────────────────────────────── */
 .navbar-default.sidebar {
-    background-color: #283a4d !important;
-    border-right: none !important;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.15) !important;
+    background-color: #0e1e2c !important;
+    border-right: 1px solid var(--border) !important;
+    box-shadow: 2px 0 16px rgba(0,0,0,0.4) !important;
     top: 33px !important;
     height: calc(100vh - 33px) !important;
     z-index: 99 !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
 }
-/* Scrollbar delgada y discreta en el sidebar */
-.navbar-default.sidebar::-webkit-scrollbar { width: 4px; }
+.navbar-default.sidebar::-webkit-scrollbar { width: 3px; }
 .navbar-default.sidebar::-webkit-scrollbar-track { background: transparent; }
-.navbar-default.sidebar::-webkit-scrollbar-thumb { background: rgba(255,179,35,0.35); border-radius: 4px; }
-.navbar-default.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(255,179,35,0.6); }
+.navbar-default.sidebar::-webkit-scrollbar-thumb { background: rgba(255,179,35,0.3); border-radius: 4px; }
+.navbar-default.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(255,179,35,0.55); }
 
 #side-menu > li > a {
-    color: #afc1d0 !important;
-    font-size: 13px !important;
-    padding: 10px 14px !important;
+    color: #6a90a8 !important;
+    font-size: 12.5px !important;
+    font-weight: 500 !important;
+    padding: 10px 16px !important;
     border-radius: 0 !important;
-    border-bottom: 1px solid rgba(255,255,255,0.04) !important;
-    transition: all 0.2s !important;
+    border-bottom: 1px solid rgba(255,255,255,0.03) !important;
+    border-left: 3px solid transparent !important;
+    transition: all 0.18s !important;
+    letter-spacing: .2px !important;
 }
-
-#side-menu > li > a i { color: #7a9bb5 !important; margin-right: 8px; }
+#side-menu > li > a i { color: #4a6a82 !important; margin-right: 8px; width: 16px; text-align: center; }
 
 #side-menu > li > a:hover,
 #side-menu > li > a:focus {
-    color: #ffffff !important;
-    background-color: rgba(255, 179, 35, 0.12) !important;
-    border-left: 3px solid #ffb323 !important;
-    padding-left: 11px !important;
+    color: #dce8f0 !important;
+    background-color: rgba(255,179,35,0.08) !important;
+    border-left-color: var(--amber) !important;
+    padding-left: 13px !important;
 }
-
 #side-menu > li > a:hover i,
-#side-menu > li > a:focus i { color: #ffb323 !important; }
+#side-menu > li > a:focus i { color: var(--amber) !important; }
 
 #side-menu > li.active > a,
 #side-menu > li.mm-active > a {
     color: #ffffff !important;
-    background-color: rgba(255,179,35,0.18) !important;
-    border-left: 3px solid #ffb323 !important;
-    padding-left: 11px !important;
+    background-color: rgba(255,179,35,0.12) !important;
+    border-left-color: var(--amber) !important;
+    padding-left: 13px !important;
 }
+#side-menu > li.active > a i,
+#side-menu > li.mm-active > a i { color: var(--amber) !important; }
 
-/* Sub-menú lateral — comportamiento original: aparece a la derecha del sidebar */
-#side-menu > li ul {
-    background-color: #1e2d3a !important;
-    border-left: 3px solid #ffb323 !important;
-}
-
-#side-menu > li ul li a {
-    color: #afc1d0 !important;
+/* Sub-menú */
+#side-menu .nav-second-level { background-color: rgba(0,0,0,0.2) !important; }
+#side-menu .nav-second-level li a {
+    color: #5a8099 !important;
     font-size: 12px !important;
-    padding: 8px 14px 8px 24px !important;
+    padding: 8px 16px 8px 40px !important;
+    border-left: 3px solid transparent !important;
+}
+#side-menu .nav-second-level li a:hover {
+    color: var(--amber) !important;
+    background-color: rgba(255,179,35,0.06) !important;
+    border-left-color: var(--amber) !important;
+}
+#side-menu .nav-second-level li.active a {
+    color: var(--amber) !important;
+    border-left-color: var(--amber) !important;
 }
 
-#side-menu > li ul li a:hover {
-    color: #ffb323 !important;
-    background-color: rgba(255,255,255,0.05) !important;
-}
+/* Arrow indicator */
+.glyphicon.arrow { color: #3a5a72 !important; font-size: 10px !important; }
 
-/* Botón minimizar sidebar */
-#min-menu,
-#min-menu i {
-    color: #ffb323 !important;
-}
-
-/* Sidebar inner */
-.navbar-default.sidebar .sidebar-nav {
-    background-color: #283a4d !important;
-    padding-top: 0 !important;
-    min-height: 100% !important;
-    padding-bottom: 40px !important;
-}
-
-/* ── 6. Page wrapper ────────────────────────────────────────── */
+/* ── 7. Page Wrapper / Content ──────────────────────────────── */
 #page-wrapper {
-    background-color: #f4f6f9 !important;
+    background-color: var(--bg-deep) !important;
+    min-height: 100vh !important;
     border-left: none !important;
+    padding: 20px 24px !important;
 }
 
-/* ── 7. Breadcrumb ──────────────────────────────────────────── */
-.breadcrumb {
-    background-color: #ffffff !important;
-    border: 1px solid #dde3ea !important;
-    border-radius: 4px !important;
-    padding: 8px 15px !important;
-    margin-bottom: 15px !important;
+.page-header {
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 20px !important;
+    padding-bottom: 10px !important;
 }
-
-.breadcrumb > li + li::before { color: #7a9bb5; }
-.breadcrumb > .active { color: #324458 !important; font-weight: 600; }
-.breadcrumb a { color: #324458 !important; }
-.breadcrumb a:hover { color: #ffb323 !important; }
 
 /* ── 8. Panels / Cards ──────────────────────────────────────── */
 .panel {
-    border: 1px solid #dde3ea !important;
+    background-color: var(--bg-surface) !important;
+    border: 1px solid var(--border) !important;
     border-radius: 6px !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important;
+    margin-bottom: 20px !important;
 }
-
 .panel-default > .panel-heading {
-    background: linear-gradient(135deg, #324458 0%, #3d5470 100%) !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 5px 5px 0 0 !important;
-    padding: 10px 15px !important;
-}
-
-.panel-default > .panel-heading a,
-.panel-default > .panel-heading small { color: #cdd8e3 !important; }
-.panel-default > .panel-heading a:hover { color: #ffb323 !important; }
-
-.panel-default-secondary > .panel-heading {
-    background: #3d5470 !important;
-    color: #ffffff !important;
-    border-color: #324458 !important;
-    border-radius: 5px 5px 0 0 !important;
-}
-
-.panel-body { background-color: #ffffff !important; }
-
-.panel-footer {
-    background-color: #f4f6f9 !important;
-    border-top: 1px solid #dde3ea !important;
-    color: #7a9bb5;
-}
-
-/* Panel azul sólido */
-.panel-blue .panel-heading,
-.panel-blue {
-    background-color: #324458 !important;
-    border-color: #324458 !important;
-    color: #f4f6f9 !important;
-}
-
-/* ── 9. Buttons ─────────────────────────────────────────────── */
-
-/* Primary */
-.btn-primary {
-    background-color: #324458 !important;
-    border-color: #324458 !important;
-    color: #fff !important;
-}
-.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
-    background-color: #1e2d3a !important;
-    border-color: #1e2d3a !important;
-    color: #fff !important;
-}
-
-/* Success → SQA orange accent (used as primary action in DefectDojo) */
-.btn-success {
-    background-color: #ffb323 !important;
-    border-color: #e09e1a !important;
-    color: #ffffff !important;
-}
-.btn-success:hover, .btn-success:focus, .btn-success:active {
-    background-color: #e09e1a !important;
-    border-color: #c98e16 !important;
-    color: #ffffff !important;
-}
-
-/* Secondary */
-.btn-secondary {
-    background-color: #324458 !important;
-    border-color: #324458 !important;
-    color: #fff !important;
-}
-.btn-secondary:hover, .btn-secondary:focus {
-    background-color: #1e2d3a !important;
-    border-color: #1e2d3a !important;
-    color: #fff !important;
-}
-
-/* Info */
-.btn-info {
-    background-color: #5b8faa !important;
-    border-color: #5b8faa !important;
-    color: #fff !important;
-}
-.btn-info:hover { background-color: #4a7a93 !important; border-color: #4a7a93 !important; }
-
-/* Warning */
-.btn-warning {
-    background-color: #ffb323 !important;
-    border-color: #e09e1a !important;
-    color: #fff !important;
-}
-.btn-warning:hover { background-color: #e09e1a !important; }
-
-/* Default */
-.btn-default {
-    border-color: #dde3ea !important;
-    color: #324458 !important;
-}
-.btn-default:hover {
-    background-color: #f0f4f8 !important;
-    border-color: #324458 !important;
-    color: #324458 !important;
-}
-
-/* Panel header buttons */
-.panel-default .btn-primary {
-    background-color: transparent !important;
-    border: 1px solid rgba(255,255,255,0.6) !important;
-    color: #fff !important;
-}
-.panel-default .btn-primary:hover {
-    background-color: rgba(255,255,255,0.15) !important;
-    border-color: #fff !important;
-}
-
-/* ── 10. Forms ──────────────────────────────────────────────── */
-.form-control:focus {
-    border-color: #ffb323 !important;
-    box-shadow: 0 0 0 0.2rem rgba(255,179,35,0.2) !important;
-}
-
-label { color: #324458; font-weight: 600; }
-
-/* ── 11. Tables ─────────────────────────────────────────────── */
-.table > thead > tr > th {
-    background-color: #324458 !important;
-    color: #ffffff !important;
-    border-bottom: 2px solid #ffb323 !important;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-.table-bordered th { background-color: #324458 !important; color: #fff !important; }
-
-.table > tbody > tr:hover > td,
-.table > tbody > tr:hover > th {
-    background-color: rgba(50,68,88,0.04) !important;
-}
-
-.table > tbody > tr:nth-child(even) > td {
-    background-color: rgba(50,68,88,0.02);
-}
-
-/* ── 12. Dropdowns ──────────────────────────────────────────── */
-.dropdown-menu {
-    border: 1px solid #dde3ea !important;
-    border-radius: 6px !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
-}
-
-.dropdown-menu > li > a {
-    color: #324458 !important;
-    font-size: 13px;
-    padding: 7px 16px;
-}
-
-.dropdown-menu > li > a:hover,
-.dropdown-menu > li > a:focus {
-    background-color: rgba(50,68,88,0.07) !important;
-    color: #324458 !important;
-}
-
-.dropdown-header {
-    color: #7a9bb5 !important;
-    font-size: 11px;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-}
-
-/* ── 13. Badges & Labels ────────────────────────────────────── */
-.badge {
-    background-color: #324458;
-}
-
-.label-primary, .badge-primary { background-color: #324458 !important; }
-.label-success, .badge-success { background-color: #43ac6a !important; }
-.label-info,    .badge-info    { background-color: #5b8faa !important; }
-.label-warning, .badge-warning { background-color: #ffb323 !important; }
-.label-danger,  .badge-danger  { background-color: #d9534f !important; }
-
-/* ── 14. Navigation Tabs ────────────────────────────────────── */
-.nav-tabs {
-    border-bottom: 2px solid #dde3ea !important;
-}
-
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:focus,
-.nav-tabs > li.active > a:hover {
-    color: #fff !important;
-    background-color: #324458 !important;
-    border: 1px solid #324458 !important;
-    border-bottom-color: #324458 !important;
-}
-
-.nav-tabs > li > a {
-    color: #324458 !important;
-    border-radius: 4px 4px 0 0 !important;
-}
-
-.nav-tabs > li > a:hover {
-    background-color: rgba(50,68,88,0.07) !important;
-    border-color: #dde3ea #dde3ea transparent !important;
-}
-
-/* ── 15. Pagination ─────────────────────────────────────────── */
-.pagination > .active > a,
-.pagination > .active > a:focus,
-.pagination > .active > a:hover,
-.pagination > .active > span,
-.pagination > .active > span:focus,
-.pagination > .active > span:hover {
-    background-color: #324458 !important;
-    border-color: #324458 !important;
-    color: #fff !important;
-}
-
-.pagination > li > a,
-.pagination > li > span {
-    color: #324458 !important;
-}
-
-.pagination > li > a:hover,
-.pagination > li > span:hover {
-    background-color: rgba(50,68,88,0.07) !important;
-    border-color: #dde3ea !important;
-    color: #1e2d3a !important;
-}
-
-/* ── 16. Alerts ─────────────────────────────────────────────── */
-.alert-info {
-    background-color: #e8f2f8 !important;
-    border-color: #5b8faa !important;
-    color: #2b5f7a !important;
-}
-
-.alert-warning {
-    background-color: #fff8e6 !important;
-    border-color: #ffb323 !important;
-    color: #7a5c0a !important;
-}
-
-.alert-success {
-    background-color: #eaf6ee !important;
-    border-color: #43ac6a !important;
-    color: #2d6b43 !important;
-}
-
-/* ── 17. Well ───────────────────────────────────────────────── */
-.well {
-    background-color: #f4f6f9 !important;
-    border: 1px solid #dde3ea !important;
-    border-radius: 6px !important;
-    box-shadow: none !important;
-}
-
-/* ── 18. Progress bars ──────────────────────────────────────── */
-.progress-bar { background-color: #324458 !important; }
-.progress-bar-success { background-color: #43ac6a !important; }
-.progress-bar-info    { background-color: #5b8faa !important; }
-.progress-bar-warning { background-color: #ffb323 !important; }
-.progress-bar-danger  { background-color: #d9534f !important; }
-
-/* ── 19. Footer ─────────────────────────────────────────────── */
-.footer {
-    background: linear-gradient(135deg, #283a4d 0%, #324458 100%) !important;
-    border-top: 3px solid #ffb323 !important;
-    color: #cdd8e3 !important;
-    padding: 28px 0 !important;
-}
-
-.footer a { color: #ffb323 !important; }
-.footer a:hover { color: #ffffff !important; }
-.footer p { color: #cdd8e3 !important; margin: 0; }
-
-#footer-wrapper {
-    border-left: none !important;
-}
-
-/* ── 20. Search bar ─────────────────────────────────────────── */
-#simple_search_submit {
-    background-color: #ffb323 !important;
-    border-color: #e09e1a !important;
-    color: #ffffff !important;
-}
-#simple_search_submit:hover { background-color: #e09e1a !important; }
-
-#simple_search {
-    background-color: rgba(255,255,255,0.12) !important;
-    border-color: rgba(255,255,255,0.2) !important;
-    color: #ffffff !important;
-}
-#simple_search::placeholder { color: rgba(255,255,255,0.5) !important; }
-#simple_search:focus {
-    background-color: rgba(255,255,255,0.2) !important;
-    border-color: #ffb323 !important;
-    box-shadow: none !important;
-    color: #ffffff !important;
-}
-
-/* ── 21. Filter headings & Report headings ──────────────────── */
-.dojo-filter-heading,
-.dojo-report-heading {
-    background: linear-gradient(135deg, #324458 0%, #3d5470 100%) !important;
-    border-color: #1e2d3a !important;
-    color: #ffffff !important;
-}
-
-/* ── 22. Severity badges (keep functional colors) ───────────── */
-.severity-Critical { background-color: #d9534f !important; }
-.severity-High     { background-color: #f09835 !important; }
-.severity-Medium   { background-color: #e6c200 !important; color: #333 !important; }
-.severity-Low      { background-color: #5b8faa !important; }
-.severity-Info     { background-color: #888888 !important; }
-
-/* ── 23. Tag colors ─────────────────────────────────────────── */
-.tag-color  { background: #324458 !important; }
-.tag-version { background: rgba(255,179,35,0.85) !important; }
-.btn-tag    { background: #324458 !important; }
-.tag-all    { background: #324458 !important; }
-
-/* ── 24. Modals ─────────────────────────────────────────────── */
-.modal-header {
-    background: linear-gradient(135deg, #324458 0%, #3d5470 100%) !important;
-    color: #ffffff !important;
-    border-radius: 4px 4px 0 0;
-}
-
-.modal-header .modal-title { color: #ffffff !important; }
-.modal-header .close { color: #ffffff !important; opacity: 0.8; }
-.modal-header .close:hover { opacity: 1; }
-
-/* ── 25. Scroll-to-top button ───────────────────────────────── */
-#toTop {
-    background-color: #ffb323 !important;
-    border-radius: 4px;
-    color: #ffffff !important;
-    text-align: center;
-    line-height: 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-/* ── 26. Announcement banner ────────────────────────────────── */
-.announcement-banner {
-    background-color: #ffb323 !important;
-    color: #ffffff !important;
-    border-radius: 0 !important;
-}
-
-/* ── 27. Support page ───────────────────────────────────────── */
-.community {
-    color: #324458 !important;
-    background-color: #f0f4f8 !important;
-}
-
-.commercial {
-    background-color: #324458 !important;
-    color: #f4f6f9 !important;
-}
-
-.divider.dark { border-color: #324458 !important; }
-
-/* ── 28. Product/engagement info boxes ──────────────────────── */
-div.eng_info,
-div.prod_info {
-    background-color: #ffffff !important;
-    border: 1px solid #dde3ea !important;
-}
-
-/* ── 29. DataTables buttons ─────────────────────────────────── */
-.dt-button,
-.dt-button:active,
-.dt-button:hover {
-    background: #324458 !important;
-    border-color: #324458 !important;
-    color: #fff !important;
-    border-radius: 4px !important;
-    box-shadow: none !important;
-}
-
-.dt-button:hover {
-    background: #1e2d3a !important;
-    border-color: #1e2d3a !important;
-}
-
-/* ── 29b. DataTables Column Visibility dropdown ─────────────── */
-div.dt-button-collection {
-    background-color: #ffffff !important;
-    border: 1px solid #dde3ea !important;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important;
-    border-radius: 6px !important;
-    padding: 6px !important;
-    min-width: 180px !important;
-}
-
-div.dt-button-collection .dt-button,
-div.dt-button-collection button.dt-button,
-div.dt-button-collection a.dt-button {
-    background: #f4f6f9 !important;
-    background-color: #f4f6f9 !important;
-    border: 1px solid #dde3ea !important;
-    border-color: #dde3ea !important;
-    color: #324458 !important;
-    text-align: left !important;
-    display: block !important;
-    width: calc(100% - 4px) !important;
-    margin: 2px !important;
-    border-radius: 4px !important;
+    background-color: var(--bg-elevated) !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 6px 6px 0 0 !important;
+    padding: 12px 16px !important;
+    font-weight: 600 !important;
     font-size: 13px !important;
-    padding: 5px 10px !important;
-    box-shadow: none !important;
+    letter-spacing: .2px !important;
+}
+.panel-heading .panel-title { color: var(--text-primary) !important; font-size: 13px !important; font-weight: 600 !important; }
+.panel-heading a,
+.panel-heading .panel-title a { color: var(--text-primary) !important; }
+.panel-heading a:hover { color: var(--amber) !important; }
+
+.panel-primary > .panel-heading {
+    background-color: var(--navy-mid) !important;
+    border-bottom: 2px solid var(--amber) !important;
+}
+.panel-primary { border-color: var(--navy-mid) !important; }
+
+.panel-body { background-color: var(--bg-surface) !important; color: var(--text-primary) !important; }
+.panel-footer {
+    background-color: var(--bg-elevated) !important;
+    border-top: 1px solid var(--border) !important;
+    color: var(--text-sec) !important;
+    font-size: 12px !important;
 }
 
-div.dt-button-collection .dt-button:hover {
-    background: rgba(50,68,88,0.10) !important;
-    background-color: rgba(50,68,88,0.10) !important;
-    border-color: #324458 !important;
-    color: #1e2d3a !important;
-}
+/* Product type color bars on panels */
+.panel-danger > .panel-heading  { background-color: rgba(192,57,43,0.25) !important; border-color: #c0392b !important; }
+.panel-warning > .panel-heading { background-color: rgba(230,126,34,0.2) !important; border-color: #e67e22 !important; }
+.panel-success > .panel-heading { background-color: rgba(39,174,96,0.2) !important; border-color: #27ae60 !important; }
+.panel-info > .panel-heading    { background-color: rgba(41,128,185,0.2) !important; border-color: #2980b9 !important; }
 
-div.dt-button-collection .dt-button.dt-button-active,
-div.dt-button-collection .dt-button-active {
-    background: #324458 !important;
-    background-color: #324458 !important;
-    border-color: #253344 !important;
-    color: #ffffff !important;
-}
-
-div.dt-button-collection .dt-button-active:after {
-    color: #ffb323 !important;
-}
-
-/* ── 30. Nav pills ──────────────────────────────────────────── */
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:hover,
-.nav-pills > li.active > a:focus {
-    background-color: #324458 !important;
-    color: #fff !important;
-}
-
-.nav-pills > li > a { color: #324458 !important; }
-.nav-pills > li > a:hover { background-color: rgba(50,68,88,0.07) !important; }
-
-/* ── 31. Panel available widget ─────────────────────────────── */
-.panel-available-widget .panel-heading {
-    background-color: #f4f6f9 !important;
-    border-bottom: 2px solid #ffb323 !important;
-    color: #324458 !important;
-}
-
-/* ── 32. Vuln count boxes — Modern Severity Cards ───────────── */
-.bg-vuln-critical { background-color: #c0392b !important; }
-.bg-vuln-high     { background-color: #e67e22 !important; }
-.bg-vuln-medium   { background-color: #d4ac0d !important; }
-.bg-vuln-low      { background-color: #2980b9 !important; }
-.bg-vuln-info     { background-color: #6c757d !important; }
-.bg-muted         { background-color: #324458 !important; }
-
-/* Efecto hover en el <a> — mantiene el fondo de color */
-.vuln-count a {
-    display: block !important;
-    color: #ffffff !important;
-    text-decoration: none !important;
+/* ── 9. Tables ──────────────────────────────────────────────── */
+.table {
+    color: var(--text-primary) !important;
     background-color: transparent !important;
-    transition: opacity 0.15s ease !important;
 }
-.vuln-count a:hover,
-.vuln-count a:focus,
-.vuln-count a:active,
-.vuln-count a:visited {
-    color: #ffffff !important;
-    text-decoration: none !important;
-    background-color: transparent !important;
-    opacity: 0.82;
-}
-
-/* Bloquea cualquier regla tr:hover > td de Bootstrap/Yeti/dojo.css
-   que pueda pintar las celdas de blanco al pasar el mouse */
-.table > tbody > tr:hover > td.bg-vuln-critical,
-.table-hover > tbody > tr:hover > td.bg-vuln-critical { background-color: #c0392b !important; }
-
-.table > tbody > tr:hover > td.bg-vuln-high,
-.table-hover > tbody > tr:hover > td.bg-vuln-high     { background-color: #e67e22 !important; }
-
-.table > tbody > tr:hover > td.bg-vuln-medium,
-.table-hover > tbody > tr:hover > td.bg-vuln-medium   { background-color: #d4ac0d !important; }
-
-.table > tbody > tr:hover > td.bg-vuln-low,
-.table-hover > tbody > tr:hover > td.bg-vuln-low      { background-color: #2980b9 !important; }
-
-.table > tbody > tr:hover > td.bg-vuln-info,
-.table-hover > tbody > tr:hover > td.bg-vuln-info     { background-color: #6c757d !important; }
-
-.table > tbody > tr:hover > td.bg-muted,
-.table-hover > tbody > tr:hover > td.bg-muted         { background-color: #324458 !important; }
-
-/* Ícono: mismo tamaño que el texto de la celda */
-.vuln-count .sqa-sev-icon {
-    font-size: 14px;
-    margin-right: 4px;
-    opacity: 0.85;
-}
-
-/* ── 33. Input group addon ──────────────────────────────────── */
-.input-group-btn .btn-primary,
-.input-group-addon {
-    background-color: #324458 !important;
-    border-color: #324458 !important;
-    color: #fff !important;
-}
-
-/* ── 34. Section heading — texto siempre blanco sobre fondos azules ── */
-.panel-heading,
-.panel-heading h2,
-.panel-heading h3,
-.panel-heading h4,
-.panel-heading h5,
-.panel-heading span,
-.panel-heading div {
-    color: #ffffff !important;
-    font-weight: 600;
-}
-/* Excepción: widget disponible tiene fondo claro */
-.panel-available-widget .panel-heading,
-.panel-available-widget .panel-heading h5 {
-    color: #324458 !important;
-}
-
-/* Excepción: dropdown-menu DENTRO de panel-heading — texto oscuro sobre fondo blanco */
-.panel-heading .dropdown-menu,
-.panel-heading .dropdown-menu > li > a,
-.panel-heading .dropdown-menu > li > a:hover,
-.panel-heading .dropdown-menu > li > a:focus,
-.panel-heading .dropdown-menu > li > span,
-.panel-heading .dropdown-menu > li > div {
-    color: #324458 !important;
-    font-weight: normal !important;
-}
-.panel-heading .dropdown-menu > li > a:hover,
-.panel-heading .dropdown-menu > li > a:focus {
-    background-color: rgba(50,68,88,0.07) !important;
-    color: #1e2d3a !important;
-}
-.panel-heading .dropdown-menu > li.text-danger > a,
-.panel-heading .dropdown-menu > li > a.text-danger,
-.panel-heading .dropdown-menu > li > a[style*="color:red"],
-.panel-heading .dropdown-menu > li:last-child > a {
-    color: #d9534f !important;
-}
-
-/* ── 34b. Columna de acciones (⋮) — ancho mínimo ────────────── */
-/* table-layout:fixed hace que el browser respete los anchos de <col> */
-table#products {
-    table-layout: fixed !important;
-}
-table#products colgroup col:first-child {
-    width: 40px !important;
-}
-table#products thead tr th:first-child,
-table#products tbody tr td:first-child {
-    width: 40px !important;
-    min-width: 32px !important;
-    max-width: 48px !important;
-    overflow: hidden !important;
-    padding: 6px 4px !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-}
-table#products tbody tr td:first-child > div {
-    width: 28px !important;
-    overflow: visible !important;
-}
-
-/* ── 35. Inline product type buttons ────────────────────────── */
-table#product_types .btn-success {
-    background-color: #324458 !important;
-    border-color: #324458 !important;
-}
-table#product_types .btn-success:hover {
-    background-color: #1e2d3a !important;
-    border-color: #1e2d3a !important;
-}
-table#product_types .btn-warning {
-    background-color: #ffb323 !important;
-    border-color: #e09e1a !important;
-}
-table#product_types .btn-warning:hover {
-    background-color: #e09e1a !important;
-    border-color: #c98e16 !important;
-}
-
-/* ── 36. Loading / Graph placeholders ───────────────────────── */
-.graph-loader { background-color: #ffffff !important; }
-
-/* ── 37. Benchmark colors ───────────────────────────────────── */
-.benchmark_pass     { background-color: #eaf6ee !important; }
-.benchmark_fail     { background-color: #fdecea !important; }
-.benchmark_disabled { background-color: #f4f6f9 !important; }
-
-/* ── 38. Font awesome icons in tables ───────────────────────── */
-.fa-minus-square, .fa-trash { color: #d9534f !important; }
-.fa-plus-square, .fa-exchange, .fa-share-square { color: #43ac6a !important; }
-.fa-asterisk { color: #5b8faa !important; }
-
-/* ── 39. Session timeout modal ──────────────────────────────── */
-#sessionTimeoutModal .modal-header {
-    background: linear-gradient(135deg, #324458 0%, #3d5470 100%) !important;
-}
-
-/* ── 40. Dashboard stat panels (panel-red, green, yellow) ───── */
-.panel-red .panel-heading {
-    background: linear-gradient(135deg, #c0392b, #e74c3c) !important;
-    border: none !important;
-    border-radius: 0 !important;
-}
-.panel-red .panel-footer {
-    background: #a93226 !important;
-    color: #fdecea !important;
-}
-.panel-red .panel-footer a { color: #fdecea !important; }
-
-.panel-green .panel-heading {
-    background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
-    border: none !important;
-    border-radius: 0 !important;
-}
-.panel-green .panel-footer {
-    background: #229954 !important;
-    color: #eaf6ee !important;
-}
-.panel-green .panel-footer a { color: #eaf6ee !important; }
-
-.panel-yellow .panel-heading {
-    background: linear-gradient(135deg, #e09e1a, #ffb323) !important;
-    border: none !important;
-    border-radius: 0 !important;
-}
-.panel-yellow .panel-footer {
-    background: #c98e16 !important;
-    color: #fff8e6 !important;
-}
-.panel-yellow .panel-footer a { color: #fff8e6 !important; }
-
-/* Generic panel stat (huge number) */
-.panel .huge {
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 1;
-    color: #ffffff;
-}
-
-/* ── 41. Scroll to top button ────────────────────────────────── */
-#toTop {
-    background: linear-gradient(135deg, #ffb323, #e09e1a) !important;
-    border-radius: 6px !important;
-    box-shadow: 0 3px 10px rgba(255,179,35,0.4) !important;
-}
-
-/* ── 42. Body padding top: 63px = 60px navbar + 3px borde amarillo
-   El contenido arranca exactamente donde termina la línea amarilla,
-   igual que el sidebar (top: 63px). Alineación perfecta. ─────── */
-body { padding-top: 63px !important; }
-
-/* ── 43. DataTables — encabezados siempre blancos sobre azul ──── */
+.table > thead > tr > th,
+table thead th,
 table.dataTable thead th,
-table.dataTable thead td,
-.dataTables_wrapper table thead th,
-.dataTables_wrapper table thead td,
 table.dataTable thead th.sorting,
 table.dataTable thead th.sorting_asc,
 table.dataTable thead th.sorting_desc,
 table.dataTable thead th.sorting_asc_disabled,
 table.dataTable thead th.sorting_desc_disabled,
-.dataTables_scrollHead table thead th,
-.dataTables_scrollHead table thead th.sorting,
-.dataTables_scrollHead table thead th.sorting_asc,
-.dataTables_scrollHead table thead th.sorting_desc {
-    background-color: #324458 !important;
-    color: #ffffff !important;
-    border-bottom: 2px solid #ffb323 !important;
+.dataTables_scrollHead table thead th {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 2px solid var(--amber) !important;
     border-top: none !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: .5px !important;
+    text-transform: uppercase !important;
+    padding: 10px 12px !important;
+    white-space: nowrap !important;
 }
+table thead th a,
+table thead th a:hover,
+table thead th a:visited { color: var(--text-primary) !important; text-decoration: none !important; }
 
-/* Iconos de flecha de ordenamiento: blancos semitransparentes */
 table.dataTable thead th.sorting::after,
 table.dataTable thead th.sorting_asc::after,
-table.dataTable thead th.sorting_desc::after,
-table.dataTable thead th.sorting::before,
-table.dataTable thead th.sorting_asc::before,
-table.dataTable thead th.sorting_desc::before {
-    color: rgba(255, 255, 255, 0.65) !important;
-    opacity: 1 !important;
-}
+table.dataTable thead th.sorting_desc::after { color: rgba(255,255,255,0.5) !important; opacity: 1 !important; }
 table.dataTable thead th.sorting_asc::after,
-table.dataTable thead th.sorting_desc::after {
-    color: #ffb323 !important;
+table.dataTable thead th.sorting_desc::after { color: var(--amber) !important; }
+
+.table > tbody > tr > td,
+.table > tbody > tr > th {
+    border-top: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+    vertical-align: middle !important;
+    padding: 9px 12px !important;
+}
+.table-striped > tbody > tr:nth-of-type(odd) { background-color: rgba(255,255,255,0.02) !important; }
+.table-striped > tbody > tr:nth-of-type(even) { background-color: transparent !important; }
+.table-hover > tbody > tr:hover { background-color: rgba(255,179,35,0.06) !important; }
+.table-bordered { border-color: var(--border) !important; }
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > td { border-color: var(--border) !important; }
+
+/* DataTables wrapper */
+.dataTables_wrapper { color: var(--text-primary) !important; }
+.dataTables_filter label,
+.dataTables_length label { color: var(--text-sec) !important; font-size: 12px !important; }
+.dataTables_filter input,
+.dataTables_length select {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-light) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+}
+.dataTables_info { color: var(--text-muted) !important; font-size: 12px !important; }
+.dataTables_paginate .paginate_button { color: var(--text-sec) !important; }
+
+/* ── 10. Forms & Inputs ─────────────────────────────────────── */
+.form-control {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-light) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    transition: border-color .15s, box-shadow .15s !important;
+}
+.form-control:focus {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--amber) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 0 2px rgba(255,179,35,0.15) !important;
+    outline: none !important;
+}
+.form-control::placeholder { color: var(--text-muted) !important; }
+.form-control[disabled],
+.form-control[readonly] {
+    background-color: rgba(255,255,255,0.04) !important;
+    color: var(--text-muted) !important;
+}
+select.form-control option { background-color: var(--bg-elevated) !important; color: var(--text-primary) !important; }
+
+.control-label { color: var(--text-sec) !important; font-weight: 600 !important; font-size: 12px !important; letter-spacing: .3px !important; }
+
+.input-group-addon {
+    background-color: var(--navy-mid) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-sec) !important;
 }
 
-/* Forzar blanco en ANY th dentro de tablas con encabezado azul ── */
-.panel-heading + .panel-body table thead th,
-.panel-heading + .panel-body table thead td,
-.panel > table thead th,
-.panel > table thead td,
-.panel > .table-responsive table thead th {
-    background-color: #324458 !important;
-    color: #ffffff !important;
-    border-bottom: 2px solid #ffb323 !important;
+/* Chosen / Bootstrap-select */
+.chosen-container .chosen-single,
+.chosen-container-multi .chosen-choices {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
+    box-shadow: none !important;
+}
+.chosen-container .chosen-drop {
+    background: var(--bg-elevated) !important;
+    border-color: var(--border-light) !important;
+}
+.chosen-container .chosen-results li { color: var(--text-primary) !important; }
+.chosen-container .chosen-results li.highlighted { background-color: var(--amber-glow) !important; color: var(--amber) !important; }
+.chosen-container .chosen-results li.result-selected { color: var(--text-muted) !important; }
+
+.bootstrap-select .dropdown-toggle {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
 }
 
-/* DataTables: overflow visible para que el portal JS funcione */
-.dataTables_wrapper,
-.dataTables_scroll,
-.dataTables_scrollBody,
-.dataTables_scrollHead,
-.dataTables_scrollFoot { overflow: visible !important; }
+/* Checkbox / Radio */
+.checkbox label, .radio label { color: var(--text-primary) !important; }
 
-table.dataTable tbody td { overflow: visible !important; }
+/* Fieldset */
+fieldset { border: 1px solid var(--border) !important; border-radius: 6px !important; padding: 16px !important; }
+legend { color: var(--amber) !important; font-size: 13px !important; font-weight: 700 !important; border-bottom: none !important; width: auto !important; padding: 0 8px !important; }
 
-/* La fila con el dropdown abierto sube al frente */
-table.dataTable tbody tr { position: static; }
-table.dataTable tbody td .dropdown.open { position: relative; z-index: 9999 !important; }
-
-table.dataTable tbody tr td .dropdown-menu,
-table tbody tr td .dropdown-menu {
-    z-index: 9999 !important;
-    position: absolute !important;
-    left: 0 !important;
+/* ── 11. Buttons ─────────────────────────────────────────────── */
+.btn-primary {
+    background-color: var(--amber) !important;
+    border-color: var(--amber) !important;
+    color: #0c1820 !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    letter-spacing: .3px !important;
+    transition: background .15s, border-color .15s !important;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--amber-dim) !important;
+    border-color: var(--amber-dim) !important;
+    color: #0c1820 !important;
 }
 
-/* ── 44. Sidebar flyout JS (hover panel para ítems con href real) ── */
-/* Se posiciona en el body vía JS, fuera del overflow-x:hidden del sidebar */
-.sqa-fly {
-    display: none;
-    position: fixed;
-    background: #1e2d3a;
-    border-left: 3px solid #ffb323;
-    border-radius: 0 4px 4px 0;
-    box-shadow: 4px 4px 14px rgba(0,0,0,0.35);
-    min-width: 180px;
-    padding: 4px 0;
-    z-index: 99998;
-    list-style: none;
-    margin: 0;
+.btn-default {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border-light) !important;
+    color: var(--text-primary) !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
 }
-.sqa-fly > li > a {
-    display: block;
-    padding: 8px 16px 8px 18px;
-    color: #afc1d0;
-    font-size: 12px;
-    text-decoration: none;
-    white-space: nowrap;
+.btn-default:hover, .btn-default:focus {
+    background-color: var(--bg-hover) !important;
+    border-color: var(--amber) !important;
+    color: var(--text-primary) !important;
 }
-.sqa-fly > li > a:hover {
-    color: #ffb323;
-    background: rgba(255,255,255,0.06);
-}
-.sqa-fly > li > a i { margin-right: 6px; width: 14px; }
 
-/* ── 46. Sidebar accordion (reemplaza flyout de dojo.css ≥795px) ── */
-/* dojo.css convierte el sidebar a flyout con left:100% en @media(min-width:795px).
-   Eso rompe con overflow-x:hidden. Lo revertimos a acordeón in-flow.         */
-@media (min-width: 795px) {
-    #side-menu > li > ul {
-        position: static !important;
-        left: auto !important;
-        top: auto !important;
-        min-width: 0 !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        border-top: none !important;
-        border-right: none !important;
-        border-bottom: none !important;
-        border-left: 3px solid #ffb323 !important;
-        background-color: #1e2d3a !important;
-        z-index: auto !important;
-    }
-    /* Desactiva el hover-flyout cuando MetisMenu no lo abrió */
-    #side-menu > li:hover > ul:not(.mm-show) {
-        display: none !important;
-    }
-    /* MetisMenu controla la visibilidad cuando el submenú está activo */
-    #side-menu > li > ul.mm-show {
-        display: block !important;
-    }
+.btn-success {
+    background-color: #1e7e4e !important;
+    border-color: #1e7e4e !important;
+    color: #fff !important;
+}
+.btn-success:hover { background-color: #27ae60 !important; border-color: #27ae60 !important; }
+
+.btn-danger {
+    background-color: #8b1c14 !important;
+    border-color: #8b1c14 !important;
+    color: #fff !important;
+}
+.btn-danger:hover { background-color: #c0392b !important; border-color: #c0392b !important; }
+
+.btn-warning {
+    background-color: #9a6000 !important;
+    border-color: #9a6000 !important;
+    color: #fff !important;
+}
+.btn-warning:hover { background-color: #d4891a !important; border-color: #d4891a !important; }
+
+.btn-info {
+    background-color: #1a5a8a !important;
+    border-color: #1a5a8a !important;
+    color: #fff !important;
+}
+.btn-info:hover { background-color: #2980b9 !important; border-color: #2980b9 !important; }
+
+.btn-link { color: var(--amber) !important; }
+.btn-link:hover { color: var(--amber-dim) !important; }
+
+/* Botón pequeño */
+.btn-xs, .btn-sm { font-size: 11px !important; padding: 3px 9px !important; border-radius: 3px !important; }
+
+/* ── 12. Badges & Labels ────────────────────────────────────── */
+.badge {
+    background-color: var(--navy-light) !important;
+    color: var(--text-primary) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    border-radius: 3px !important;
+    padding: 2px 6px !important;
+}
+.label { border-radius: 3px !important; font-size: 10px !important; font-weight: 700 !important; padding: 2px 7px !important; }
+.label-default { background-color: var(--navy-mid) !important; color: var(--text-sec) !important; }
+.label-primary { background-color: var(--amber) !important; color: #0c1820 !important; }
+.label-success { background-color: #1e7e4e !important; color: #fff !important; }
+.label-danger  { background-color: #8b1c14 !important; color: #fff !important; }
+.label-warning { background-color: #9a6000 !important; color: #fff !important; }
+.label-info    { background-color: #1a5a8a !important; color: #fff !important; }
+
+/* ── 13. Severity Colors ────────────────────────────────────── */
+.severity-critical, .risk-critical,
+.label-critical, .badge-critical,
+.bg-critical { background-color: rgba(192,57,43,0.85) !important; color: #fff !important; }
+
+.severity-high, .risk-high,
+.label-high, .badge-high,
+.bg-high { background-color: rgba(188,84,14,0.85) !important; color: #fff !important; }
+
+.severity-medium, .risk-medium,
+.label-medium, .badge-medium,
+.bg-medium { background-color: rgba(155,105,0,0.9) !important; color: #fff !important; }
+
+.severity-low, .risk-low,
+.label-low, .badge-low,
+.bg-low { background-color: rgba(30,110,58,0.85) !important; color: #fff !important; }
+
+.severity-info, .risk-info,
+.label-informational, .badge-info,
+.bg-informational { background-color: rgba(30,80,140,0.85) !important; color: #fff !important; }
+
+/* Texto de severity */
+.text-critical { color: #e74c3c !important; }
+.text-high     { color: #e67e22 !important; }
+.text-medium   { color: #f1c40f !important; }
+.text-low      { color: #2ecc71 !important; }
+.text-info     { color: #3498db !important; }
+
+/* ── 14. Alerts ─────────────────────────────────────────────── */
+.alert {
+    border-radius: 5px !important;
+    border-left-width: 4px !important;
+    font-size: 13px !important;
+}
+.alert-info    { background-color: rgba(41,128,185,0.15) !important; border-color: #2980b9 !important; color: #7ec8e3 !important; }
+.alert-success { background-color: rgba(39,174,96,0.15) !important;  border-color: #27ae60 !important; color: #6dd9a0 !important; }
+.alert-warning { background-color: rgba(255,179,35,0.12) !important; border-color: var(--amber) !important; color: #ffd280 !important; }
+.alert-danger  { background-color: rgba(192,57,43,0.15) !important;  border-color: #c0392b !important; color: #f1908a !important; }
+.alert h4 { color: inherit !important; font-weight: 700 !important; margin-bottom: 4px !important; }
+
+/* ── 15. Modals ─────────────────────────────────────────────── */
+.modal-content {
+    background-color: var(--bg-surface) !important;
+    border: 1px solid var(--border-light) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.6) !important;
+}
+.modal-header {
+    background-color: var(--bg-elevated) !important;
+    border-bottom: 1px solid var(--border) !important;
+    border-radius: 6px 6px 0 0 !important;
+    padding: 14px 20px !important;
+}
+.modal-header .modal-title { color: var(--text-primary) !important; font-weight: 700 !important; font-size: 14px !important; }
+.modal-header .close { color: var(--text-sec) !important; opacity: 1 !important; text-shadow: none !important; }
+.modal-header .close:hover { color: var(--amber) !important; }
+.modal-body { background-color: var(--bg-surface) !important; color: var(--text-primary) !important; padding: 20px !important; }
+.modal-footer {
+    background-color: var(--bg-elevated) !important;
+    border-top: 1px solid var(--border) !important;
+    border-radius: 0 0 6px 6px !important;
+    padding: 12px 16px !important;
+}
+.modal-backdrop { background-color: #000 !important; }
+.modal-backdrop.in { opacity: 0.65 !important; }
+
+/* ── 16. Breadcrumbs ────────────────────────────────────────── */
+.breadcrumb {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 4px !important;
+    padding: 8px 14px !important;
+    margin-bottom: 16px !important;
+    font-size: 12px !important;
+}
+.breadcrumb > li + li::before { color: var(--text-muted) !important; }
+.breadcrumb > li > a { color: var(--amber) !important; }
+.breadcrumb > .active { color: var(--text-sec) !important; }
+
+/* ── 17. Pagination ─────────────────────────────────────────── */
+.pagination > li > a,
+.pagination > li > span {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border) !important;
+    color: var(--text-sec) !important;
+    font-size: 12px !important;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover {
+    background-color: var(--bg-hover) !important;
+    border-color: var(--amber) !important;
+    color: var(--amber) !important;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover {
+    background-color: var(--amber) !important;
+    border-color: var(--amber) !important;
+    color: #0c1820 !important;
+    font-weight: 700 !important;
+}
+.pagination > .disabled > a,
+.pagination > .disabled > span { background-color: var(--bg-surface) !important; color: var(--text-muted) !important; border-color: var(--border) !important; }
+
+/* ── 18. Tabs ───────────────────────────────────────────────── */
+.nav-tabs {
+    border-bottom: 1px solid var(--border) !important;
+}
+.nav-tabs > li > a {
+    color: var(--text-sec) !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 4px 4px 0 0 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 8px 14px !important;
+    margin-right: 2px !important;
+}
+.nav-tabs > li > a:hover {
+    color: var(--text-primary) !important;
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border) var(--border) transparent !important;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    background-color: var(--bg-surface) !important;
+    border-color: var(--border) var(--border) var(--bg-surface) !important;
+    color: var(--amber) !important;
+    font-weight: 700 !important;
+}
+.tab-content { background-color: var(--bg-surface) !important; border: 1px solid var(--border) !important; border-top: none !important; padding: 16px !important; border-radius: 0 0 4px 4px !important; }
+
+/* ── 19. Wells ──────────────────────────────────────────────── */
+.well {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 5px !important;
+    box-shadow: none !important;
+    color: var(--text-primary) !important;
+}
+.well-sm { padding: 10px 14px !important; }
+
+/* ── 20. List Groups ────────────────────────────────────────── */
+.list-group-item {
+    background-color: var(--bg-surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+    font-size: 13px !important;
+}
+.list-group-item:hover, .list-group-item:focus {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+}
+.list-group-item.active,
+.list-group-item.active:hover {
+    background-color: var(--amber) !important;
+    border-color: var(--amber) !important;
+    color: #0c1820 !important;
+}
+a.list-group-item { color: var(--text-sec) !important; }
+a.list-group-item:hover { color: var(--text-primary) !important; }
+
+/* ── 21. Headings & Typography ──────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+.text-muted { color: var(--text-muted) !important; }
+.text-primary { color: var(--amber) !important; }
+.text-success { color: #27ae60 !important; }
+.text-danger  { color: #e74c3c !important; }
+.text-warning { color: var(--amber) !important; }
+.text-info    { color: #3498db !important; }
+small, .small { color: var(--text-sec) !important; font-size: 11px !important; }
+hr { border-color: var(--border) !important; margin: 16px 0 !important; }
+
+/* ── 22. Progress Bars ──────────────────────────────────────── */
+.progress {
+    background-color: var(--bg-elevated) !important;
+    border-radius: 4px !important;
+    height: 8px !important;
+    box-shadow: none !important;
+}
+.progress-bar { background-color: var(--amber) !important; }
+.progress-bar-success { background-color: #27ae60 !important; }
+.progress-bar-warning { background-color: #e67e22 !important; }
+.progress-bar-danger  { background-color: #c0392b !important; }
+
+/* ── 23. jQueryUI / Datepicker ──────────────────────────────── */
+.ui-widget { font-family: inherit !important; }
+.ui-widget-content {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+.ui-widget-header {
+    background: var(--navy-mid) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+.ui-state-default, .ui-widget-content .ui-state-default {
+    background: var(--bg-elevated) !important;
+    color: var(--text-sec) !important;
+    border-color: var(--border) !important;
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover {
+    background: var(--amber-glow) !important;
+    color: var(--amber) !important;
+    border-color: var(--amber) !important;
+}
+.ui-state-active, .ui-widget-content .ui-state-active {
+    background: var(--amber) !important;
+    color: #0c1820 !important;
+    border-color: var(--amber) !important;
+}
+
+/* ── 24. Tags / Chosen multi-select ────────────────────────── */
+.chosen-container-multi .chosen-choices li.search-choice {
+    background: var(--amber-glow) !important;
+    border-color: rgba(255,179,35,0.3) !important;
+    color: var(--amber) !important;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+}
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close { opacity: 0.6; }
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover { opacity: 1; }
+
+/* ── 25. Product / Finding Cards (dashboard) ────────────────── */
+.product-panel,
+.finding-panel { border-left: 3px solid var(--amber) !important; }
+
+/* Stats boxes */
+.stats-box, .stat-box {
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    padding: 16px !important;
+    color: var(--text-primary) !important;
+}
+.stats-box .stat-label { font-size: 10px !important; text-transform: uppercase !important; letter-spacing: 1px !important; color: var(--text-muted) !important; }
+.stats-box .stat-value { font-size: 28px !important; font-weight: 700 !important; color: var(--amber) !important; line-height: 1.1 !important; }
+
+/* ── 26. Scrollbar global ───────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,179,35,0.4); }
+
+/* ── 27. Code & Pre ─────────────────────────────────────────── */
+code {
+    background-color: var(--bg-elevated) !important;
+    color: var(--amber) !important;
+    border-radius: 3px !important;
+    padding: 1px 5px !important;
+    font-size: 12px !important;
+}
+pre {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 5px !important;
+    color: var(--text-primary) !important;
+    font-size: 12px !important;
+    padding: 14px !important;
+}
+
+/* ── 28. Tooltips ───────────────────────────────────────────── */
+.tooltip-inner {
+    background-color: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-light) !important;
+    font-size: 11px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+}
+.tooltip.top    .tooltip-arrow { border-top-color: var(--border-light) !important; }
+.tooltip.bottom .tooltip-arrow { border-bottom-color: var(--border-light) !important; }
+.tooltip.left   .tooltip-arrow { border-left-color: var(--border-light) !important; }
+.tooltip.right  .tooltip-arrow { border-right-color: var(--border-light) !important; }
+
+/* ── 29. Popovers ───────────────────────────────────────────── */
+.popover {
+    background-color: var(--bg-elevated) !important;
+    border-color: var(--border-light) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+.popover-title { background-color: var(--navy-mid) !important; color: var(--text-primary) !important; border-bottom-color: var(--border) !important; font-size: 13px !important; font-weight: 700 !important; }
+.popover-content { color: var(--text-primary) !important; font-size: 12px !important; }
+
+/* ── 30. Charts & Donut wrappers ────────────────────────────── */
+.chart-container, .donut-container {
+    background: var(--bg-surface) !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--border) !important;
+    padding: 16px !important;
+}
+
+/* ── 31. Misc UI ─────────────────────────────────────────────── */
+/* Dividers */
+.divider { background-color: var(--border) !important; }
+
+/* Background helpers */
+.bg-primary   { background-color: var(--amber) !important; color: #0c1820 !important; }
+.bg-success   { background-color: rgba(39,174,96,0.2) !important; color: #6dd9a0 !important; }
+.bg-info      { background-color: rgba(41,128,185,0.2) !important; color: #7ec8e3 !important; }
+.bg-warning   { background-color: rgba(255,179,35,0.15) !important; color: #ffd280 !important; }
+.bg-danger    { background-color: rgba(192,57,43,0.2) !important; color: #f1908a !important; }
+
+/* Footer (if any) */
+footer { background-color: var(--bg-elevated) !important; border-top: 1px solid var(--border) !important; color: var(--text-muted) !important; }
+
+/* ── 32. Product Tab Header ─────────────────────────────────── */
+.product-tab-badge {
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    font-size: 11px !important;
+    color: var(--text-sec) !important;
+}
+
+/* ── 33. Remove DefectDojo branding ──────────────────────────── */
+/* Ocultar texto/referencias a DefectDojo si aparecen sueltas */
+.dojo-footer-brand, .defectdojo-reference { display: none !important; }
+
+/* ── 34. Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+    #page-wrapper { padding: 12px 14px !important; }
+    .navbar-default.sidebar { top: 0 !important; height: auto !important; }
+    .panel-heading { padding: 10px 12px !important; }
 }
