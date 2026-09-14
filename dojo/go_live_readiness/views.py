@@ -34,6 +34,13 @@ def go_live_readiness_data(request: HttpRequest, eid: int) -> HttpResponse:
     """Llamada asíncrona que genera el reporte completo y devuelve HTML."""
     eng = get_object_or_404(Engagement, pk=eid)
 
+    # Si se pide refresco forzado, invalidar caché del agente primero
+    if request.GET.get("refresh") == "1":
+        try:
+            requests.delete(f"{AGENT_URL}/cache/{eng.id}", timeout=5)
+        except Exception:
+            pass
+
     payload = {
         "product_id": eng.product.id,
         "engagement_id": eng.id,
