@@ -181,30 +181,74 @@
     transform: translateX(4px);
 }
 
-/* Panels de gráficas */
+/* Panels de gráficas — diseño moderno */
 .sqa-chart-panel {
-    border-radius: 10px !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08) !important;
     border: 1px solid #dde3ec !important;
     margin-bottom: 20px;
+    overflow: hidden;
 }
 .sqa-chart-panel .panel-heading {
-    background: #f7fafd !important;
-    border-radius: 9px 9px 0 0 !important;
+    background: #ffffff !important;
+    border-bottom: 1px solid #edf1f7 !important;
+    border-radius: 12px 12px 0 0 !important;
     font-size: 14px !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.3px;
+    font-weight: 700 !important;
+    letter-spacing: 0.2px;
     color: #1a2636 !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
 }
-.sqa-chart-panel .panel-heading i { color: #ffb323 !important; }
+.sqa-chart-panel .panel-heading i { color: #ffb323 !important; margin-right: 8px; }
 .sqa-surveys-panel .panel-heading { color: #1a2636 !important; }
 .sqa-chart-panel .panel-body {
-    padding: 20px !important;
+    padding: 24px !important;
     background: #ffffff !important;
 }
 
-.chart { height: 300px; }
-#punchcard { height: 350px; }
+/* Contenedor de canvas — relativo para Chart.js responsive */
+.sqa-chart-canvas-wrap {
+    position: relative;
+    height: 300px;
+}
+.sqa-chart-canvas-wrap canvas {
+    max-height: 300px;
+}
+#punchcard { height: 300px; }
+
+/* Análisis: banda de sección oscura premium */
+.sqa-analysis-hero {
+    background: linear-gradient(135deg, #1a2736 0%, #243348 100%);
+    border-radius: 12px;
+    padding: 20px 24px 16px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.sqa-analysis-hero-icon {
+    width: 48px; height: 48px;
+    border-radius: 10px;
+    background: rgba(255,179,35,0.15);
+    display: flex; align-items: center; justify-content: center;
+    color: #ffb323;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.sqa-analysis-hero-text h4 {
+    margin: 0 0 3px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.2px;
+}
+.sqa-analysis-hero-text p {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+}
 
 /* Tabla de cuestionarios */
 .sqa-surveys-panel {
@@ -375,30 +419,34 @@
 {% endblock %}
 
 <!-- Gráficas -->
-<p class="sqa-section-label"><i class="fa-solid fa-chart-bar"></i> {% trans "Análisis de hallazgos" %}</p>
+<div class="sqa-analysis-hero">
+    <div class="sqa-analysis-hero-icon">
+        <i class="fa-solid fa-chart-mixed"></i>
+    </div>
+    <div class="sqa-analysis-hero-text">
+        <h4>{% trans "Análisis de Seguridad" %}</h4>
+        <p>{% trans "Distribución histórica y tendencia mensual de hallazgos por severidad" %}</p>
+    </div>
+</div>
 
 {% block graph_row %}
 <div class="row">
 
     {% block historical_finding_severity %}
-    <div class="col-lg-6">
+    <div class="col-lg-5">
         <div class="panel sqa-chart-panel">
             <div class="panel-heading" id="homepage_pie_chart_heading">
-                <i class="fa-solid fa-chart-pie" style="margin-right:8px; color:#ffb323;"></i>
-                {% trans "Severidad histórica de hallazgos" %}
+                <i class="fa-solid fa-chart-pie"></i>
+                {% trans "Distribución por severidad" %}
             </div>
             <div class="panel-body">
                 <p id="chart-description" class="sr-only">
-                    {% trans "Gráfico de torta de hallazgos por severidad:" %}
+                    {% trans "Gráfico de hallazgos por severidad:" %}
                     critical ({{critical}}), high ({{high}}), medium ({{medium}}),
                     low ({{low}}), informational ({{info}}).
                 </p>
-                <div aria-describedby="chart-description"
-                     aria-labelledby="homepage_pie_chart_heading"
-                     class="chart"
-                     id="homepage_pie_chart"
-                     role="img"
-                     tabindex="0">
+                <div class="sqa-chart-canvas-wrap" aria-labelledby="homepage_pie_chart_heading">
+                    <canvas id="homepage_pie_chart_canvas"></canvas>
                 </div>
             </div>
         </div>
@@ -406,20 +454,18 @@
     {% endblock %}
 
     {% block reported_finding_severity_by_month %}
-    <div class="col-lg-6">
+    <div class="col-lg-7">
         <div class="panel sqa-chart-panel">
             <div class="panel-heading" id="severity-chart-heading">
-                <i class="fa-solid fa-chart-line" style="margin-right:8px; color:#ffb323;"></i>
-                {% trans "Severidad de hallazgos por mes" %}
+                <i class="fa-solid fa-chart-area"></i>
+                {% trans "Tendencia mensual de hallazgos" %}
             </div>
             <p id="severity-chart-description" class="sr-only">
                 {% trans "Tendencia mensual de hallazgos por severidad: critical, high, medium, low." %}
             </p>
             <div class="panel-body">
-                <div class="chart" id="homepage_severity_plot"
-                     aria-describedby="severity-chart-description"
-                     aria-labelledby="severity-chart-heading"
-                     role="img" tabindex="0">
+                <div class="sqa-chart-canvas-wrap" aria-labelledby="severity-chart-heading">
+                    <canvas id="homepage_severity_plot_canvas"></canvas>
                 </div>
                 <div class="sr-only">
                     <h3 id="severity-table-title">{% trans "Desglose mensual por severidad" %}</h3>
@@ -588,46 +634,160 @@
 
 {% block postscript %}
     {{ block.super }}
-    <script src="{% static "flot/excanvas.min.js" %}"></script>
-    <script src="{% static "flot/jquery.flot.js" %}"></script>
-    <script src="{% static "flot/jquery.flot.pie.js" %}"></script>
-    <script src="{% static "flot/jquery.flot.time.js" %}"></script>
-    <script src="{% static "jquery.flot.tooltip/js/jquery.flot.tooltip.min.js" %}"></script>
-    <script src="{% static "flot/jquery.flot.stack.js" %}"></script>
-    <script src="{% static "flot/jquery.flot.resize.js" %}"></script>
+    <!-- Chart.js moderno en lugar de flot.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     {% if punchcard %}
+        <!-- Flot solo para punchcard -->
+        <script src="{% static "flot/jquery.flot.js" %}"></script>
+        <script src="{% static "flot/jquery.flot.resize.js" %}"></script>
         <script src="{% static "JUMFlot/javascripts/JUMFlot.min.js" %}"></script>
         <script src="{% static "JUMFlot/javascripts/jquery.flot.mouse.js" %}"></script>
         <script src="{% static "JUMFlot/javascripts/jquery.flot.bubbles.js" %}"></script>
+        {% block metrics %}
+            <script src="{% static "dojo/js/metrics.js" %}"></script>
+        {% endblock metrics %}
     {% endif %}
-    {% block metrics %}
-        <script src="{% static "dojo/js/metrics.js" %}"></script>
-    {% endblock metrics %}
     <script>
-        $(function () {
-            homepage_pie_chart("{{critical}}", "{{high}}", "{{medium}}", "{{low}}", "{{info}}");
+    $(function () {
+        /* ── Datos de severidad ── */
+        var cr  = parseInt("{{critical}}") || 0;
+        var hi  = parseInt("{{high}}")     || 0;
+        var me  = parseInt("{{medium}}")   || 0;
+        var lo  = parseInt("{{low}}")      || 0;
+        var inf = parseInt("{{info}}")     || 0;
+        var tot = cr + hi + me + lo + inf;
 
-            let critical = [];
-            let high = [];
-            let medium = [];
-            let low = [];
-            let info = [];
+        /* ── Doughnut: Distribución por severidad ── */
+        var pieCanvas = document.getElementById('homepage_pie_chart_canvas');
+        if (pieCanvas) {
+            var centerPlugin = {
+                id: 'centerText',
+                afterDraw: function(chart) {
+                    var c = chart.ctx;
+                    var cx = (chart.chartArea.left + chart.chartArea.right) / 2;
+                    var cy = (chart.chartArea.top  + chart.chartArea.bottom) / 2;
+                    c.save();
+                    c.textAlign    = 'center';
+                    c.textBaseline = 'middle';
+                    c.fillStyle    = '#1a2736';
+                    c.font         = 'bold 36px JetBrains Mono, monospace';
+                    c.fillText(tot, cx, cy - 10);
+                    c.font         = '600 10px Figtree, sans-serif';
+                    c.fillStyle    = '#8898ae';
+                    c.letterSpacing = '1.5px';
+                    c.fillText('HALLAZGOS', cx, cy + 18);
+                    c.restore();
+                }
+            };
+            new Chart(pieCanvas, {
+                type: 'doughnut',
+                plugins: [centerPlugin],
+                data: {
+                    labels: ['Critical','High','Medium','Low','Informational'],
+                    datasets: [{
+                        data: [cr, hi, me, lo, inf],
+                        backgroundColor: ['#e74c3c','#e67e22','#f1c40f','#3498db','#b2bec3'],
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    cutout: '68%',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#5a6b82',
+                                font: { family:'Figtree,sans-serif', size:12 },
+                                padding: 14,
+                                usePointStyle: true,
+                                pointStyleWidth: 10
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    var p = tot > 0 ? ((ctx.parsed / tot)*100).toFixed(1) : 0;
+                                    return '  ' + ctx.label + ': ' + ctx.parsed + ' (' + p + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /* ── Área: Tendencia mensual ── */
+        var lineCanvas = document.getElementById('homepage_severity_plot_canvas');
+        if (lineCanvas) {
+            var lbls = [], crD = [], hiD = [], meD = [], loD = [];
             {% for month in by_month %}
-                month = {{month|safe}};
-                ttp = new Date(month['y'] + '-01').getTime();
-                critical.push([ttp, month['a']]);
-                high.push([ttp, month['b']]);
-                medium.push([ttp, month['c']]);
-                low.push([ttp, month['d']]);
+            (function(){
+                var m = {{month|safe}};
+                var d = new Date(m.y + '-01');
+                lbls.push(d.toLocaleString('es',{month:'short',year:'2-digit'}));
+                crD.push(m.a || 0);
+                hiD.push(m.b || 0);
+                meD.push(m.c || 0);
+                loD.push(m.d || 0);
+            })();
             {% endfor %}
-            homepage_severity_plot(critical, high, medium, low);
 
-            {% if punchcard %}
-                let punchcardData = {{ punchcard|safe }};
-                let ticksData = {{ ticks|safe }};
-                punchcard("#punchcard", punchcardData, ticksData);
-                updatePunchcardTable(punchcardData, ticksData);
-            {% endif %}
-        });
+            var lCtx = lineCanvas.getContext('2d');
+            function mkGrad(hex, alpha) {
+                var g = lCtx.createLinearGradient(0,0,0,260);
+                g.addColorStop(0, hex.replace(')',','+alpha+')').replace('rgb','rgba'));
+                g.addColorStop(1, hex.replace(')',',0)').replace('rgb','rgba'));
+                return g;
+            }
+            var gradCr = lCtx.createLinearGradient(0,0,0,260);
+            gradCr.addColorStop(0,'rgba(231,76,60,0.28)'); gradCr.addColorStop(1,'rgba(231,76,60,0)');
+            var gradHi = lCtx.createLinearGradient(0,0,0,260);
+            gradHi.addColorStop(0,'rgba(230,126,34,0.22)'); gradHi.addColorStop(1,'rgba(230,126,34,0)');
+            var gradMe = lCtx.createLinearGradient(0,0,0,260);
+            gradMe.addColorStop(0,'rgba(241,196,15,0.22)'); gradMe.addColorStop(1,'rgba(241,196,15,0)');
+            var gradLo = lCtx.createLinearGradient(0,0,0,260);
+            gradLo.addColorStop(0,'rgba(52,152,219,0.18)'); gradLo.addColorStop(1,'rgba(52,152,219,0)');
+
+            new Chart(lineCanvas, {
+                type: 'line',
+                data: {
+                    labels: lbls,
+                    datasets: [
+                        { label:'Critical', data:crD, borderColor:'#e74c3c', backgroundColor:gradCr, fill:true, tension:0.4, pointRadius:4, pointHoverRadius:7, borderWidth:2 },
+                        { label:'High',     data:hiD, borderColor:'#e67e22', backgroundColor:gradHi, fill:true, tension:0.4, pointRadius:4, pointHoverRadius:7, borderWidth:2 },
+                        { label:'Medium',   data:meD, borderColor:'#d4ac0d', backgroundColor:gradMe, fill:true, tension:0.4, pointRadius:4, pointHoverRadius:7, borderWidth:2 },
+                        { label:'Low',      data:loD, borderColor:'#3498db', backgroundColor:gradLo, fill:true, tension:0.4, pointRadius:4, pointHoverRadius:7, borderWidth:2 }
+                    ]
+                },
+                options: {
+                    responsive:true,
+                    maintainAspectRatio:false,
+                    interaction:{ mode:'index', intersect:false },
+                    scales: {
+                        x: { grid:{ color:'rgba(0,0,0,0.04)' }, ticks:{ color:'#8898ae', font:{family:'Figtree',size:11} } },
+                        y: { beginAtZero:true, grid:{ color:'rgba(0,0,0,0.04)' }, ticks:{ color:'#8898ae', font:{family:'JetBrains Mono,monospace',size:11}, stepSize:1 } }
+                    },
+                    plugins: {
+                        legend: {
+                            position:'top',
+                            align:'end',
+                            labels:{ color:'#5a6b82', font:{family:'Figtree',size:12}, usePointStyle:true, padding:14 }
+                        }
+                    }
+                }
+            });
+        }
+
+        {% if punchcard %}
+            var punchcardData = {{ punchcard|safe }};
+            var ticksData     = {{ ticks|safe }};
+            punchcard("#punchcard", punchcardData, ticksData);
+            updatePunchcardTable(punchcardData, ticksData);
+        {% endif %}
+    });
     </script>
 {% endblock %}

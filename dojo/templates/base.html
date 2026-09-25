@@ -91,7 +91,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=11">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=12">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -101,7 +101,7 @@
             {% endblock %}
         </style>
         <style>
-            /* ── QustodIA CRITICAL LAYOUT v11 ── inline para garantizar aplicación */
+            /* ── QustodIA CRITICAL LAYOUT v12 ── inline para garantizar aplicación */
             body, html { margin: 0 !important; padding: 0 !important; }
             body.custodia-body { padding-top: 0 !important; overflow: hidden !important; height: 100vh !important; }
             /* Ocultar topbar Bootstrap viejo */
@@ -217,6 +217,83 @@
             /* Sidebar colapsado */
             .custodia-app.csb-collapsed .csb { width: 60px !important; }
             .custodia-app.csb-collapsed .custodia-main { margin-left: 60px !important; }
+
+            /* ── Logo prominente ── */
+            .csb-brand {
+                height: 88px !important;
+                min-height: 88px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-start !important;
+                padding: 0 18px !important;
+                border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+                flex-shrink: 0 !important;
+                background: rgba(0,0,0,0.12) !important;
+            }
+            .csb-brand a {
+                display: flex !important;
+                align-items: center !important;
+                text-decoration: none !important;
+                width: 100% !important;
+            }
+            .csb-logo-img {
+                width: 196px !important;
+                max-width: 196px !important;
+                height: auto !important;
+                max-height: 68px !important;
+                object-fit: contain !important;
+                transition: width 0.3s, max-width 0.3s !important;
+            }
+            .custodia-app.csb-collapsed .csb-logo-img {
+                width: 32px !important;
+                max-width: 32px !important;
+            }
+
+            /* ── MetisMenu submenús ── */
+            #side-menu .nav-second-level {
+                display: none !important;
+                background: rgba(0,0,0,0.22) !important;
+                padding: 4px 0 6px !important;
+                list-style: none !important;
+                margin: 0 !important;
+            }
+            #side-menu .nav-second-level.mm-show,
+            #side-menu .nav-second-level.in {
+                display: block !important;
+            }
+            #side-menu .nav-second-level li {
+                display: block !important;
+            }
+            #side-menu .nav-second-level li a {
+                display: flex !important;
+                align-items: center !important;
+                padding: 7px 16px 7px 44px !important;
+                font-size: 12px !important;
+                color: rgba(255,255,255,0.46) !important;
+                text-decoration: none !important;
+                transition: color 0.15s, background 0.15s !important;
+                border-left: 3px solid transparent !important;
+                white-space: normal !important;
+            }
+            #side-menu .nav-second-level li a:hover,
+            #side-menu .nav-second-level li.active > a {
+                color: #ffb323 !important;
+                background: rgba(255,179,35,0.07) !important;
+                border-left-color: rgba(255,179,35,0.6) !important;
+            }
+            /* Flecha rotante */
+            #side-menu li > a .glyphicon.arrow {
+                margin-left: auto !important;
+                float: none !important;
+                font-size: 10px !important;
+                opacity: 0.45 !important;
+                transition: transform 0.25s ease !important;
+                flex-shrink: 0 !important;
+            }
+            #side-menu li.mm-active > a .glyphicon.arrow {
+                transform: rotate(90deg) !important;
+                opacity: 0.75 !important;
+            }
         </style>
         <style>
             /* QustodIA — encabezados de tabla (light theme) */
@@ -270,7 +347,7 @@
                     <div class="csb-brand">
                         <a href="{% url 'home' %}">
                             {% block header_logo %}
-                                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA" height="52"/>
+                                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA" class="csb-logo-img"/>
                             {% endblock %}
                         </a>
                     </div>
@@ -1519,7 +1596,24 @@
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
 
-        /* QustodIA: flyout desactivado — sidebar expandido en .csb-nav-wrap con scroll normal */
+        /* ── MetisMenu: init submenús ── */
+        (function() {
+            if (typeof $.fn.metisMenu !== 'undefined') {
+                $('#side-menu').metisMenu({ toggle: false });
+            } else {
+                /* Fallback manual si MetisMenu no carga */
+                $('#side-menu').on('click', '> li > a', function(e) {
+                    var $ul = $(this).siblings('ul.nav-second-level');
+                    if (!$ul.length) return;
+                    e.preventDefault();
+                    var $li = $(this).parent();
+                    var wasOpen = $ul.hasClass('mm-show');
+                    $li.toggleClass('mm-active', !wasOpen);
+                    if (wasOpen) { $ul.removeClass('mm-show'); }
+                    else { $ul.addClass('mm-show'); }
+                });
+            }
+        })();
 
         /* MetisMenu: scroll sidebar para mostrar submenú expandido */
         $('#side-menu').on('click', '> li > a', function() {
