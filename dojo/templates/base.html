@@ -91,7 +91,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=14">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=15">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -220,12 +220,12 @@
 
             /* ── Logo prominente ── */
             .csb-brand {
-                height: 108px !important;
-                min-height: 108px !important;
+                height: 132px !important;
+                min-height: 132px !important;
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
-                padding: 0 14px !important;
+                padding: 8px 12px !important;
                 border-bottom: 2px solid rgba(255,179,35,0.2) !important;
                 flex-shrink: 0 !important;
                 background: rgba(0,0,0,0.18) !important;
@@ -240,14 +240,18 @@
             .csb-logo-img {
                 width: 228px !important;
                 height: auto !important;
-                max-height: 90px !important;
                 object-fit: contain !important;
                 transition: all 0.3s ease !important;
             }
-            .custodia-app.csb-collapsed .csb-brand { padding: 0 8px !important; }
+            .custodia-app.csb-collapsed .csb-brand {
+                height: 72px !important;
+                min-height: 72px !important;
+                padding: 0 8px !important;
+            }
             .custodia-app.csb-collapsed .csb-logo-img {
-                max-width: 38px !important;
-                max-height: 38px !important;
+                width: 40px !important;
+                height: 40px !important;
+                object-fit: contain !important;
             }
 
             /* ── Submenús: toggle por clase CSS con !important ── */
@@ -271,19 +275,34 @@
                 background: rgba(255,179,35,0.07) !important;
                 border-left-color: rgba(255,179,35,0.55) !important;
             }
-            /* Flecha rotante con !important */
+            /* Flecha: usa Font Awesome (glyphicon.arrow no tiene ::before en Bootstrap)  */
             #side-menu li > a .glyphicon.arrow {
+                font-family: "Font Awesome 6 Free" !important;
+                font-weight: 900 !important;
+                -webkit-font-smoothing: antialiased !important;
                 margin-left: auto !important;
                 float: none !important;
-                font-size: 9px !important;
-                opacity: 0.4 !important;
-                transition: transform 0.22s ease !important;
+                font-size: 10px !important;
+                opacity: 0.45 !important;
+                transition: transform 0.22s ease, opacity 0.15s !important;
                 flex-shrink: 0 !important;
                 cursor: pointer !important;
+                padding: 5px 8px !important;
+                margin-right: -8px !important;
+                border-radius: 4px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+            }
+            #side-menu li > a .glyphicon.arrow::before {
+                content: "\f054" !important;
+            }
+            #side-menu li > a .glyphicon.arrow:hover {
+                opacity: 1 !important;
+                background: rgba(255,255,255,0.08) !important;
             }
             #side-menu li.csb-open > a .glyphicon.arrow {
                 transform: rotate(90deg) !important;
-                opacity: 0.7 !important;
+                opacity: 0.75 !important;
             }
         </style>
         <style>

@@ -29,9 +29,26 @@
     background: rgba(255,179,35,0.05);
     pointer-events: none;
 }
-.sqa-risk-logo {
-    height: 38px;
+.sqa-risk-wordmark {
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+.sqa-risk-wordmark-icon {
+    font-size: 13px;
+    color: #ffb323;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+.sqa-risk-wordmark-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    font-family: 'Figtree', sans-serif;
+    line-height: 1;
 }
 .sqa-risk-div {
     width: 1px; height: 52px;
@@ -294,6 +311,11 @@
 
 <!-- Banner de postura de riesgo -->
 <div class="sqa-risk-banner">
+    <div class="sqa-risk-wordmark">
+        <span class="sqa-risk-wordmark-icon"><i class="fa-solid fa-shield-halved"></i> ASPM</span>
+        <span class="sqa-risk-wordmark-text">QustodIA</span>
+    </div>
+    <div class="sqa-risk-div"></div>
     <div class="sqa-risk-info">
         <div class="lbl">Postura de seguridad · SQA Security S.A.</div>
         <p class="title">Application Security Posture Management</p>
