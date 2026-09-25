@@ -769,7 +769,7 @@ form#custom_search_form {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 24px;
+  padding: 8px 20px;
   gap: 16px;
 }
 
