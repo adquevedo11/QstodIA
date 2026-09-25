@@ -91,7 +91,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=13">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=14">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -238,8 +238,7 @@
                 width: 100% !important;
             }
             .csb-logo-img {
-                width: auto !important;
-                max-width: 218px !important;
+                width: 228px !important;
                 height: auto !important;
                 max-height: 90px !important;
                 object-fit: contain !important;
@@ -251,44 +250,40 @@
                 max-height: 38px !important;
             }
 
-            /* ── Submenús — SIN !important para que jQuery slideDown funcione ── */
-            #side-menu .nav-second-level {
-                display: none;
-                background: rgba(0,0,0,0.2);
-                padding: 4px 0 8px;
-                list-style: none;
-                margin: 0;
-                overflow: hidden;
-            }
-            #side-menu .nav-second-level li { display: block; }
+            /* ── Submenús: toggle por clase CSS con !important ── */
+            #side-menu > li > ul.nav-second-level { display: none !important; }
+            #side-menu > li.csb-open > ul.nav-second-level { display: block !important; }
             #side-menu .nav-second-level li a {
-                display: flex;
-                align-items: center;
-                padding: 8px 16px 8px 44px;
-                font-size: 12px;
-                color: rgba(255,255,255,0.46);
-                text-decoration: none;
-                transition: color 0.15s, background 0.15s;
-                border-left: 3px solid transparent;
+                display: block !important;
+                padding: 8px 14px 8px 44px !important;
+                font-size: 12px !important;
+                color: rgba(255,255,255,0.46) !important;
+                text-decoration: none !important;
+                transition: color 0.15s, background 0.15s !important;
+                border-left: 3px solid transparent !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
             }
             #side-menu .nav-second-level li a:hover,
             #side-menu .nav-second-level li.active > a {
-                color: #ffb323;
-                background: rgba(255,179,35,0.07);
-                border-left-color: rgba(255,179,35,0.55);
+                color: #ffb323 !important;
+                background: rgba(255,179,35,0.07) !important;
+                border-left-color: rgba(255,179,35,0.55) !important;
             }
-            /* Flecha rotante — sin !important */
+            /* Flecha rotante con !important */
             #side-menu li > a .glyphicon.arrow {
-                margin-left: auto;
-                float: none;
-                font-size: 9px;
-                opacity: 0.4;
-                transition: transform 0.22s ease;
-                flex-shrink: 0;
+                margin-left: auto !important;
+                float: none !important;
+                font-size: 9px !important;
+                opacity: 0.4 !important;
+                transition: transform 0.22s ease !important;
+                flex-shrink: 0 !important;
+                cursor: pointer !important;
             }
             #side-menu li.csb-open > a .glyphicon.arrow {
-                transform: rotate(90deg);
-                opacity: 0.7;
+                transform: rotate(90deg) !important;
+                opacity: 0.7 !important;
             }
         </style>
         <style>
@@ -1592,53 +1587,13 @@
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
 
-        /* ── Submenús accordion — puro jQuery, sin MetisMenu ── */
-        (function() {
-            /* Marca ítems que tienen submenú */
-            $('#side-menu > li').each(function() {
-                if ($(this).children('ul.nav-second-level').length) {
-                    $(this).children('a').addClass('csb-has-sub');
-                }
-            });
-            /* Toggle accordion */
-            $('#side-menu').on('click', '> li > a.csb-has-sub', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                var $li   = $(this).parent();
-                var $ul   = $li.children('ul.nav-second-level');
-                var isOpen = $li.hasClass('csb-open');
-                /* Cierra hermanos */
-                $li.siblings('.csb-open').each(function() {
-                    $(this).removeClass('csb-open');
-                    $(this).children('ul.nav-second-level').slideUp(180);
-                });
-                if (isOpen) {
-                    $li.removeClass('csb-open');
-                    $ul.slideUp(200);
-                } else {
-                    $li.addClass('csb-open');
-                    $ul.slideDown(240);
-                }
-            });
-        })();
-
-        /* MetisMenu: scroll sidebar para mostrar submenú expandido */
-        $('#side-menu').on('click', '> li > a', function() {
-            var $li     = $(this).parent();
-            var $scroll = $('.csb-nav-wrap');
-            setTimeout(function() {
-                var $ul = $li.find('> ul.nav-second-level');
-                if (!$ul.length) return;
-                var ulH = $ul.outerHeight(true) || 0;
-                if (ulH < 5) return; // aún colapsado o cerrando
-                var sTop   = $scroll.scrollTop();
-                var sH     = $scroll.innerHeight();
-                var liTop  = $li.offset().top - $scroll.offset().top + sTop;
-                var needed = liTop + $li.outerHeight(true) + ulH + 10;
-                if (needed > sTop + sH) {
-                    $scroll.stop(true).animate({ scrollTop: needed - sH }, 200);
-                }
-            }, 500);
+        /* ── Submenús: clic en la FLECHA toggle — el link sigue navegando ── */
+        $('#side-menu').on('click', '.glyphicon.arrow', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var $li = $(this).closest('li');
+            $li.siblings('.csb-open').removeClass('csb-open');
+            $li.toggleClass('csb-open');
         });
         </script>
     </body>
