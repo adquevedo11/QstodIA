@@ -90,7 +90,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=17">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=18">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -118,12 +118,19 @@
                 z-index: 9000 !important;
                 box-shadow: 2px 0 16px rgba(0,0,0,0.22) !important;
             }
-            /* Área principal: empujada 256px a la derecha */
+            /* Contenedor raíz — flex column full height para footer full-width */
+            .custodia-app {
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100vh !important;
+            }
+            /* Área principal: empujada 256px a la derecha, flex:1 para ceder espacio al footer */
             .custodia-main {
                 margin-left: 256px !important;
                 display: flex !important;
                 flex-direction: column !important;
-                height: 100vh !important;
+                flex: 1 !important;
+                min-height: 0 !important;
                 overflow: hidden !important;
             }
             /* Topbar QustodIA */
@@ -217,54 +224,24 @@
             .custodia-app.csb-collapsed .csb { width: 60px !important; }
             .custodia-app.csb-collapsed .custodia-main { margin-left: 60px !important; }
 
-            /* ── Wordmark CSS: independiente de imágenes ── */
+            /* ── Logo sidebar: imagen PNG original ── */
             .csb-brand {
-                padding: 16px 16px 14px !important;
+                padding: 0 !important;
                 border-bottom: 2px solid rgba(255,179,35,0.22) !important;
                 flex-shrink: 0 !important;
                 background: rgba(0,0,0,0.16) !important;
+                overflow: hidden !important;
             }
-            .csb-brand-link {
-                display: block !important;
-                text-decoration: none !important;
+            .csb-brand-link { display: block !important; text-decoration: none !important; }
+            .csb-logo-img { width: 100% !important; height: auto !important; display: block !important; }
+            /* Colapsado: recorte sobre la zona del escudo */
+            .custodia-app.csb-collapsed .csb-brand { padding: 0 !important; }
+            .custodia-app.csb-collapsed .csb-logo-img {
+                width: 60px !important;
+                height: 52px !important;
+                object-fit: cover !important;
+                object-position: 40% 12% !important;
             }
-            .csb-wordmark {
-                display: flex !important;
-                align-items: center !important;
-                gap: 11px !important;
-            }
-            .csb-wm-shield {
-                font-size: 34px !important;
-                color: #5bbfff !important;
-                flex-shrink: 0 !important;
-                filter: drop-shadow(0 0 6px rgba(91,191,255,0.35)) !important;
-            }
-            .csb-wm-texts {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 3px !important;
-            }
-            .csb-wm-name {
-                font-size: 21px !important;
-                font-weight: 800 !important;
-                color: #ffffff !important;
-                font-family: 'Figtree', sans-serif !important;
-                letter-spacing: -0.4px !important;
-                line-height: 1 !important;
-                display: block !important;
-            }
-            .csb-wm-ia { color: #5bbfff !important; }
-            .csb-wm-tagline {
-                font-size: 9px !important;
-                color: rgba(255,255,255,0.35) !important;
-                letter-spacing: 1px !important;
-                text-transform: uppercase !important;
-                display: block !important;
-            }
-            .custodia-app.csb-collapsed .csb-brand { padding: 12px 0 10px !important; justify-content: center !important; display: flex !important; }
-            .custodia-app.csb-collapsed .csb-wm-texts { display: none !important; }
-            .custodia-app.csb-collapsed .csb-wordmark { justify-content: center !important; gap: 0 !important; }
-            .custodia-app.csb-collapsed .csb-wm-shield { font-size: 22px !important; }
 
             /* ── Submenús: toggle por clase CSS — anula todo lo de MetisMenu ── */
             #side-menu > li > ul.nav-second-level {
@@ -380,13 +357,7 @@
                     <div class="csb-brand">
                         <a href="{% url 'home' %}" class="csb-brand-link">
                             {% block header_logo %}
-                            <div class="csb-wordmark">
-                                <i class="fa-solid fa-shield-halved csb-wm-shield"></i>
-                                <div class="csb-wm-texts">
-                                    <span class="csb-wm-name">Qustod<span class="csb-wm-ia">IA</span></span>
-                                    <span class="csb-wm-tagline">by SQA SA</span>
-                                </div>
-                            </div>
+                            <img src="{% static "dojo/img/qustodIA_logo.png" %}" class="csb-logo-img" alt="QustodIA">
                             {% endblock %}
                         </a>
                     </div>
@@ -1386,31 +1357,6 @@
                 </div>
                 <!-- /.c-content-wrap / #page-wrapper -->
 
-                <!-- FOOTER -->
-                <div id="footer-wrapper">
-                {% block footer %}
-                    <footer class="c-footer">
-                        <div class="c-footer-inner">
-                            <div class="c-footer-col c-footer-left">
-                                <img src="{% static "dojo/img/sqa_logo.png" %}" class="c-footer-sqa-logo" alt="SQA SA">
-                                <span class="c-footer-product-name">QustodIA</span>
-                            </div>
-                            <div class="c-footer-col c-footer-center">
-                                <span class="c-footer-center-title">QustodIA</span>
-                                <span class="c-footer-center-sep">|</span>
-                                <span class="c-footer-center-sub">Application Security Posture Management</span>
-                            </div>
-                            <div class="c-footer-col c-footer-right">
-                                <span class="c-footer-company-name">SQA SA</span>
-                                <a href="https://sqasa.co/" target="_blank" class="c-footer-company-web">sqasa.co</a>
-                                <span class="c-footer-copy">&copy; {% now "Y" %} SQA SA. Todos los derechos reservados.</span>
-                            </div>
-                        </div>
-                    </footer>
-                {% endblock %}
-                </div>
-                <!-- /#footer-wrapper -->
-
                 <!-- .dojo-modals-wrapper -->
                 <div id="dojo-modals-wrapper" class="dojo-modals-wrapper">
                 {% block modals %}
@@ -1440,6 +1386,31 @@
 
             </div>
             <!-- /.custodia-main -->
+
+            <!-- FOOTER — fuera de custodia-main para ancho completo (cubre sidebar) -->
+            <div id="footer-wrapper">
+            {% block footer %}
+                <footer class="c-footer">
+                    <div class="c-footer-inner">
+                        <div class="c-footer-col c-footer-left">
+                            <img src="{% static "dojo/img/sqa_logo.png" %}" class="c-footer-sqa-logo" alt="SQA SA">
+                            <span class="c-footer-product-name">QustodIA</span>
+                        </div>
+                        <div class="c-footer-col c-footer-center">
+                            <span class="c-footer-center-title">QustodIA</span>
+                            <span class="c-footer-center-sep">|</span>
+                            <span class="c-footer-center-sub">Application Security Posture Management</span>
+                        </div>
+                        <div class="c-footer-col c-footer-right">
+                            <span class="c-footer-company-name">SQA SA</span>
+                            <a href="https://sqasa.co/" target="_blank" class="c-footer-company-web">sqasa.co</a>
+                            <span class="c-footer-copy">&copy; {% now "Y" %} SQA SA. Todos los derechos reservados.</span>
+                        </div>
+                    </div>
+                </footer>
+            {% endblock %}
+            </div>
+            <!-- /#footer-wrapper -->
 
         </div>
         <!-- /.custodia-app -->

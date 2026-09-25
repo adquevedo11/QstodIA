@@ -756,8 +756,13 @@ form#custom_search_form {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   FOOTER — 3 columnas estilo producción
+   FOOTER — 3 columnas estilo producción (ancho completo)
    ══════════════════════════════════════════════════════════════ */
+/* El #footer-wrapper es hijo directo de .custodia-app (flex-col), ocupa el ancho total */
+#footer-wrapper {
+  flex-shrink: 0;
+  width: 100%;
+}
 .c-footer,
 #footer-wrapper footer.c-footer {
   flex-shrink: 0;
