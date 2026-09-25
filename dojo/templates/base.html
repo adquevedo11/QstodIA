@@ -91,7 +91,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=10">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=11">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -101,7 +101,7 @@
             {% endblock %}
         </style>
         <style>
-            /* ── QustodIA CRITICAL LAYOUT v10 ── inline para garantizar aplicación */
+            /* ── QustodIA CRITICAL LAYOUT v11 ── inline para garantizar aplicación */
             body, html { margin: 0 !important; padding: 0 !important; }
             body.custodia-body { padding-top: 0 !important; overflow: hidden !important; height: 100vh !important; }
             /* Ocultar topbar Bootstrap viejo */
@@ -137,6 +137,80 @@
                 border-bottom: 1px solid #dde3ec !important;
                 padding: 0 16px !important;
                 z-index: 100 !important;
+                gap: 12px !important;
+            }
+            .ctp-left {
+                display: flex !important;
+                align-items: center !important;
+                gap: 12px !important;
+                flex: 1 !important;
+                min-width: 0 !important;
+            }
+            /* Búsqueda unificada */
+            form#custom_search_form {
+                display: flex !important;
+                align-items: center !important;
+                background: #f3f6fa !important;
+                border: 1px solid #dde3ec !important;
+                border-radius: 8px !important;
+                height: 36px !important;
+                overflow: hidden !important;
+                flex: 1 !important;
+                max-width: 440px !important;
+                margin: 0 !important;
+            }
+            form#custom_search_form:focus-within {
+                border-color: #ffb323 !important;
+                box-shadow: 0 0 0 3px rgba(255,179,35,0.15) !important;
+            }
+            /* Botón submit búsqueda: transparente, solo ícono */
+            #simple_search_submit, .ctp-search-ico {
+                background: transparent !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+                color: #8898ae !important;
+                font-size: 13px !important;
+                padding: 0 10px !important;
+                height: 36px !important;
+                display: flex !important;
+                align-items: center !important;
+                cursor: pointer !important;
+                flex-shrink: 0 !important;
+            }
+            #simple_search_submit:hover, .ctp-search-ico:hover { color: #ffb323 !important; }
+            /* Input de búsqueda */
+            #simple_search, .ctp-search-inp {
+                flex: 1 !important;
+                border: none !important;
+                background: transparent !important;
+                outline: none !important;
+                box-shadow: none !important;
+                color: #222b3a !important;
+                font-size: 13px !important;
+                height: 36px !important;
+                padding: 0 !important;
+                min-width: 0 !important;
+            }
+            /* Hamburger: soporte a ambos class names */
+            .ctp-hamburger-btn, .ctp-hamburger {
+                background: transparent !important;
+                border: 1px solid #dde3ec !important;
+                border-radius: 6px !important;
+                color: #6b7a92 !important;
+                width: 34px !important;
+                height: 34px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                cursor: pointer !important;
+                font-size: 14px !important;
+                flex-shrink: 0 !important;
+                padding: 0 !important;
+            }
+            .ctp-hamburger-btn:hover, .ctp-hamburger:hover {
+                border-color: #ffb323 !important;
+                color: #222b3a !important;
             }
             /* Contenido scrollable */
             .c-content-wrap, #page-wrapper { flex: 1 !important; overflow-y: auto !important; margin-left: 0 !important; }
