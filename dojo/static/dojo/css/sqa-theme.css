@@ -125,78 +125,57 @@ pre {
 ::-webkit-scrollbar-thumb:hover { background: #c4cdd8; }
 
 /* ══════════════════════════════════════════════════════════════
-   KILL sb-admin-2 layout — ejecutar ANTES del grid
+   KILL sb-admin-2 — CRÍTICO: ejecutar antes que nada
    ══════════════════════════════════════════════════════════════ */
-/* Neutralizar body padding de la barra de navbar fija */
-body, body.custodia-body {
+body,
+body.custodia-body {
   padding-top: 0 !important;
   margin-top: 0 !important;
 }
-
-/* Neutralizar el #wrapper de sb-admin-2 */
-#wrapper {
-  padding-top: 0 !important;
-}
-
-/* Neutralizar navbar fija de sb-admin-2 (el antiguo topbar) */
+/* Ocultar el topbar de Bootstrap/sb-admin-2 que ya no existe */
 .navbar.navbar-default,
-nav.navbar {
-  position: static !important;
-  height: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
+.navbar-fixed-top {
   display: none !important;
+  height: 0 !important;
 }
-
-/* Neutralizar sidebar de sb-admin-2 */
-.navbar-default.sidebar,
-.navbar-default .sidebar-nav {
-  position: static !important;
-  width: auto !important;
-  top: auto !important;
-}
-
-/* page-wrapper: el antiguo margin-left: 250px de sb-admin-2 */
-#page-wrapper {
+/* Quitar el margin-left de page-wrapper del layout viejo */
+#page-wrapper,
+.page-wrapper {
   margin-left: 0 !important;
-  padding: 0 !important;
+  padding-left: 0 !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
-   LAYOUT PRINCIPAL — CSS GRID
-   Completamente diferente de DefectDojo (sb-admin-2 float layout)
+   LAYOUT PRINCIPAL — FIXED SIDEBAR + FLEX MAIN
+   Usa position:fixed para garantizar visibilidad del sidebar
+   independientemente de soporte de CSS Grid
    ══════════════════════════════════════════════════════════════ */
+/* El contenedor externo: solo evita desbordamiento del body */
 .custodia-app {
-  display: grid !important;
-  grid-template-columns: var(--sidebar-w) 1fr;
-  grid-template-rows: 100vh;
+  display: block !important;
+  width: 100% !important;
   height: 100vh !important;
   overflow: hidden !important;
   position: relative !important;
 }
 
-/* Cuando no hay sidebar (invitado), main ocupa todo */
-.custodia-app > .custodia-main:first-child {
-  grid-column: 1 / -1;
-}
-
 /* ══════════════════════════════════════════════════════════════
-   SIDEBAR — aside.csb (INDEPENDIENTE, no dentro de nav)
+   SIDEBAR — aside.csb — POSITION: FIXED (garantizado)
    ══════════════════════════════════════════════════════════════ */
 .csb {
-  grid-column: 1;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--sidebar-bg);
-  border-right: 1px solid rgba(255,255,255,0.06);
-  box-shadow: 2px 0 12px rgba(0,0,0,0.18);
-  overflow: hidden;
-  transition: grid-template-columns 0.25s ease;
-  z-index: 100;
-  position: relative;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: var(--sidebar-w) !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--sidebar-bg) !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.18) !important;
+  overflow: hidden !important;
+  z-index: 9000 !important;
+  transition: width 0.25s ease !important;
 }
 
 /* Marca / Logo */
@@ -420,8 +399,11 @@ ul.csb-menu {
 /* ══════════════════════════════════════════════════════════════
    SIDEBAR COLAPSADO
    ══════════════════════════════════════════════════════════════ */
-.custodia-app.csb-collapsed {
-  grid-template-columns: 60px 1fr;
+.custodia-app.csb-collapsed .csb {
+  width: 60px !important;
+}
+.custodia-app.csb-collapsed .custodia-main {
+  margin-left: 60px !important;
 }
 
 .custodia-app.csb-collapsed .csb-group-head { display: none !important; }
@@ -454,14 +436,16 @@ ul.csb-menu {
 .custodia-app.csb-collapsed .nav-second-level { display: none !important; }
 
 /* ══════════════════════════════════════════════════════════════
-   COLUMNA PRINCIPAL — flex column
+   COLUMNA PRINCIPAL — margin-left igual al ancho del sidebar
    ══════════════════════════════════════════════════════════════ */
 .custodia-main {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-  background: var(--bg);
+  margin-left: var(--sidebar-w) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  background: var(--bg) !important;
+  transition: margin-left 0.25s ease !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1225,31 +1209,20 @@ a.list-group-item:hover { color: var(--text) !important; }
 @media (max-width: 768px) {
   body.custodia-body { overflow: auto !important; }
 
-  .custodia-app {
-    grid-template-columns: 1fr !important;
-    height: auto !important;
-    min-height: 100vh;
-  }
-
   .csb {
-    position: fixed !important;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: var(--sidebar-w) !important;
-    height: 100vh !important;
     transform: translateX(calc(-1 * var(--sidebar-w)));
-    transition: transform 0.25s ease;
-    z-index: 9000;
+    transition: transform 0.25s ease, width 0.25s ease !important;
   }
 
   .custodia-app.mobile-open .csb {
-    transform: translateX(0);
+    transform: translateX(0) !important;
   }
 
   .custodia-main {
+    margin-left: 0 !important;
     height: auto !important;
     min-height: 100vh;
+    overflow: visible !important;
   }
 
   .c-content-wrap {
