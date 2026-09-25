@@ -177,11 +177,11 @@ pre {
   width: 100% !important;
 }
 .navbar-default .navbar-brand img {
-  height: 36px !important;
-  max-width: 180px !important;
+  height: 40px !important;
+  max-width: 190px !important;
   object-fit: contain !important;
-  filter: brightness(0) invert(1) !important;
-  opacity: 0.92 !important;
+  filter: none !important;
+  opacity: 1 !important;
 }
 
 /* Links del topbar derecho */
