@@ -101,6 +101,50 @@
             {% endblock %}
         </style>
         <style>
+            /* ── QustodIA CRITICAL LAYOUT v10 ── inline para garantizar aplicación */
+            body, html { margin: 0 !important; padding: 0 !important; }
+            body.custodia-body { padding-top: 0 !important; overflow: hidden !important; height: 100vh !important; }
+            /* Ocultar topbar Bootstrap viejo */
+            .navbar.navbar-default, nav.navbar, .navbar-fixed-top { display: none !important; height: 0 !important; }
+            /* Sidebar: FIXED — siempre visible */
+            .csb {
+                position: fixed !important;
+                top: 0 !important; left: 0 !important;
+                width: 256px !important;
+                height: 100vh !important;
+                background: #1a2736 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: hidden !important;
+                z-index: 9000 !important;
+                box-shadow: 2px 0 16px rgba(0,0,0,0.22) !important;
+            }
+            /* Área principal: empujada 256px a la derecha */
+            .custodia-main {
+                margin-left: 256px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                height: 100vh !important;
+                overflow: hidden !important;
+            }
+            /* Topbar QustodIA */
+            .ctp {
+                flex-shrink: 0 !important;
+                height: 60px !important;
+                display: flex !important;
+                align-items: center !important;
+                background: #ffffff !important;
+                border-bottom: 1px solid #dde3ec !important;
+                padding: 0 16px !important;
+                z-index: 100 !important;
+            }
+            /* Contenido scrollable */
+            .c-content-wrap, #page-wrapper { flex: 1 !important; overflow-y: auto !important; margin-left: 0 !important; }
+            /* Sidebar colapsado */
+            .custodia-app.csb-collapsed .csb { width: 60px !important; }
+            .custodia-app.csb-collapsed .custodia-main { margin-left: 60px !important; }
+        </style>
+        <style>
             /* QustodIA — encabezados de tabla (light theme) */
             .table > thead > tr > th,
             table thead th,
