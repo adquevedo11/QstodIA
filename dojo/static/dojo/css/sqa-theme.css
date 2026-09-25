@@ -762,82 +762,81 @@ form#custom_search_form {
 #footer-wrapper footer.c-footer {
   flex-shrink: 0;
   background: #1a2736;
-  border-top: 2px solid rgba(255,179,35,0.18);
+  border-top: 1px solid rgba(255,179,35,0.22);
 }
 
 .c-footer-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 28px;
-  gap: 20px;
+  padding: 8px 24px;
+  gap: 16px;
 }
 
 /* Columna izquierda: logo SQA + nombre producto */
 .c-footer-left {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  min-width: 100px;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
 }
 .c-footer-sqa-logo {
-  height: 28px;
+  height: 22px;
   width: auto;
-  opacity: 0.92;
+  opacity: 0.88;
   filter: none !important;
 }
 .c-footer-product-name {
   font-size: 11px;
   font-weight: 700;
-  color: rgba(255,255,255,0.55);
-  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.3px;
 }
 
 /* Columna central: tagline */
 .c-footer-center {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
   flex: 1;
-  text-align: center;
+  justify-content: center;
 }
 .c-footer-center-title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: #ffb323;
-  letter-spacing: -0.3px;
+}
+.c-footer-center-sep {
+  color: rgba(255,255,255,0.2);
+  font-size: 11px;
 }
 .c-footer-center-sub {
-  font-size: 10.5px;
-  color: rgba(255,255,255,0.45);
-  letter-spacing: 0.2px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.42);
 }
 
 /* Columna derecha: empresa y copyright */
 .c-footer-right {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  min-width: 120px;
-  text-align: right;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+  justify-content: flex-end;
 }
 .c-footer-company-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: #ffb323;
 }
 .c-footer-company-web {
   font-size: 11px;
-  color: rgba(255,255,255,0.6) !important;
+  color: rgba(255,255,255,0.55) !important;
   text-decoration: none !important;
 }
 .c-footer-company-web:hover { color: #ffb323 !important; }
 .c-footer-copy {
-  font-size: 10px;
-  color: rgba(255,255,255,0.35);
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.32);
 }
 
 /* Ocultar el footer viejo si existe */

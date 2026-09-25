@@ -1373,6 +1373,7 @@
                             </div>
                             <div class="c-footer-col c-footer-center">
                                 <span class="c-footer-center-title">QustodIA</span>
+                                <span class="c-footer-center-sep">|</span>
                                 <span class="c-footer-center-sub">Application Security Posture Management</span>
                             </div>
                             <div class="c-footer-col c-footer-right">
@@ -1616,40 +1617,43 @@
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
 
-        /* ── Submenús: inicializar DESPUÉS de MetisMenu ($(function) corre en DOMReady) ── */
+        /* ── Submenús: handler DIRECTO en cada arrow (no delegado)
+           Razón: con delegation, el click ya habrá pasado por <a> donde MetisMenu
+           tiene su handler ANTES de que #side-menu lo vea. Con handler directo +
+           e.stopPropagation() el evento nunca llega a MetisMenu. ── */
         $(function() {
-            /* Limpiar cualquier inline style que MetisMenu JS haya podido añadir */
+            function showSub($li) {
+                var sub = $li.children('ul.nav-second-level')[0];
+                if (!sub) return;
+                $li.addClass('csb-open');
+                sub.style.cssText = 'display:block!important;height:auto!important;overflow:visible!important;max-height:2000px!important;visibility:visible!important;';
+            }
+            function hideSub($li) {
+                var sub = $li.children('ul.nav-second-level')[0];
+                $li.removeClass('csb-open');
+                if (sub) sub.style.cssText = '';
+            }
+
+            /* Limpiar estado inicial de MetisMenu */
             function resetMM() {
                 $('#side-menu .nav-second-level').each(function() {
                     this.classList.remove('mm-collapse', 'mm-show', 'mm-collapsing');
                     this.style.cssText = '';
                 });
             }
-            setTimeout(resetMM, 0);   /* microtask: corre tras MetisMenu init */
-            setTimeout(resetMM, 400); /* fallback */
+            setTimeout(resetMM, 50);
+            setTimeout(resetMM, 600);
 
-            /* Clic en flecha: muestra/oculta submenu vía cssText con !important */
-            $('#side-menu').on('click', '.glyphicon.arrow', function(e) {
+            /* Handler DIRECTO sobre cada arrow — stopPropagation impide que MetisMenu reciba el clic */
+            $('#side-menu .glyphicon.arrow').on('click', function(e) {
+                e.stopPropagation();
                 e.preventDefault();
-                e.stopImmediatePropagation();
                 var $li = $(this).closest('li');
-                var $sub = $li.children('ul.nav-second-level');
                 var isOpen = $li.hasClass('csb-open');
-
-                /* Cerrar todos los hermanos */
-                $li.siblings('.csb-open').each(function() {
-                    $(this).removeClass('csb-open')
-                           .children('ul.nav-second-level')[0].style.cssText = '';
-                });
-
-                if (isOpen) {
-                    $li.removeClass('csb-open');
-                    $sub[0].style.cssText = '';
-                } else {
-                    $li.addClass('csb-open');
-                    /* !important en cssText gana sobre cualquier inline style de MetisMenu */
-                    $sub[0].style.cssText = 'display:block!important;height:auto!important;overflow:visible!important;max-height:2000px!important;visibility:visible!important;opacity:1!important;';
-                }
+                /* Cerrar hermanos abiertos */
+                $li.siblings().each(function() { hideSub($(this)); });
+                /* Toggle propio */
+                if (isOpen) { hideSub($li); } else { showSub($li); }
             });
         });
         </script>
