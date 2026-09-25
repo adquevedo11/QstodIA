@@ -125,16 +125,56 @@ pre {
 ::-webkit-scrollbar-thumb:hover { background: #c4cdd8; }
 
 /* ══════════════════════════════════════════════════════════════
+   KILL sb-admin-2 layout — ejecutar ANTES del grid
+   ══════════════════════════════════════════════════════════════ */
+/* Neutralizar body padding de la barra de navbar fija */
+body, body.custodia-body {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Neutralizar el #wrapper de sb-admin-2 */
+#wrapper {
+  padding-top: 0 !important;
+}
+
+/* Neutralizar navbar fija de sb-admin-2 (el antiguo topbar) */
+.navbar.navbar-default,
+nav.navbar {
+  position: static !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  display: none !important;
+}
+
+/* Neutralizar sidebar de sb-admin-2 */
+.navbar-default.sidebar,
+.navbar-default .sidebar-nav {
+  position: static !important;
+  width: auto !important;
+  top: auto !important;
+}
+
+/* page-wrapper: el antiguo margin-left: 250px de sb-admin-2 */
+#page-wrapper {
+  margin-left: 0 !important;
+  padding: 0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
    LAYOUT PRINCIPAL — CSS GRID
    Completamente diferente de DefectDojo (sb-admin-2 float layout)
    ══════════════════════════════════════════════════════════════ */
 .custodia-app {
-  display: grid;
+  display: grid !important;
   grid-template-columns: var(--sidebar-w) 1fr;
   grid-template-rows: 100vh;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
+  height: 100vh !important;
+  overflow: hidden !important;
+  position: relative !important;
 }
 
 /* Cuando no hay sidebar (invitado), main ocupa todo */
