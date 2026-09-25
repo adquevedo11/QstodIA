@@ -702,6 +702,7 @@ form#custom_search_form {
   overflow-x: hidden;
   background: var(--bg);
   position: relative;
+  padding-bottom: 42px;
 }
 
 /* Override sb-admin-2 que pone margin-left en #page-wrapper */
@@ -756,16 +757,17 @@ form#custom_search_form {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   FOOTER — 3 columnas estilo producción (ancho completo)
+   FOOTER — position:fixed ancho completo (incluye sidebar)
    ══════════════════════════════════════════════════════════════ */
-/* El #footer-wrapper es hijo directo de .custodia-app (flex-col), ocupa el ancho total */
 #footer-wrapper {
-  flex-shrink: 0;
-  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 8500;
 }
 .c-footer,
 #footer-wrapper footer.c-footer {
-  flex-shrink: 0;
   background: #1a2736;
   border-top: 1px solid rgba(255,179,35,0.22);
 }

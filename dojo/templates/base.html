@@ -90,7 +90,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=18">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=19">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -118,19 +118,12 @@
                 z-index: 9000 !important;
                 box-shadow: 2px 0 16px rgba(0,0,0,0.22) !important;
             }
-            /* Contenedor raíz — flex column full height para footer full-width */
-            .custodia-app {
-                display: flex !important;
-                flex-direction: column !important;
-                height: 100vh !important;
-            }
-            /* Área principal: empujada 256px a la derecha, flex:1 para ceder espacio al footer */
+            /* Área principal: empujada 256px a la derecha */
             .custodia-main {
                 margin-left: 256px !important;
                 display: flex !important;
                 flex-direction: column !important;
-                flex: 1 !important;
-                min-height: 0 !important;
+                height: 100vh !important;
                 overflow: hidden !important;
             }
             /* Topbar QustodIA */
@@ -1384,33 +1377,33 @@
                     </div>
                 </div>
 
+                <!-- FOOTER — position:fixed full-width -->
+                <div id="footer-wrapper">
+                {% block footer %}
+                    <footer class="c-footer">
+                        <div class="c-footer-inner">
+                            <div class="c-footer-col c-footer-left">
+                                <img src="{% static "dojo/img/sqa_logo.png" %}" class="c-footer-sqa-logo" alt="SQA SA">
+                                <span class="c-footer-product-name">QustodIA</span>
+                            </div>
+                            <div class="c-footer-col c-footer-center">
+                                <span class="c-footer-center-title">QustodIA</span>
+                                <span class="c-footer-center-sep">|</span>
+                                <span class="c-footer-center-sub">Application Security Posture Management</span>
+                            </div>
+                            <div class="c-footer-col c-footer-right">
+                                <span class="c-footer-company-name">SQA SA</span>
+                                <a href="https://sqasa.co/" target="_blank" class="c-footer-company-web">sqasa.co</a>
+                                <span class="c-footer-copy">&copy; {% now "Y" %} SQA SA. Todos los derechos reservados.</span>
+                            </div>
+                        </div>
+                    </footer>
+                {% endblock %}
+                </div>
+                <!-- /#footer-wrapper -->
+
             </div>
             <!-- /.custodia-main -->
-
-            <!-- FOOTER — fuera de custodia-main para ancho completo (cubre sidebar) -->
-            <div id="footer-wrapper">
-            {% block footer %}
-                <footer class="c-footer">
-                    <div class="c-footer-inner">
-                        <div class="c-footer-col c-footer-left">
-                            <img src="{% static "dojo/img/sqa_logo.png" %}" class="c-footer-sqa-logo" alt="SQA SA">
-                            <span class="c-footer-product-name">QustodIA</span>
-                        </div>
-                        <div class="c-footer-col c-footer-center">
-                            <span class="c-footer-center-title">QustodIA</span>
-                            <span class="c-footer-center-sep">|</span>
-                            <span class="c-footer-center-sub">Application Security Posture Management</span>
-                        </div>
-                        <div class="c-footer-col c-footer-right">
-                            <span class="c-footer-company-name">SQA SA</span>
-                            <a href="https://sqasa.co/" target="_blank" class="c-footer-company-web">sqasa.co</a>
-                            <span class="c-footer-copy">&copy; {% now "Y" %} SQA SA. Todos los derechos reservados.</span>
-                        </div>
-                    </div>
-                </footer>
-            {% endblock %}
-            </div>
-            <!-- /#footer-wrapper -->
 
         </div>
         <!-- /.custodia-app -->
