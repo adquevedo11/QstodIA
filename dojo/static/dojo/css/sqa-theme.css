@@ -386,6 +386,27 @@ pre {
   background: var(--sidebar-act) !important;
 }
 
+/* Etiquetas de sección del sidebar */
+#side-menu li.sqa-nav-section-label {
+  pointer-events: none !important;
+  user-select: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+#side-menu li.sqa-nav-section-label > a { display: none !important; }
+#side-menu li.sqa-nav-section-label span {
+  display: block !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1.4px !important;
+  text-transform: uppercase !important;
+  color: rgba(255,255,255,0.22) !important;
+  padding: 16px 20px 5px !important;
+  line-height: 1 !important;
+}
+
 /* Flyout de submenú (sidebar con overflow oculto) */
 ul.nav.sqa-fly {
   position: fixed !important;
