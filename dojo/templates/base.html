@@ -91,7 +91,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=12">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=13">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -220,79 +220,75 @@
 
             /* ── Logo prominente ── */
             .csb-brand {
-                height: 88px !important;
-                min-height: 88px !important;
+                height: 108px !important;
+                min-height: 108px !important;
                 display: flex !important;
                 align-items: center !important;
-                justify-content: flex-start !important;
-                padding: 0 18px !important;
-                border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+                justify-content: center !important;
+                padding: 0 14px !important;
+                border-bottom: 2px solid rgba(255,179,35,0.2) !important;
                 flex-shrink: 0 !important;
-                background: rgba(0,0,0,0.12) !important;
+                background: rgba(0,0,0,0.18) !important;
             }
             .csb-brand a {
                 display: flex !important;
                 align-items: center !important;
+                justify-content: center !important;
                 text-decoration: none !important;
                 width: 100% !important;
             }
             .csb-logo-img {
-                width: 196px !important;
-                max-width: 196px !important;
+                width: auto !important;
+                max-width: 218px !important;
                 height: auto !important;
-                max-height: 68px !important;
+                max-height: 90px !important;
                 object-fit: contain !important;
-                transition: width 0.3s, max-width 0.3s !important;
+                transition: all 0.3s ease !important;
             }
+            .custodia-app.csb-collapsed .csb-brand { padding: 0 8px !important; }
             .custodia-app.csb-collapsed .csb-logo-img {
-                width: 32px !important;
-                max-width: 32px !important;
+                max-width: 38px !important;
+                max-height: 38px !important;
             }
 
-            /* ── MetisMenu submenús ── */
+            /* ── Submenús — SIN !important para que jQuery slideDown funcione ── */
             #side-menu .nav-second-level {
-                display: none !important;
-                background: rgba(0,0,0,0.22) !important;
-                padding: 4px 0 6px !important;
-                list-style: none !important;
-                margin: 0 !important;
+                display: none;
+                background: rgba(0,0,0,0.2);
+                padding: 4px 0 8px;
+                list-style: none;
+                margin: 0;
+                overflow: hidden;
             }
-            #side-menu .nav-second-level.mm-show,
-            #side-menu .nav-second-level.in {
-                display: block !important;
-            }
-            #side-menu .nav-second-level li {
-                display: block !important;
-            }
+            #side-menu .nav-second-level li { display: block; }
             #side-menu .nav-second-level li a {
-                display: flex !important;
-                align-items: center !important;
-                padding: 7px 16px 7px 44px !important;
-                font-size: 12px !important;
-                color: rgba(255,255,255,0.46) !important;
-                text-decoration: none !important;
-                transition: color 0.15s, background 0.15s !important;
-                border-left: 3px solid transparent !important;
-                white-space: normal !important;
+                display: flex;
+                align-items: center;
+                padding: 8px 16px 8px 44px;
+                font-size: 12px;
+                color: rgba(255,255,255,0.46);
+                text-decoration: none;
+                transition: color 0.15s, background 0.15s;
+                border-left: 3px solid transparent;
             }
             #side-menu .nav-second-level li a:hover,
             #side-menu .nav-second-level li.active > a {
-                color: #ffb323 !important;
-                background: rgba(255,179,35,0.07) !important;
-                border-left-color: rgba(255,179,35,0.6) !important;
+                color: #ffb323;
+                background: rgba(255,179,35,0.07);
+                border-left-color: rgba(255,179,35,0.55);
             }
-            /* Flecha rotante */
+            /* Flecha rotante — sin !important */
             #side-menu li > a .glyphicon.arrow {
-                margin-left: auto !important;
-                float: none !important;
-                font-size: 10px !important;
-                opacity: 0.45 !important;
-                transition: transform 0.25s ease !important;
-                flex-shrink: 0 !important;
+                margin-left: auto;
+                float: none;
+                font-size: 9px;
+                opacity: 0.4;
+                transition: transform 0.22s ease;
+                flex-shrink: 0;
             }
-            #side-menu li.mm-active > a .glyphicon.arrow {
-                transform: rotate(90deg) !important;
-                opacity: 0.75 !important;
+            #side-menu li.csb-open > a .glyphicon.arrow {
+                transform: rotate(90deg);
+                opacity: 0.7;
             }
         </style>
         <style>
@@ -1596,23 +1592,34 @@
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
 
-        /* ── MetisMenu: init submenús ── */
+        /* ── Submenús accordion — puro jQuery, sin MetisMenu ── */
         (function() {
-            if (typeof $.fn.metisMenu !== 'undefined') {
-                $('#side-menu').metisMenu({ toggle: false });
-            } else {
-                /* Fallback manual si MetisMenu no carga */
-                $('#side-menu').on('click', '> li > a', function(e) {
-                    var $ul = $(this).siblings('ul.nav-second-level');
-                    if (!$ul.length) return;
-                    e.preventDefault();
-                    var $li = $(this).parent();
-                    var wasOpen = $ul.hasClass('mm-show');
-                    $li.toggleClass('mm-active', !wasOpen);
-                    if (wasOpen) { $ul.removeClass('mm-show'); }
-                    else { $ul.addClass('mm-show'); }
+            /* Marca ítems que tienen submenú */
+            $('#side-menu > li').each(function() {
+                if ($(this).children('ul.nav-second-level').length) {
+                    $(this).children('a').addClass('csb-has-sub');
+                }
+            });
+            /* Toggle accordion */
+            $('#side-menu').on('click', '> li > a.csb-has-sub', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $li   = $(this).parent();
+                var $ul   = $li.children('ul.nav-second-level');
+                var isOpen = $li.hasClass('csb-open');
+                /* Cierra hermanos */
+                $li.siblings('.csb-open').each(function() {
+                    $(this).removeClass('csb-open');
+                    $(this).children('ul.nav-second-level').slideUp(180);
                 });
-            }
+                if (isOpen) {
+                    $li.removeClass('csb-open');
+                    $ul.slideUp(200);
+                } else {
+                    $li.addClass('csb-open');
+                    $ul.slideDown(240);
+                }
+            });
         })();
 
         /* MetisMenu: scroll sidebar para mostrar submenú expandido */
