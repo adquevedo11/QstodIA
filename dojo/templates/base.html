@@ -218,45 +218,48 @@
             .custodia-app.csb-collapsed .csb { width: 60px !important; }
             .custodia-app.csb-collapsed .custodia-main { margin-left: 60px !important; }
 
-            /* ── Logo prominente ── */
+            /* ── Logo prominente: sin padding para que llene todo el ancho ── */
             .csb-brand {
-                height: 132px !important;
-                min-height: 132px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                padding: 8px 12px !important;
+                display: block !important;
                 border-bottom: 2px solid rgba(255,179,35,0.2) !important;
                 flex-shrink: 0 !important;
                 background: rgba(0,0,0,0.18) !important;
+                padding: 0 !important;
+                line-height: 0 !important;
             }
             .csb-brand a {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
+                display: block !important;
                 text-decoration: none !important;
                 width: 100% !important;
+                line-height: 0 !important;
             }
             .csb-logo-img {
-                width: 228px !important;
+                width: 100% !important;
                 height: auto !important;
+                display: block !important;
                 object-fit: contain !important;
                 transition: all 0.3s ease !important;
             }
-            .custodia-app.csb-collapsed .csb-brand {
-                height: 72px !important;
-                min-height: 72px !important;
-                padding: 0 8px !important;
-            }
+            .custodia-app.csb-collapsed .csb-brand { padding: 0 !important; }
             .custodia-app.csb-collapsed .csb-logo-img {
-                width: 40px !important;
-                height: 40px !important;
-                object-fit: contain !important;
+                width: 60px !important;
+                height: auto !important;
             }
 
-            /* ── Submenús: toggle por clase CSS con !important ── */
-            #side-menu > li > ul.nav-second-level { display: none !important; }
-            #side-menu > li.csb-open > ul.nav-second-level { display: block !important; }
+            /* ── Submenús: toggle por clase CSS — anula todo lo de MetisMenu ── */
+            #side-menu > li > ul.nav-second-level {
+                display: none !important;
+                height: 0 !important;
+                overflow: hidden !important;
+            }
+            #side-menu > li.csb-open > ul.nav-second-level {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
+                max-height: 2000px !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
             #side-menu .nav-second-level li a {
                 display: block !important;
                 padding: 8px 14px 8px 44px !important;
@@ -452,7 +455,7 @@
                                 </li>
                                 <li>
                                     <a href="{% url 'open_findings' %}" aria-expanded="false" aria-label="Hallazgos">
-                                        <i class="fa-solid fa-shield-exclamation fa-fw"></i>
+                                        <i class="fa-solid fa-triangle-exclamation fa-fw"></i>
                                         <span>Hallazgos</span>
                                         <span class="glyphicon arrow"></span>
                                     </a>
@@ -488,7 +491,7 @@
                                 </li>
                                 <li>
                                     <a href="{% url 'all_finding_groups' %}" aria-expanded="false" aria-label="Grupos">
-                                        <i class="fa-solid fa-object-group fa-fw"></i>
+                                        <i class="fa-solid fa-folder-tree fa-fw"></i>
                                         <span>Grupos</span>
                                         <span class="glyphicon arrow"></span>
                                     </a>
@@ -637,7 +640,7 @@
                                 {% endblock %}
                                 <li>
                                     <a href="{% url 'metrics' %}?date=5&view=dashboard" aria-expanded="false" aria-label="Métricas">
-                                        <i class="fa-solid fa-chart-mixed fa-fw"></i>
+                                        <i class="fa-solid fa-chart-bar fa-fw"></i>
                                         <span>Métricas</span>
                                         <span class="glyphicon arrow"></span>
                                     </a>
@@ -1605,6 +1608,19 @@
         });
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
+
+        /* ── Limpiar MetisMenu: quita mm-collapse y height:0 que bloquean los submenús ── */
+        function cleanMetisMenu() {
+            $('#side-menu .nav-second-level').each(function() {
+                $(this).removeClass('mm-collapse mm-show mm-collapsing');
+                $(this)[0].style.removeProperty('height');
+                $(this)[0].style.removeProperty('overflow');
+                $(this)[0].style.removeProperty('visibility');
+            });
+        }
+        /* Ejecutar ahora y de nuevo tras cualquier inicialización diferida */
+        cleanMetisMenu();
+        setTimeout(cleanMetisMenu, 300);
 
         /* ── Submenús: clic en la FLECHA toggle — el link sigue navegando ── */
         $('#side-menu').on('click', '.glyphicon.arrow', function(e) {
