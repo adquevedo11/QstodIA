@@ -72,8 +72,7 @@
         <!-- Bootstrap Select -->
         <link href="{% static "bootstrap-select/dist/css/bootstrap-select.min.css" %}" rel="stylesheet">
 
-        <!-- MetisMenu CSS -->
-        <link href="{% static "metismenu/dist/metisMenu.min.css" %}" rel="stylesheet">
+        <!-- MetisMenu CSS eliminado: causaba mm-collapse/height:0 en submenús -->
 
         <!-- Custom CSS -->
         <link href="{% static "startbootstrap-sb-admin-2/dist/css/sb-admin-2.css" %}" rel="stylesheet">
@@ -91,7 +90,7 @@
         <link rel="stylesheet" href="{% static "fullcalendar/dist/fullcalendar.min.css" %}">
         {% block dojo_css %}
             <link rel="stylesheet" href="{% static "dojo/css/dojo.css" %}?v=6">
-            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=15">
+            <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=16">
         {% endblock %}
         <link rel="stylesheet" href="{% static "datatables.net-bs/css/dataTables.bootstrap.min.css" %}">
         <link rel="stylesheet" href="{% static "datatables.net-buttons-bs/css/buttons.bootstrap.min.css" %}">
@@ -218,32 +217,35 @@
             .custodia-app.csb-collapsed .csb { width: 60px !important; }
             .custodia-app.csb-collapsed .custodia-main { margin-left: 60px !important; }
 
-            /* ── Logo prominente: sin padding para que llene todo el ancho ── */
+            /* ── Logo: qustodIA_logo_2.png tiene fondo navy propio, sin transparencias ── */
             .csb-brand {
-                display: block !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 border-bottom: 2px solid rgba(255,179,35,0.2) !important;
                 flex-shrink: 0 !important;
-                background: rgba(0,0,0,0.18) !important;
+                background: transparent !important;
                 padding: 0 !important;
-                line-height: 0 !important;
+                overflow: hidden !important;
             }
             .csb-brand a {
-                display: block !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
                 text-decoration: none !important;
                 width: 100% !important;
-                line-height: 0 !important;
             }
             .csb-logo-img {
                 width: 100% !important;
                 height: auto !important;
                 display: block !important;
-                object-fit: contain !important;
-                transition: all 0.3s ease !important;
+                object-fit: cover !important;
             }
-            .custodia-app.csb-collapsed .csb-brand { padding: 0 !important; }
             .custodia-app.csb-collapsed .csb-logo-img {
                 width: 60px !important;
-                height: auto !important;
+                height: 60px !important;
+                object-fit: cover !important;
+                object-position: center top !important;
             }
 
             /* ── Submenús: toggle por clase CSS — anula todo lo de MetisMenu ── */
@@ -360,7 +362,7 @@
                     <div class="csb-brand">
                         <a href="{% url 'home' %}">
                             {% block header_logo %}
-                                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA" class="csb-logo-img"/>
+                                <img src="{% static "dojo/img/qustodIA_logo_2.png" %}" alt="QustodIA" class="csb-logo-img"/>
                             {% endblock %}
                         </a>
                     </div>
@@ -1365,14 +1367,19 @@
                 {% block footer %}
                     <footer class="c-footer">
                         <div class="c-footer-inner">
-                            <img src="{% static "dojo/img/logo.png" %}" height="22" class="c-footer-logo" alt="CQASA">
-                            <span class="c-footer-brand">QustodIA</span>
-                            <span class="c-footer-pipe">|</span>
-                            <span>Application Security &amp; Risk Management</span>
-                            <span class="c-footer-pipe">|</span>
-                            <a href="https://sqasa.co/" target="_blank">CQASA</a>
-                            <span class="c-footer-pipe">|</span>
-                            <span>&copy; {% now "Y" %} Todos los derechos reservados.</span>
+                            <div class="c-footer-col c-footer-left">
+                                <img src="{% static "dojo/img/sqa_logo.png" %}" class="c-footer-sqa-logo" alt="SQA SA">
+                                <span class="c-footer-product-name">QustodIA</span>
+                            </div>
+                            <div class="c-footer-col c-footer-center">
+                                <span class="c-footer-center-title">QustodIA</span>
+                                <span class="c-footer-center-sub">Application Security Posture Management</span>
+                            </div>
+                            <div class="c-footer-col c-footer-right">
+                                <span class="c-footer-company-name">SQA SA</span>
+                                <a href="https://sqasa.co/" target="_blank" class="c-footer-company-web">sqasa.co</a>
+                                <span class="c-footer-copy">&copy; {% now "Y" %} SQA SA. Todos los derechos reservados.</span>
+                            </div>
                         </div>
                     </footer>
                 {% endblock %}
@@ -1609,26 +1616,41 @@
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
 
-        /* ── Limpiar MetisMenu: quita mm-collapse y height:0 que bloquean los submenús ── */
-        function cleanMetisMenu() {
-            $('#side-menu .nav-second-level').each(function() {
-                $(this).removeClass('mm-collapse mm-show mm-collapsing');
-                $(this)[0].style.removeProperty('height');
-                $(this)[0].style.removeProperty('overflow');
-                $(this)[0].style.removeProperty('visibility');
-            });
-        }
-        /* Ejecutar ahora y de nuevo tras cualquier inicialización diferida */
-        cleanMetisMenu();
-        setTimeout(cleanMetisMenu, 300);
+        /* ── Submenús: inicializar DESPUÉS de MetisMenu ($(function) corre en DOMReady) ── */
+        $(function() {
+            /* Limpiar cualquier inline style que MetisMenu JS haya podido añadir */
+            function resetMM() {
+                $('#side-menu .nav-second-level').each(function() {
+                    this.classList.remove('mm-collapse', 'mm-show', 'mm-collapsing');
+                    this.style.cssText = '';
+                });
+            }
+            setTimeout(resetMM, 0);   /* microtask: corre tras MetisMenu init */
+            setTimeout(resetMM, 400); /* fallback */
 
-        /* ── Submenús: clic en la FLECHA toggle — el link sigue navegando ── */
-        $('#side-menu').on('click', '.glyphicon.arrow', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            var $li = $(this).closest('li');
-            $li.siblings('.csb-open').removeClass('csb-open');
-            $li.toggleClass('csb-open');
+            /* Clic en flecha: muestra/oculta submenu vía cssText con !important */
+            $('#side-menu').on('click', '.glyphicon.arrow', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                var $li = $(this).closest('li');
+                var $sub = $li.children('ul.nav-second-level');
+                var isOpen = $li.hasClass('csb-open');
+
+                /* Cerrar todos los hermanos */
+                $li.siblings('.csb-open').each(function() {
+                    $(this).removeClass('csb-open')
+                           .children('ul.nav-second-level')[0].style.cssText = '';
+                });
+
+                if (isOpen) {
+                    $li.removeClass('csb-open');
+                    $sub[0].style.cssText = '';
+                } else {
+                    $li.addClass('csb-open');
+                    /* !important en cssText gana sobre cualquier inline style de MetisMenu */
+                    $sub[0].style.cssText = 'display:block!important;height:auto!important;overflow:visible!important;max-height:2000px!important;visibility:visible!important;opacity:1!important;';
+                }
+            });
         });
         </script>
     </body>

@@ -756,30 +756,89 @@ form#custom_search_form {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   FOOTER — slim, una línea
+   FOOTER — 3 columnas estilo producción
    ══════════════════════════════════════════════════════════════ */
 .c-footer,
 #footer-wrapper footer.c-footer {
   flex-shrink: 0;
-  border-top: 1px solid var(--border);
-  background: var(--surface);
+  background: #1a2736;
+  border-top: 2px solid rgba(255,179,35,0.18);
 }
 
 .c-footer-inner {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 24px;
-  font-size: 11.5px;
-  color: var(--text-mute);
-  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 12px 28px;
+  gap: 20px;
 }
 
-.c-footer-logo { height: 18px; opacity: 0.65; filter: none !important; }
-.c-footer-brand { font-weight: 700; color: var(--amber-dim); }
-.c-footer-pipe { color: var(--border); }
-.c-footer-inner a { color: var(--text-sec); }
-.c-footer-inner a:hover { color: var(--amber-dim); }
+/* Columna izquierda: logo SQA + nombre producto */
+.c-footer-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 100px;
+}
+.c-footer-sqa-logo {
+  height: 28px;
+  width: auto;
+  opacity: 0.92;
+  filter: none !important;
+}
+.c-footer-product-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.5px;
+}
+
+/* Columna central: tagline */
+.c-footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  text-align: center;
+}
+.c-footer-center-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffb323;
+  letter-spacing: -0.3px;
+}
+.c-footer-center-sub {
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.2px;
+}
+
+/* Columna derecha: empresa y copyright */
+.c-footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  min-width: 120px;
+  text-align: right;
+}
+.c-footer-company-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffb323;
+}
+.c-footer-company-web {
+  font-size: 11px;
+  color: rgba(255,255,255,0.6) !important;
+  text-decoration: none !important;
+}
+.c-footer-company-web:hover { color: #ffb323 !important; }
+.c-footer-copy {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+}
 
 /* Ocultar el footer viejo si existe */
 #footer-wrapper > footer:not(.c-footer) { display: none !important; }
