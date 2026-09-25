@@ -19,7 +19,7 @@
             {% elif product_tab.title %}
                 {{ product_tab.title }} |
             {% endif %}
-            CUSTODIA
+            QustodIA
         </title>
         {% block add_css_before %}
         {% endblock %}
@@ -101,7 +101,7 @@
             {% endblock %}
         </style>
         <style>
-            /* CUSTODIA Dark Theme — encabezados de tabla */
+            /* QustodIA — encabezados de tabla (light theme) */
             .table > thead > tr > th,
             table thead th,
             table thead tr th,
@@ -112,8 +112,8 @@
             table.dataTable thead th.sorting_asc_disabled,
             table.dataTable thead th.sorting_desc_disabled,
             .dataTables_scrollHead table thead th {
-                color: #dce8f0 !important;
-                background-color: #1e3347 !important;
+                color: #5a6b82 !important;
+                background-color: #f7fafd !important;
                 border-bottom: 2px solid #ffb323 !important;
                 font-size: 11px !important;
                 letter-spacing: .5px !important;
@@ -122,7 +122,7 @@
             table.dataTable thead th.sorting::after,
             table.dataTable thead th.sorting_asc::after,
             table.dataTable thead th.sorting_desc::after {
-                color: rgba(255,255,255,0.4) !important;
+                color: #8898ae !important;
                 opacity: 1 !important;
             }
             table.dataTable thead th.sorting_asc::after,
@@ -134,7 +134,7 @@
             table thead th a:hover,
             table thead th a:visited,
             table thead th a:focus {
-                color: #dce8f0 !important;
+                color: #5a6b82 !important;
                 text-decoration: none !important;
             }
         </style>
@@ -152,7 +152,7 @@
                     <div class="csb-brand">
                         <a href="{% url 'home' %}">
                             {% block header_logo %}
-                                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="CUSTODIA Logo" height="52"/>
+                                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA" height="52"/>
                             {% endblock %}
                         </a>
                     </div>
@@ -1158,7 +1158,7 @@
                     <footer class="c-footer">
                         <div class="c-footer-inner">
                             <img src="{% static "dojo/img/logo.png" %}" height="22" class="c-footer-logo" alt="CQASA">
-                            <span class="c-footer-brand">CUSTODIA</span>
+                            <span class="c-footer-brand">QustodIA</span>
                             <span class="c-footer-pipe">|</span>
                             <span>Application Security &amp; Risk Management</span>
                             <span class="c-footer-pipe">|</span>
@@ -1333,7 +1333,7 @@
         {% block postscript %}
         {% endblock %}
         <script>
-        // CUSTODIA sidebar toggle
+        // QustodIA sidebar toggle
         $('#csb-toggle-btn, #ctp-hamburger').on('click', function() {
           var $app = $('.custodia-app');
           $app.toggleClass('csb-collapsed');
@@ -1401,42 +1401,12 @@
         $(document).on('hidden.bs.dropdown', sqaPortalClean);
         $(document).on('hide.bs.dropdown', sqaPortalClean);
 
-        /* Sidebar: flyout para ítems con href real y submenú (overflow-x:hidden los mataba en CSS) */
-        (function() {
-            var $fly = $('<ul class="nav sqa-fly"></ul>').appendTo('body');
-            var hideT, $cur;
-            function pos($li) {
-                var r = $li[0].getBoundingClientRect();
-                var sr = $('.navbar-default.sidebar')[0].getBoundingClientRect();
-                var top = r.top;
-                var maxH = window.innerHeight - top - 10;
-                $fly.css({ top: top, left: sr.right, maxHeight: maxH, overflowY: maxH < 120 ? 'auto' : 'visible' });
-            }
-            function show($li) {
-                clearTimeout(hideT);
-                if ($cur && $cur[0] === $li[0] && $fly.is(':visible')) return;
-                $cur = $li;
-                $fly.empty();
-                $li.find('> ul.nav-second-level').children().each(function() {
-                    $fly.append($(this).clone(true));
-                });
-                pos($li);
-                $fly.show();
-            }
-            function hide() { hideT = setTimeout(function(){ $fly.hide(); $cur = null; }, 160); }
-            $(document).on('mouseenter', '#side-menu > li', function() {
-                var $li = $(this);
-                if (!$li.find('> ul.nav-second-level').length) { hide(); return; }
-                if (($li.find('> a').attr('href') || '') === '#') { hide(); return; }
-                show($li);
-            }).on('mouseleave', '#side-menu > li', hide);
-            $fly.on('mouseenter', function(){ clearTimeout(hideT); }).on('mouseleave', hide);
-        })();
+        /* QustodIA: flyout desactivado — sidebar expandido en .csb-nav-wrap con scroll normal */
 
         /* MetisMenu: scroll sidebar para mostrar submenú expandido */
         $('#side-menu').on('click', '> li > a', function() {
             var $li     = $(this).parent();
-            var $scroll = $('.navbar-default.sidebar');
+            var $scroll = $('.csb-nav-wrap');
             setTimeout(function() {
                 var $ul = $li.find('> ul.nav-second-level');
                 if (!$ul.length) return;
