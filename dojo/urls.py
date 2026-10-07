@@ -87,13 +87,16 @@ from dojo.tool_type.ui.urls import urlpatterns as tool_type_urls
 from dojo.url.api.urls import add_url_urls
 from dojo.url.ui.urls import urlpatterns as url_patterns
 from dojo.user.api.urls import add_user_urls
-# QustodIA custom modules
+# QustodIA custom modules — UI
 from dojo.security_concept.urls import urlpatterns as security_concept_urls
 from dojo.executive_report.urls import urlpatterns as executive_report_urls
 from dojo.pentest.urls import urlpatterns as pentest_urls
 from dojo.hour_pool.urls import urlpatterns as hour_pool_urls
 from dojo.go_live_readiness.urls import urlpatterns as go_live_readiness_urls
 from dojo.sqa_metrics.urls import urlpatterns as sqa_metrics_urls
+# QustodIA custom modules — API
+from dojo.pentest.api.urls import add_pentest_urls
+from dojo.hour_pool.api.urls import add_hour_pool_urls
 from dojo.user.api.views import ForcedResetObtainAuthToken, RevokeApiTokenView, UserProfileView
 from dojo.user.ui.urls import urlpatterns as user_urls
 from dojo.utils import get_system_setting
@@ -168,6 +171,9 @@ if settings.V3_FEATURE_LOCATIONS:
 else:
     v2_api = add_endpoint_urls(v2_api)
 v2_api.register(r"celery", CeleryViewSet, basename="celery")
+# QustodIA custom API endpoints
+v2_api = add_pentest_urls(v2_api)
+v2_api = add_hour_pool_urls(v2_api)
 # V3
 add_asset_urls(v2_api)
 add_cicd_infrastructure_urls(v2_api)
