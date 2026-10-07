@@ -21,7 +21,7 @@
             {% elif product_tab.title %}
                 {{ product_tab.title }} |
             {% endif %}
-            DefectDojo
+            QustodIA
         </title>
         {% block add_css_before %}
         {% endblock %}
@@ -81,6 +81,9 @@
 
         <!-- Tailwind CSS (compiled output — loaded last to override) -->
         <link rel="stylesheet" href="{% static "dojo/css/tailwind-out.css" %}?v={% static_v "dojo/css/tailwind-out.css" %}">
+
+        <!-- QustodIA Design System — loaded after Tailwind to take precedence -->
+        <link rel="stylesheet" href="{% static "dojo/css/sqa-theme.css" %}?v=20">
 
         <style>
             /* Layout shell — not in Tailwind because these are structural, not component styles */
@@ -156,12 +159,11 @@
             <aside id="dd-sidebar"
                    class="fixed inset-y-0 start-0 z-50 w-[var(--dd-sidebar-width)] bg-dd-primary-800 text-white overflow-y-auto flex flex-col">
 
-                <!-- Logo -->
-                <div class="flex items-center h-[var(--dd-topbar-height)] px-4 bg-dd-primary-900 flex-shrink-0">
+                <!-- Logo QustodIA -->
+                <div class="dd-logo-bar flex items-center h-[var(--dd-topbar-height)] px-3 flex-shrink-0">
                     {% block header_logo %}
-                        <a href="{% url 'home' %}" class="flex items-center gap-2 min-w-0">
-                            <img src="{% static "dojo/img/favicon.png" %}" alt="{% trans 'DefectDojo' %}" class="w-8 h-8 flex-shrink-0">
-                            <span class="text-lg font-semibold text-white truncate">DefectDojo</span>
+                        <a href="{% url 'home' %}" class="block w-full">
+                            <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA" class="w-full h-auto" style="max-height:46px;object-fit:contain;">
                         </a>
                     {% endblock %}
                 </div>
@@ -957,25 +959,25 @@
                 </div>
             </dialog>
 
-            <!-- Footer -->
+            <!-- Footer QustodIA / SQA SA -->
             <div id="footer-wrapper">
             {% block footer %}
-                <footer class="border-t border-gray-200 bg-white py-8 mt-8">
-                    <div class="text-center text-sm text-gray-500">
-                        <p>
-                            <a href="{% url 'home' %}">
-                                <img src="{% static "dojo/img/chop.png" %}" alt="{% trans "DefectDojo Chop" %}" style="height:45px;width:auto;display:inline-block"/>
-                            </a>
-                        </p>
-                        <p class="mt-2">{% dojo_version %} ({% dojo_current_hash %})</p>
-                        <p>
-                            Detailed DefectDojo documentation can be found in our <a href="{% dojo_docs_url %}" class="text-blue-600 hover:underline">GitHub Pages</a>.
-                        </p>
-                        <p>
-                            DefectDojo is licensed under the <a href="https://github.com/DefectDojo/django-DefectDojo/blob/master/LICENSE.md" class="text-blue-600 hover:underline">3-Clause BSD License</a>.
-                            | <a href="https://github.com/DefectDojo/django-DefectDojo/blob/master/NOTICE" class="text-blue-600 hover:underline">Dependencies Notice.</a>
-                        </p>
-                        <p>&copy; 2015-{% now "Y" %} DefectDojo, Inc. All rights reserved. DefectDojo is trademark of DefectDojo, Inc.</p>
+                <footer class="c-footer">
+                    <div class="c-footer-inner">
+                        <div class="c-footer-col c-footer-left">
+                            <img src="{% static "dojo/img/sqa_logo.png" %}" class="c-footer-sqa-logo" alt="SQA SA">
+                            <span class="c-footer-product-name">QustodIA</span>
+                        </div>
+                        <div class="c-footer-col c-footer-center">
+                            <span class="c-footer-center-title">QustodIA</span>
+                            <span class="c-footer-center-sep">|</span>
+                            <span class="c-footer-center-sub">Application Security Posture Management</span>
+                        </div>
+                        <div class="c-footer-col c-footer-right">
+                            <span class="c-footer-company-name">SQA SA</span>
+                            <a href="https://sqasa.co/" target="_blank" class="c-footer-company-web">sqasa.co</a>
+                            <span class="c-footer-copy">&copy; {% now "Y" %} SQA SA. Todos los derechos reservados.</span>
+                        </div>
                     </div>
                 </footer>
             {% endblock %}

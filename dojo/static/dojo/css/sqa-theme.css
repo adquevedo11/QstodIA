@@ -1,0 +1,545 @@
+/*
+ * ============================================================
+ *  QustodIA — Design System v20
+ *  Adaptado para DefectDojo 3.3.300 (Tailwind + Alpine.js)
+ *  CQASA · Security Quality Assurance
+ *
+ *  Layout base: Tailwind (#dd-sidebar fixed, topbar sticky)
+ *  Sidebar oscuro: #1a2736 / #243850
+ *  Topbar claro:   #ffffff / #f3f6fa
+ *  Acento:         #ffb323
+ * ============================================================
+ */
+
+/* ── Fonts ──────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── CSS Tokens QustodIA ────────────────────────────────────── */
+:root {
+  /* Contenido claro */
+  --bg:         #f3f6fa;
+  --surface:    #ffffff;
+  --elevated:   #f7fafd;
+  --hover:      #edf2f8;
+  --border:     #dde3ec;
+  --border-sub: #eef2f8;
+  --text:       #1a2636;
+  --text-sec:   #5a6b82;
+  --text-mute:  #8898ae;
+
+  /* Sidebar oscuro (CQASA navy) */
+  --sidebar-bg:    #1a2736;
+  --sidebar-deep:  #131f2d;
+  --sidebar-hov:   #243850;
+  --sidebar-act:   rgba(255,179,35,0.14);
+  --sidebar-bdr:   rgba(255,255,255,0.07);
+
+  /* Acento naranja CQASA */
+  --amber:       #ffb323;
+  --amber-dim:   #e09e1a;
+  --amber-glow:  rgba(255,179,35,0.12);
+  --amber-text:  #b87200;
+
+  /* Severidades */
+  --sev-crit:    #e03030;
+  --sev-crit-lo: rgba(224,48,48,0.10);
+  --sev-high:    #d06020;
+  --sev-high-lo: rgba(208,96,32,0.10);
+  --sev-med:     #c09010;
+  --sev-med-lo:  rgba(192,144,16,0.10);
+  --sev-low:     #28a050;
+  --sev-low-lo:  rgba(40,160,80,0.10);
+  --sev-info:    #1f6feb;
+  --sev-info-lo: rgba(31,111,235,0.10);
+
+  --blue-btn:    #0066cc;
+  --radius:      6px;
+  --radius-lg:   10px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════════════ */
+body {
+  font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--blue-btn); }
+a:hover { color: var(--amber-dim); }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Figtree', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+code {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  background: var(--elevated) !important;
+  color: var(--sev-crit) !important;
+  border-radius: 4px !important;
+  padding: 1px 6px !important;
+}
+
+pre {
+  font-family: 'JetBrains Mono', monospace !important;
+  background: var(--elevated) !important;
+  color: var(--text) !important;
+  font-size: 12px !important;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #c4cdd8; }
+
+/* ══════════════════════════════════════════════════════════════
+   SIDEBAR — sobreescribir colores del #dd-sidebar (3.3.300)
+   El layout (position:fixed, width, flex) lo maneja Tailwind.
+   Aquí solo aplicamos la paleta QustodIA.
+   ══════════════════════════════════════════════════════════════ */
+#dd-sidebar {
+  background: var(--sidebar-bg) !important;
+  border-right: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.22) !important;
+}
+
+/* Logo bar (zona del logo en la parte superior del sidebar) */
+#dd-sidebar .dd-logo-bar,
+#dd-sidebar > div:first-child {
+  background: var(--sidebar-deep) !important;
+  border-bottom: 2px solid rgba(255,179,35,0.22) !important;
+}
+
+/* Logo imagen QustodIA */
+#dd-sidebar .dd-logo-bar img,
+#dd-sidebar > div:first-child img {
+  height: auto !important;
+  width: 100% !important;
+  max-height: 52px !important;
+  object-fit: contain !important;
+}
+
+/* Links y botones dentro del sidebar */
+#dd-sidebar a,
+#dd-sidebar button {
+  color: rgba(255,255,255,0.75) !important;
+  text-decoration: none !important;
+  font-family: 'Figtree', sans-serif !important;
+}
+
+#dd-sidebar a:hover,
+#dd-sidebar button:hover {
+  color: #ffffff !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* Item activo en el sidebar */
+#dd-sidebar a.active,
+#dd-sidebar a[aria-current="page"] {
+  background: var(--sidebar-act) !important;
+  color: var(--amber) !important;
+  border-left: 2px solid var(--amber) !important;
+  font-weight: 600 !important;
+}
+
+/* Sub-nav expandibles */
+#dd-sidebar div[x-data] > div {
+  background: rgba(0,0,0,0.18) !important;
+}
+
+#dd-sidebar div[x-data] > div a {
+  color: rgba(255,255,255,0.55) !important;
+  font-size: 0.82rem !important;
+}
+
+#dd-sidebar div[x-data] > div a:hover {
+  color: #ffffff !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+
+/* Chevrons / íconos de expansión */
+#dd-sidebar .fa-chevron-right {
+  color: rgba(255,179,35,0.45) !important;
+  transition: transform 0.2s ease !important;
+}
+
+/* Scrollbar del sidebar */
+#dd-sidebar::-webkit-scrollbar { width: 3px; }
+#dd-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,179,35,0.20);
+  border-radius: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOPBAR
+   ══════════════════════════════════════════════════════════════ */
+header.sticky,
+.dd-topbar {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Botón de búsqueda en topbar */
+header .btn-primary,
+header button[type="submit"] {
+  background: var(--sidebar-bg) !important;
+  border-color: var(--sidebar-bg) !important;
+  color: white !important;
+}
+
+header .btn-primary:hover,
+header button[type="submit"]:hover {
+  background: var(--amber) !important;
+  border-color: var(--amber) !important;
+  color: var(--sidebar-bg) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ÁREA DE CONTENIDO PRINCIPAL
+   ══════════════════════════════════════════════════════════════ */
+#page-wrapper {
+  background: var(--bg) !important;
+}
+
+.page-wrapper,
+.row-content,
+.container-fluid {
+  background: var(--bg) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FOOTER QUSTODIA / SQA SA
+   ══════════════════════════════════════════════════════════════ */
+#footer-wrapper footer.c-footer,
+.c-footer {
+  background: var(--sidebar-bg) !important;
+  border-top: 1px solid rgba(255,179,35,0.22) !important;
+  padding: 10px 0 !important;
+  color: rgba(255,255,255,0.75) !important;
+  font-family: 'Figtree', sans-serif !important;
+  font-size: 12px !important;
+}
+
+.c-footer-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  max-width: 100% !important;
+  padding: 0 24px !important;
+  gap: 16px !important;
+}
+
+.c-footer-col {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.c-footer-left { flex: 0 0 auto !important; }
+.c-footer-center {
+  flex: 1 !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+.c-footer-right {
+  flex: 0 0 auto !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 2px !important;
+}
+
+.c-footer-sqa-logo {
+  height: 24px !important;
+  width: auto !important;
+  opacity: 0.85 !important;
+}
+
+.c-footer-product-name {
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: var(--amber) !important;
+  letter-spacing: 0.3px !important;
+}
+
+.c-footer-center-title {
+  font-weight: 600 !important;
+  color: rgba(255,255,255,0.9) !important;
+}
+
+.c-footer-center-sep { color: rgba(255,179,35,0.40) !important; }
+
+.c-footer-center-sub {
+  color: rgba(255,255,255,0.50) !important;
+  font-size: 11px !important;
+}
+
+.c-footer-company-name {
+  font-weight: 600 !important;
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 11px !important;
+}
+
+.c-footer-company-web {
+  color: var(--amber) !important;
+  font-size: 11px !important;
+  text-decoration: none !important;
+}
+.c-footer-company-web:hover { text-decoration: underline !important; }
+
+.c-footer-copy {
+  color: rgba(255,255,255,0.35) !important;
+  font-size: 10px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CARDS / PANELS
+   ══════════════════════════════════════════════════════════════ */
+.card,
+.panel,
+.panel-default {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
+}
+
+.card-header,
+.panel-heading {
+  background: var(--elevated) !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOTONES
+   ══════════════════════════════════════════════════════════════ */
+.btn-primary {
+  background-color: var(--sidebar-bg) !important;
+  border-color: var(--sidebar-bg) !important;
+  color: white !important;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--sidebar-hov) !important;
+  border-color: var(--sidebar-hov) !important;
+}
+
+.btn-warning {
+  background-color: var(--amber) !important;
+  border-color: var(--amber-dim) !important;
+  color: var(--sidebar-bg) !important;
+  font-weight: 600 !important;
+}
+.btn-warning:hover {
+  background-color: var(--amber-dim) !important;
+  border-color: var(--amber-dim) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABLAS / DATATABLES
+   ══════════════════════════════════════════════════════════════ */
+.table th {
+  background: var(--elevated) !important;
+  color: var(--text-sec) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background: var(--elevated) !important;
+}
+
+.table tbody tr:hover {
+  background: var(--hover) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BADGES DE SEVERIDAD
+   ══════════════════════════════════════════════════════════════ */
+.severity-badge-critical,
+.badge.critical, .label-critical {
+  background: var(--sev-crit) !important;
+  color: #fff !important;
+}
+.severity-badge-high,
+.badge.high, .label-high {
+  background: var(--sev-high) !important;
+  color: #fff !important;
+}
+.severity-badge-medium,
+.badge.medium, .label-medium {
+  background: var(--sev-med) !important;
+  color: #fff !important;
+}
+.severity-badge-low,
+.badge.low, .label-low {
+  background: var(--sev-low) !important;
+  color: #fff !important;
+}
+.severity-badge-info,
+.badge.info, .label-info {
+  background: var(--sev-info) !important;
+  color: #fff !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FORMS
+   ══════════════════════════════════════════════════════════════ */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  border-color: var(--border) !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-radius: var(--radius) !important;
+}
+
+.form-control:focus,
+input:focus {
+  border-color: var(--amber) !important;
+  box-shadow: 0 0 0 2px var(--amber-glow) !important;
+  outline: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BREADCRUMBS
+   ══════════════════════════════════════════════════════════════ */
+.breadcrumb {
+  background: transparent !important;
+  padding: 4px 0 !important;
+  font-size: 12px !important;
+}
+
+.breadcrumb > li + li::before {
+  color: var(--amber) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE HEADER / PRODUCT TABS
+   ══════════════════════════════════════════════════════════════ */
+.product-tab-bar .nav-tabs > li.active > a,
+.nav-tabs > li.active > a {
+  border-bottom: 2px solid var(--amber) !important;
+  color: var(--amber-text) !important;
+  font-weight: 600 !important;
+}
+
+.nav-tabs > li > a:hover {
+  border-bottom: 2px solid rgba(255,179,35,0.35) !important;
+  color: var(--text) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ALERTS / MENSAJES
+   ══════════════════════════════════════════════════════════════ */
+.alert-info {
+  background: var(--sev-info-lo) !important;
+  border-color: var(--sev-info) !important;
+  color: var(--sev-info) !important;
+}
+
+.alert-warning {
+  background: var(--amber-glow) !important;
+  border-color: var(--amber) !important;
+  color: var(--amber-text) !important;
+}
+
+.alert-danger, .alert-error {
+  background: var(--sev-crit-lo) !important;
+  border-color: var(--sev-crit) !important;
+  color: var(--sev-crit) !important;
+}
+
+.alert-success {
+  background: var(--sev-low-lo) !important;
+  border-color: var(--sev-low) !important;
+  color: var(--sev-low) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODALS
+   ══════════════════════════════════════════════════════════════ */
+.modal-header {
+  background: var(--sidebar-bg) !important;
+  color: #fff !important;
+  border-bottom: 1px solid rgba(255,179,35,0.22) !important;
+}
+
+.modal-title { color: #fff !important; font-weight: 700 !important; }
+
+.modal-footer {
+  border-top: 1px solid var(--border) !important;
+  background: var(--elevated) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TÍTULO DE PÁGINA
+   ══════════════════════════════════════════════════════════════ */
+.page-header h1,
+h1.page-title,
+.product-title h2 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  border-bottom: 2px solid var(--amber) !important;
+  padding-bottom: 6px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GO-LIVE READINESS (panel QustodIA custom)
+   ══════════════════════════════════════════════════════════════ */
+.sqa-golive-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.sqa-risk-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.sqa-risk-stat .n {
+  font-family: 'Figtree', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+}
+
+.sqa-risk-stat .sev-crit .n { color: var(--sev-crit) !important; }
+.sqa-risk-stat .sev-high .n { color: var(--sev-high) !important; }
+.sqa-risk-stat .sev-med  .n { color: var(--sev-med)  !important; }
+.sqa-risk-stat .sev-low  .n { color: var(--sev-low)  !important; }
+.sqa-risk-stat .sev-info .n { color: var(--sev-info) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .c-footer-inner {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 8px !important;
+  }
+  .c-footer-right {
+    align-items: center !important;
+  }
+}
