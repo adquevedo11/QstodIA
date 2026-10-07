@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{{ block.super }}
+
+<h3>Eliminar Registro de Horas</h3>
+<p>¿Confirmas que deseas eliminar este registro de horas?</p>
+<p>
+    <strong>Fecha:</strong> {{ entry.date }} &nbsp;|&nbsp;
+    <strong>Horas:</strong> {{ entry.hours }}h &nbsp;|&nbsp;
+    <strong>Actividad:</strong> {{ entry.activity_type }}
+</p>
+
+<div class="danger-zone panel panel-danger">
+    <div class="panel-heading">
+        <h3>Danger Zone</h3>
+    </div>
+    <form class="form-horizontal" method="post">
+        {% csrf_token %}
+        <div class="form-group" style="padding: 15px;">
+            <button class="btn btn-danger" type="submit">
+                <i class="fa-solid fa-trash"></i> Eliminar Registro
+            </button>
+            &nbsp;
+            <a href="{% url 'hour_pool_detail' entry.pool.id %}" class="btn btn-default">Cancelar</a>
+        </div>
+    </form>
+</div>
+<br/><br/>
+{% endblock %}

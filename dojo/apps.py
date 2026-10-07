@@ -56,6 +56,7 @@ class DojoAppConfig(AppConfig):
         import dojo.test.signals  # noqa: PLC0415, F401 raised: AppRegistryNotReady
         import dojo.tool_product.signals  # noqa: PLC0415, F401 raised: AppRegistryNotReady
         import dojo.url.signals  # noqa: PLC0415, F401 raised: AppRegistryNotReady
+        import dojo.go_live_readiness.signals  # noqa: PLC0415, F401 raised: AppRegistryNotReady
         # Configure audit system after all models are loaded
         # This must be done in ready() to avoid "Models aren't loaded yet" errors
         # Note: pghistory models are registered here (no database access), but trigger

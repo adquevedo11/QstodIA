@@ -1,0 +1,34 @@
+# docker-compose.override.sqa.yml
+#
+# QustodIA production/staging overlay for qustodia/core-vnext.
+# All QustodIA code is baked into the image — no bind mounts needed.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.override.sqa.yml up -d
+#
+# The go-live-agent microservice must be running on the sqasa network.
+# Start it separately before bringing up this stack.
+---
+services:
+
+  uwsgi:
+    environment:
+      GOLIVE_AGENT_URL: "http://go-live-agent:8001"
+      DD_CREATE_CLOUD_BANNER: "False"
+      # ── SMTP / Email ─────────────────────────────────────────────────────
+      # Override in a .env file or secrets manager — do not commit credentials.
+      # DD_EMAIL_URL: "smtp+tls://user%40example.com:password@smtp.example.com:587"
+      # DD_DEFAULT_FROM_EMAIL: "noreply@example.com"
+    networks:
+      - default
+      - sqasa
+
+  nginx:
+    networks:
+      - default
+      - sqasa
+
+networks:
+  sqasa:
+    name: sqasa
+    external: true
