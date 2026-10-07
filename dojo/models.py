@@ -681,3 +681,369 @@ admin.site.register(DojoMeta)
 # Development_Environment admin registered in dojo/development_environment/admin.py
 # Announcement + UserAnnouncement admin registered in dojo/announcement/admin.py
 # BannerConf admin registered in dojo/banner/admin.py
+
+# ═══════════════════════════════════════════════════════════════════════════════
+#  QustodIA — Custom Models (SQA SA · CQASA)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ── Concepto de Seguridad ─────────────────────────────────────────────────────
+
+RISK_LEVEL_CHOICES = [
+    ("Crítico",   "Crítico"),
+    ("Alto",      "Alto"),
+    ("Medio",     "Medio"),
+    ("Bajo",      "Bajo"),
+    ("Aceptable", "Aceptable"),
+]
+
+
+class SecurityConcept(models.Model):
+    reference     = models.CharField(max_length=100, blank=True, verbose_name="Referencia")
+    title         = models.CharField(max_length=500, verbose_name="Título")
+    client        = models.CharField(max_length=300, blank=True, verbose_name="Cliente")
+    scope         = models.CharField(max_length=500, blank=True, verbose_name="Alcance")
+    context_text  = models.TextField(blank=True, verbose_name="Contexto")
+    analysis      = models.TextField(blank=True, verbose_name="Análisis")
+    risk_level    = models.CharField(max_length=50, choices=RISK_LEVEL_CHOICES, default="Medio", verbose_name="Nivel de riesgo")
+    conclusion    = models.TextField(blank=True, verbose_name="Conclusión")
+    analyst_name  = models.CharField(max_length=300, blank=True, verbose_name="Analista")
+    analyst_title = models.CharField(max_length=300, blank=True, verbose_name="Cargo")
+    findings      = models.ManyToManyField("Finding", blank=True, related_name="security_concepts", verbose_name="Hallazgos")
+    created_at    = models.DateTimeField(auto_now_add=True)
+    updated_at    = models.DateTimeField(auto_now=True)
+    created_by    = models.ForeignKey(
+        Dojo_User, null=True, blank=True, on_delete=models.SET_NULL, related_name="security_concepts",
+    )
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Concepto de Seguridad"
+        verbose_name_plural = "Conceptos de Seguridad"
+
+    def __str__(self):
+        return f"{self.reference} — {self.title}" if self.reference else self.title
+
+
+# ── Informe Ejecutivo ─────────────────────────────────────────────────────────
+
+EXEC_REPORT_CLASSIFICATION = [
+    ('Confidencial', 'Confidencial'),
+    ('Interno', 'Interno'),
+    ('Público', 'Público'),
+]
+
+
+class ExecutiveReport(models.Model):
+    product           = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='executive_reports')
+    engagements       = models.ManyToManyField('Engagement', blank=True, related_name='executive_reports')
+    title             = models.CharField(max_length=500)
+    period_start      = models.DateField()
+    period_end        = models.DateField()
+    classification    = models.CharField(max_length=50, choices=EXEC_REPORT_CLASSIFICATION, default='Confidencial')
+    analyst_name      = models.CharField(max_length=300, blank=True)
+    analyst_title     = models.CharField(max_length=300, blank=True)
+    executive_summary = models.TextField(blank=True)
+    recommendations   = models.TextField(blank=True)
+    next_steps        = models.TextField(blank=True)
+    conclusion        = models.TextField(blank=True)
+    sections          = models.JSONField(default=dict)
+    created_at        = models.DateTimeField(auto_now_add=True)
+    updated_at        = models.DateTimeField(auto_now=True)
+    created_by        = models.ForeignKey(
+        Dojo_User, null=True, blank=True, on_delete=models.SET_NULL, related_name='executive_reports',
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Informe Ejecutivo'
+        verbose_name_plural = 'Informes Ejecutivos'
+
+    def __str__(self):
+        return f"{self.title} — {self.product.name}"
+
+
+# ── Pentest Module ────────────────────────────────────────────────────────────
+
+class PentestType(models.Model):
+    name        = models.CharField(max_length=100, unique=True, verbose_name="Tipo")
+    description = models.TextField(blank=True, verbose_name="Descripción")
+    is_active   = models.BooleanField(default=True, verbose_name="Activo")
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = "Tipo de Pentest"
+        verbose_name_plural = "Tipos de Pentest"
+
+    def __str__(self):
+        return self.name
+
+
+class PentestProject(models.Model):
+    STATUS_CHOICES = [
+        ('planned',     'Planificado'),
+        ('in_progress', 'En progreso'),
+        ('completed',   'Completado'),
+        ('delivered',   'Entregado'),
+    ]
+    INDUSTRY_CHOICES = [
+        ('banca',             'Banca y Financiero'),
+        ('fintech',           'Fintech'),
+        ('seguros',           'Seguros'),
+        ('salud',             'Salud'),
+        ('gobierno',          'Gobierno y Sector Público'),
+        ('retail',            'Retail y E-commerce'),
+        ('tecnologia',        'Tecnología'),
+        ('educacion',         'Educación'),
+        ('energia',           'Energía y Utilities'),
+        ('manufactura',       'Manufactura e Industria'),
+        ('telecomunicaciones','Telecomunicaciones'),
+        ('otro',              'Otro'),
+    ]
+
+    engagement   = models.ForeignKey('Engagement', on_delete=models.CASCADE, related_name='pentest_projects')
+    title        = models.CharField(max_length=200, verbose_name="Título")
+    pentest_type = models.ForeignKey(PentestType, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Tipo")
+    industry     = models.CharField(max_length=50, choices=INDUSTRY_CHOICES, blank=True, verbose_name="Sector/Industria del cliente")
+    methodology  = models.CharField(max_length=200, blank=True, verbose_name="Metodología")
+    scope        = models.TextField(blank=True, verbose_name="Alcance")
+    objectives   = models.TextField(blank=True, verbose_name="Objetivos")
+    start_date   = models.DateField(null=True, blank=True, verbose_name="Fecha inicio")
+    end_date     = models.DateField(null=True, blank=True, verbose_name="Fecha fin")
+    status       = models.CharField(max_length=20, choices=STATUS_CHOICES, default='planned', verbose_name="Estado")
+    lead_analyst = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True, blank=True, related_name='led_pentests', verbose_name="Analista líder")
+    analysts     = models.ManyToManyField(Dojo_User, blank=True, related_name='assigned_pentests', verbose_name="Equipo")
+    created_by   = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True, related_name='created_pentests')
+    created_at   = models.DateTimeField(auto_now_add=True)
+    updated_at   = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Proyecto Pentest"
+        verbose_name_plural = "Proyectos Pentest"
+
+    def __str__(self):
+        return f"{self.title} — {self.engagement}"
+
+    def get_severity_summary(self):
+        counts = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, 'informational': 0}
+        for f in self.pentest_findings.all():
+            if f.severity in counts:
+                counts[f.severity] += 1
+        return counts
+
+
+class PentestFinding(models.Model):
+    STATUS_CHOICES = [
+        ('identified', 'Identificado'),
+        ('confirmed',  'Confirmado'),
+        ('exploited',  'Explotado'),
+        ('reported',   'Reportado'),
+    ]
+    SEVERITY_CHOICES = [
+        ('critical',      'Crítico'),
+        ('high',          'Alto'),
+        ('medium',        'Medio'),
+        ('low',           'Bajo'),
+        ('informational', 'Informativo'),
+    ]
+
+    project            = models.ForeignKey(PentestProject, on_delete=models.CASCADE, related_name='pentest_findings')
+    title              = models.CharField(max_length=300, verbose_name="Título")
+    description        = models.TextField(verbose_name="Descripción técnica")
+    steps_to_reproduce = models.TextField(blank=True, verbose_name="Pasos para reproducir")
+    impact             = models.TextField(blank=True, verbose_name="Impacto")
+    affected_component = models.CharField(max_length=500, blank=True, verbose_name="Componente afectado")
+    cvss_score         = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True, verbose_name="CVSS Score")
+    cvss_vector        = models.CharField(max_length=200, blank=True, verbose_name="CVSS Vector")
+    severity           = models.CharField(max_length=20, choices=SEVERITY_CHOICES, blank=True, verbose_name="Severidad")
+    status             = models.CharField(max_length=20, choices=STATUS_CHOICES, default='identified', verbose_name="Estado")
+    remediation        = models.TextField(blank=True, verbose_name="Remediación")
+    references         = models.TextField(blank=True, verbose_name="Referencias")
+    order              = models.IntegerField(default=0, verbose_name="Orden")
+    created_by         = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True, related_name='pentest_findings')
+    created_at         = models.DateTimeField(auto_now_add=True)
+    updated_at         = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['order', '-cvss_score']
+        verbose_name = "Hallazgo Pentest"
+        verbose_name_plural = "Hallazgos Pentest"
+
+    def __str__(self):
+        return f"[{self.severity.upper()}] {self.title}"
+
+    def save(self, *args, **kwargs):
+        if self.cvss_score is not None:
+            score = float(self.cvss_score)
+            if score >= 9.0:
+                self.severity = 'critical'
+            elif score >= 7.0:
+                self.severity = 'high'
+            elif score >= 4.0:
+                self.severity = 'medium'
+            elif score > 0:
+                self.severity = 'low'
+            else:
+                self.severity = 'informational'
+        super().save(*args, **kwargs)
+
+    @property
+    def severity_color(self):
+        return {
+            'critical': '#c0392b', 'high': '#e67e22',
+            'medium': '#d4ac0d',   'low': '#2980b9',
+            'informational': '#7f8c8d',
+        }.get(self.severity, '#7f8c8d')
+
+
+class PentestEvidence(models.Model):
+    FILE_TYPE_CHOICES = [
+        ('screenshot', 'Captura de pantalla'),
+        ('payload',    'Payload'),
+        ('log',        'Log'),
+        ('script',     'Script'),
+        ('other',      'Otro'),
+    ]
+
+    finding     = models.ForeignKey(PentestFinding, on_delete=models.CASCADE, related_name='evidences')
+    title       = models.CharField(max_length=200, verbose_name="Título")
+    caption     = models.TextField(blank=True, verbose_name="Descripción")
+    file        = models.FileField(upload_to='pentest_evidence/%Y/%m/', verbose_name="Archivo")
+    file_type   = models.CharField(max_length=20, choices=FILE_TYPE_CHOICES, default='screenshot', verbose_name="Tipo")
+    uploaded_by = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['uploaded_at']
+        verbose_name = "Evidencia"
+        verbose_name_plural = "Evidencias"
+
+    def __str__(self):
+        return f"{self.title} — {self.finding.title}"
+
+    @property
+    def is_image(self):
+        name = self.file.name.lower() if self.file else ''
+        return any(name.endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.webp'])
+
+
+class PentestReport(models.Model):
+    REPORT_TYPE_CHOICES = [
+        ('executive', 'Ejecutivo'),
+        ('technical', 'Técnico'),
+    ]
+    STATUS_CHOICES = [
+        ('draft',     'Borrador'),
+        ('final',     'Final'),
+        ('delivered', 'Entregado'),
+    ]
+
+    project           = models.ForeignKey(PentestProject, on_delete=models.CASCADE, related_name='reports')
+    report_type       = models.CharField(max_length=20, choices=REPORT_TYPE_CHOICES, verbose_name="Tipo de reporte")
+    version           = models.CharField(max_length=10, default='1.0', verbose_name="Versión")
+    executive_summary = models.TextField(blank=True, verbose_name="Resumen ejecutivo")
+    conclusions       = models.TextField(blank=True, verbose_name="Conclusiones")
+    recommendations   = models.TextField(blank=True, verbose_name="Recomendaciones")
+    generated_pdf     = models.FileField(upload_to='pentest_reports/%Y/%m/', null=True, blank=True)
+    status            = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft', verbose_name="Estado")
+    generated_by      = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True, related_name='pentest_reports')
+    generated_at      = models.DateTimeField(auto_now_add=True)
+    delivered_at      = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-generated_at']
+        verbose_name = "Reporte Pentest"
+        verbose_name_plural = "Reportes Pentest"
+
+    def __str__(self):
+        return f"{self.get_report_type_display()} v{self.version} — {self.project.title}"
+
+
+# ── Hour Pool Module ──────────────────────────────────────────────────────────
+
+class ActivityType(models.Model):
+    name        = models.CharField(max_length=100, unique=True, verbose_name="Actividad")
+    description = models.TextField(blank=True)
+    is_active   = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = "Tipo de Actividad"
+        verbose_name_plural = "Tipos de Actividad"
+
+    def __str__(self):
+        return self.name
+
+
+class HourPool(models.Model):
+    STATUS_CHOICES = [
+        ('active',    'Activa'),
+        ('depleted',  'Agotada'),
+        ('expired',   'Vencida'),
+        ('cancelled', 'Cancelada'),
+    ]
+
+    product             = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='hour_pools')
+    name                = models.CharField(max_length=200, verbose_name="Nombre de la bolsa")
+    total_hours         = models.PositiveIntegerField(verbose_name="Horas totales")
+    alert_threshold_pct = models.PositiveIntegerField(default=20, verbose_name="Alerta al % restante")
+    valid_from          = models.DateField(verbose_name="Válida desde")
+    valid_until         = models.DateField(null=True, blank=True, verbose_name="Válida hasta")
+    status              = models.CharField(max_length=20, choices=STATUS_CHOICES, default='active', verbose_name="Estado")
+    notes               = models.TextField(blank=True, verbose_name="Notas")
+    created_by          = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True, related_name='created_hour_pools')
+    created_at          = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Bolsa de Horas"
+        verbose_name_plural = "Bolsas de Horas"
+
+    def __str__(self):
+        return f"{self.name} — {self.product.name}"
+
+    @property
+    def used_hours(self):
+        from django.db.models import Sum
+        result = self.time_entries.aggregate(total=Sum('hours'))['total']
+        return result or 0
+
+    @property
+    def remaining_hours(self):
+        return self.total_hours - self.used_hours
+
+    @property
+    def consumption_pct(self):
+        if self.total_hours == 0:
+            return 0
+        return round((self.used_hours / self.total_hours) * 100, 1)
+
+    @property
+    def is_alert(self):
+        threshold = self.total_hours * self.alert_threshold_pct / 100
+        return self.remaining_hours <= threshold
+
+    @property
+    def status_color(self):
+        if self.status == 'active':
+            return '#27ae60' if not self.is_alert else '#e67e22'
+        return {'depleted': '#c0392b', 'expired': '#7f8c8d', 'cancelled': '#bdc3c7'}.get(self.status, '#7f8c8d')
+
+
+class TimeEntry(models.Model):
+    pool            = models.ForeignKey(HourPool, on_delete=models.CASCADE, related_name='time_entries')
+    pentest_project = models.ForeignKey(PentestProject, on_delete=models.SET_NULL, null=True, blank=True, related_name='time_entries')
+    analyst         = models.ForeignKey(Dojo_User, on_delete=models.SET_NULL, null=True, related_name='time_entries')
+    date            = models.DateField(verbose_name="Fecha")
+    hours           = models.PositiveIntegerField(verbose_name="Horas")
+    activity_type   = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, null=True, verbose_name="Actividad")
+    description     = models.TextField(blank=True, verbose_name="Descripción")
+    created_at      = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date', '-created_at']
+        verbose_name = "Registro de Horas"
+        verbose_name_plural = "Registros de Horas"
+
+    def __str__(self):
+        return f"{self.analyst} — {self.hours}h — {self.date}"
