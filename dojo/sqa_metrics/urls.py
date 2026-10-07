@@ -1,6 +1,1 @@
-from django.urls import re_path
-from dojo.sqa_metrics import views
-
-urlpatterns = [
-    re_path(r"^metricas-sqa/$", views.sqa_metrics, name="sqa_metrics"),
-]
+from dojo.sqa_metrics.ui.urls import urlpatterns  # noqa: F401
