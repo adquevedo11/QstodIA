@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}QustodIA — Bolsas de Horas{% endblock %}
+
+{% block add_styles %}
+.pt-header {
+    background: linear-gradient(135deg, #324458 0%, #1e2d3a 100%);
+    color: #fff;
+    padding: 24px 28px 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+.pt-header .brand-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffb323;
+    margin-bottom: 8px;
+}
+.pt-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: #fff;
+}
+.table > thead > tr > th {
+    background-color: #324458;
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.progress-bar-sqa { background-color: #27ae60; }
+.progress-bar-warn { background-color: #ffb323; }
+.progress-bar-alert { background-color: #e74c3c; }
+.badge-active   { background-color: #27ae60; color: #fff; }
+.badge-inactive { background-color: #95a5a6; color: #fff; }
+.badge-expired  { background-color: #c0392b; color: #fff; }
+.badge-alert    { background-color: #ffb323; color: #fff; }
+.progress { margin-bottom: 0; border-radius: 4px; }
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #aaa;
+}
+.empty-state .icon-lg {
+    font-size: 48px;
+    color: #dde3ea;
+    margin-bottom: 16px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="pt-header">
+            <div class="brand-tag">QustodIA · Gestión de Horas</div>
+            <h2><i class="fa-solid fa-clock"></i> Bolsas de Horas</h2>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body" style="padding:0;">
+                {% if pools %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered" id="pools-table" style="margin:0;">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Producto</th>
+                                <th style="text-align:right;">Total</th>
+                                <th style="text-align:right;">Usadas</th>
+                                <th style="text-align:right;">Restantes</th>
+                                <th style="width:160px;">% Consumo</th>
+                                <th>Estado</th>
+                                <th>Vigencia</th>
+                                <th style="width:100px;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pool in pools %}
+                            {% with pct=pool.consumption_pct %}
+                            <tr {% if pool.is_alert %}style="background-color:#fff8ee;"{% endif %}>
+                                <td>
+                                    <a href="{% url 'hour_pool_detail' pool.pk %}" style="font-weight:700; color:#324458;">
+                                        {{ pool.name }}
+                                    </a>
+                                    {% if pool.is_alert %}
+                                    <span class="badge badge-alert" title="Alerta de consumo" style="margin-left:4px;">
+                                        <i class="fa-solid fa-bell"></i>
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pool.product %}
+                                        <a href="{% url 'view_product' pool.product.id %}" style="color:#555;">
+                                            {{ pool.product.name }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td style="text-align:right; font-weight:600;">{{ pool.total_hours }}h</td>
+                                <td style="text-align:right; color:{% if pool.is_alert %}#e74c3c{% else %}#555{% endif %}; font-weight:600;">
+                                    {{ pool.used_hours|default:0 }}h
+                                </td>
+                                <td style="text-align:right; font-weight:700; color:{% if pool.remaining_hours <= 0 %}#e74c3c{% else %}#27ae60{% endif %};">
+                                    {{ pool.remaining_hours|default:0 }}h
+                                </td>
+                                <td>
+                                    <div style="font-size:11px; color:{% if pct >= 90 %}#e74c3c{% elif pct >= pool.alert_threshold_pct %}#e67e22{% else %}#27ae60{% endif %}; font-weight:700; margin-bottom:3px;">
+                                        {{ pct|default:0|floatformat:0 }}%
+                                    </div>
+                                    <div class="progress" style="height:8px; background:#eee;">
+                                        <div class="progress-bar
+                                            {% if pct >= 90 %}progress-bar-alert
+                                            {% elif pct >= pool.alert_threshold_pct|default:75 %}progress-bar-warn
+                                            {% else %}progress-bar-sqa{% endif %}"
+                                             role="progressbar"
+                                             style="width:{{ pct|default:0|floatformat:0 }}%; min-width:2px;">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if pool.status == 'active' %}
+                                        <span class="badge badge-active">Activa</span>
+                                    {% elif pool.status == 'inactive' %}
+                                        <span class="badge badge-inactive">Inactiva</span>
+                                    {% elif pool.status == 'expired' %}
+                                        <span class="badge badge-expired">Expirada</span>
+                                    {% else %}
+                                        <span class="badge">{{ pool.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td style="font-size:12px;">
+                                    {% if pool.start_date %}{{ pool.start_date|date:"d/m/Y" }}{% else %}—{% endif %}
+                                    {% if pool.end_date %}
+                                    <br><small class="text-muted">al {{ pool.end_date|date:"d/m/Y" }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'hour_pool_detail' pool.pk %}" class="btn btn-xs btn-primary" title="Ver detalle">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'hour_pool_edit' pool.pk %}" class="btn btn-xs btn-default" title="Editar">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                    <a href="{% url 'hour_pool_delete' pool.pk %}" class="btn btn-xs btn-danger" title="Eliminar">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="icon-lg"><i class="fa-solid fa-clock"></i></div>
+                    <p style="font-size:15px;"><strong>No hay bolsas de horas registradas.</strong></p>
+                    <p class="text-muted">Las bolsas de horas se crean desde el detalle del producto.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

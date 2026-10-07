@@ -1,0 +1,492 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}QustodIA — Nuevo Informe Ejecutivo{% endblock %}
+
+{% block add_styles %}
+{{ block.super }}
+.sqa-er-header {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    border-radius: 8px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 14px rgba(50,68,88,0.18);
+}
+.sqa-er-header h2 { color: #fff; margin: 0 0 4px 0; font-size: 20px; }
+.sqa-er-header p  { color: #afc1d0; margin: 0; font-size: 13px; }
+.sqa-er-header img { height: 40px; filter: none; }
+
+.sqa-er-section {
+    background: #fff;
+    border: 1px solid #dde3ea;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.sqa-er-section-title {
+    background: #324458;
+    color: #fff;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    border-left: 4px solid #ffb323;
+}
+.sqa-er-section-title i { color: #ffb323; margin-right: 8px; }
+.sqa-er-section-body { padding: 18px 20px; }
+
+.sqa-er-section .form-group label {
+    font-weight: 600;
+    color: #324458;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.sqa-er-section .form-control {
+    border-color: #c5d0da;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.sqa-er-section .form-control:focus {
+    border-color: #ffb323;
+    box-shadow: 0 0 0 2px rgba(255,179,35,0.2);
+}
+
+.section-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+.section-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8f9fa;
+    border: 1px solid #dde3ea;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+}
+.section-checkbox-item:hover { border-color: #ffb323; background: #fffbf0; }
+.section-checkbox-item input[type="checkbox"] { accent-color: #ffb323; width: 15px; height: 15px; }
+.section-checkbox-item label { margin: 0; cursor: pointer; font-size: 12px; color: #324458; font-weight: 500; text-transform: none; letter-spacing: 0; }
+
+.engagement-check-list {
+    max-height: 220px;
+    overflow-y: auto;
+    border: 1px solid #dde3ea;
+    border-radius: 4px;
+    padding: 8px;
+    background: #f8f9fa;
+}
+.engagement-check-list label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    margin: 0;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: normal !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-size: 13px !important;
+}
+.engagement-check-list label:hover { background: #e8edf2; }
+.engagement-check-list input { accent-color: #ffb323; }
+
+.btn-sqa-generate {
+    background: linear-gradient(135deg, #324458, #3d5470);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 12px 36px;
+    font-size: 15px;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(50,68,88,0.25);
+    transition: all 0.2s;
+}
+.btn-sqa-generate:hover {
+    background: linear-gradient(135deg, #3d5470, #4a6285);
+    color: #fff;
+    transform: translateY(-1px);
+}
+.btn-sqa-auto {
+    background: #ffb323;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+.btn-sqa-auto:hover { background: #e09e1a; color: #fff; }
+.btn-sqa-auto:disabled { background: #ccc; cursor: not-allowed; }
+
+#summary-spinner { display: none; }
+.ia-spinner { display: none; margin-left: 4px; }
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+<!-- Header -->
+<div class="sqa-er-header">
+    <div>
+        <h2><i class="fa-solid fa-file-chart-column" style="color:#ffb323;margin-right:10px;"></i>Nuevo Informe Ejecutivo</h2>
+        <p>QustodIA · Application Security Posture Management · SQA SA</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <a href="{% url 'executive_report_list' %}" class="btn btn-default btn-sm" style="border-color:#afc1d0;color:#afc1d0;">
+            <i class="fa-solid fa-arrow-left" style="margin-right:4px;"></i>Historial
+        </a>
+        <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA" style="height:38px;">
+    </div>
+</div>
+
+<form method="post" action="{% url 'executive_report_new' %}" id="er-form">
+{% csrf_token %}
+
+<!-- 1. Datos del informe -->
+<div class="sqa-er-section">
+    <div class="sqa-er-section-title">
+        <i class="fa-solid fa-id-card"></i>Datos del Informe
+    </div>
+    <div class="sqa-er-section-body">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>Título del Informe</label>
+                    <input type="text" name="title" class="form-control" required
+                        placeholder="Ej: Informe Ejecutivo de Seguridad — Q1 2025">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Clasificación</label>
+                    <select name="classification" class="form-control">
+                        <option value="Confidencial">Confidencial</option>
+                        <option value="Interno">Interno</option>
+                        <option value="Público">Público</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Producto</label>
+                    <select name="product_id" id="er-product" class="form-control" required>
+                        <option value="">— Seleccione un producto —</option>
+                        {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Fecha Inicio del Período</label>
+                    <input type="date" name="period_start" class="form-control" required id="er-period-start">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Fecha Fin del Período</label>
+                    <input type="date" name="period_end" class="form-control" required id="er-period-end">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Nombre del Analista</label>
+                    <input type="text" name="analyst_name" class="form-control" value="{{ analyst_name }}">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Cargo / Título</label>
+                    <input type="text" name="analyst_title" class="form-control"
+                        placeholder="Ej: Líder de Seguridad de la Información">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Engagements -->
+<div class="sqa-er-section">
+    <div class="sqa-er-section-title">
+        <i class="fa-solid fa-bullseye"></i>Engagements a Incluir
+        <span style="font-weight:400;font-size:11px;margin-left:8px;color:#afc1d0;">(opcional — si no selecciona, se incluyen todos)</span>
+    </div>
+    <div class="sqa-er-section-body">
+        <div id="engagement-loading" style="display:none;color:#afc1d0;font-size:13px;">
+            <i class="fa-solid fa-spinner fa-spin"></i> Cargando engagements...
+        </div>
+        <div id="engagement-container" class="engagement-check-list">
+            <div style="color:#aab4be;font-size:13px;padding:10px;">Seleccione un producto primero.</div>
+        </div>
+    </div>
+</div>
+
+<!-- 3. Secciones del informe -->
+<div class="sqa-er-section">
+    <div class="sqa-er-section-title">
+        <i class="fa-solid fa-list-check"></i>Secciones a Incluir en el Informe
+    </div>
+    <div class="sqa-er-section-body">
+        <div class="section-checkbox-grid">
+            {% for key, label in section_labels.items %}
+            <div class="section-checkbox-item">
+                <input type="checkbox" name="sections" value="{{ key }}" id="sec-{{ key }}"
+                    {% if key in default_sections %}checked{% endif %}>
+                <label for="sec-{{ key }}">{{ label }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div style="margin-top:10px;">
+            <button type="button" id="btn-all-sections" class="btn btn-xs" style="background:#f0f4f8;border:1px solid #dde3ea;color:#324458;">
+                Seleccionar todas
+            </button>
+            <button type="button" id="btn-none-sections" class="btn btn-xs" style="background:#f0f4f8;border:1px solid #dde3ea;color:#324458;margin-left:6px;">
+                Ninguna
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Contenido editable -->
+<div class="sqa-er-section">
+    <div class="sqa-er-section-title">
+        <i class="fa-solid fa-pen-to-square"></i>Contenido del Informe
+    </div>
+    <div class="sqa-er-section-body">
+
+        <!-- Resumen ejecutivo -->
+        <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <label style="margin:0;">Resumen Ejecutivo</label>
+                <button type="button" id="btn-auto-summary" class="btn-sqa-auto" disabled>
+                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:4px;"></i>
+                    Auto-generar
+                    <span id="summary-spinner"><i class="fa-solid fa-spinner fa-spin" style="margin-left:4px;"></i></span>
+                </button>
+            </div>
+            <textarea name="executive_summary" id="er-summary" class="form-control" rows="6"
+                placeholder="Redacte el resumen ejecutivo o use el botón Auto-generar para generarlo automáticamente con base en las métricas del período..."></textarea>
+        </div>
+
+        <!-- Recomendaciones -->
+        <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <label style="margin:0;">Recomendaciones</label>
+                <button type="button" class="btn-sqa-auto btn-ia-section" data-section="recommendations" data-target="er-recommendations" disabled>
+                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:4px;"></i>Auto-generar
+                    <span class="ia-spinner"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                </button>
+            </div>
+            <textarea name="recommendations" id="er-recommendations" class="form-control" rows="5"
+                placeholder="Liste las recomendaciones prioritarias para la organización..."></textarea>
+        </div>
+
+        <!-- Próximos pasos -->
+        <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <label style="margin:0;">Próximos Pasos</label>
+                <button type="button" class="btn-sqa-auto btn-ia-section" data-section="next_steps" data-target="er-next-steps" disabled>
+                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:4px;"></i>Auto-generar
+                    <span class="ia-spinner"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                </button>
+            </div>
+            <textarea name="next_steps" id="er-next-steps" class="form-control" rows="4"
+                placeholder="Defina los próximos pasos del plan de remediación y seguimiento..."></textarea>
+        </div>
+
+        <!-- Conclusión -->
+        <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <label style="margin:0;">Conclusión</label>
+                <button type="button" class="btn-sqa-auto btn-ia-section" data-section="conclusion" data-target="er-conclusion" disabled>
+                    <i class="fa-solid fa-wand-magic-sparkles" style="margin-right:4px;"></i>Auto-generar
+                    <span class="ia-spinner"><i class="fa-solid fa-spinner fa-spin"></i></span>
+                </button>
+            </div>
+            <textarea name="conclusion" id="er-conclusion" class="form-control" rows="4"
+                placeholder="Redacte la conclusión general del período evaluado..."></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Botón guardar -->
+<div class="text-center" style="margin: 32px 0 40px;">
+    <button type="submit" class="btn btn-sqa-generate">
+        <i class="fa-solid fa-file-chart-column" style="margin-right:8px;"></i>
+        Guardar y Generar Informe
+    </button>
+    <p style="color:#999;font-size:11px;margin-top:10px;">
+        El informe se abrirá listo para imprimir o guardar como PDF (Ctrl+P)
+    </p>
+</div>
+
+</form>
+{% endblock %}
+
+{% block postscript %}
+{{ block.super }}
+<script>
+var ENGAGEMENTS_URL = "{% url 'executive_report_engagements' %}";
+var SUMMARY_URL = "{% url 'executive_report_generate_summary' %}";
+var IA_URL = "{% url 'executive_report_generate_ia' %}";
+var CSRF_TOKEN = "{{ csrf_token }}";
+
+// ── Cargar engagements al cambiar producto ──
+document.getElementById('er-product').addEventListener('change', function() {
+    var pid = this.value;
+    var container = document.getElementById('engagement-container');
+    var loading = document.getElementById('engagement-loading');
+    var btnAuto = document.getElementById('btn-auto-summary');
+
+    btnAuto.disabled = !pid;
+    document.querySelectorAll('.btn-ia-section').forEach(function(b) { b.disabled = !pid; });
+
+    if (!pid) {
+        container.innerHTML = '<div style="color:#aab4be;font-size:13px;padding:10px;">Seleccione un producto primero.</div>';
+        return;
+    }
+
+    loading.style.display = 'block';
+    container.innerHTML = '';
+
+    fetch(ENGAGEMENTS_URL + '?product_id=' + pid)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            loading.style.display = 'none';
+            if (!data.engagements || data.engagements.length === 0) {
+                container.innerHTML = '<div style="color:#aab4be;font-size:13px;padding:10px;">Este producto no tiene engagements registrados.</div>';
+                return;
+            }
+            var html = '';
+            data.engagements.forEach(function(e) {
+                var label = e.name;
+                if (e.start) label += ' (' + e.start + (e.end ? ' → ' + e.end : '') + ')';
+                if (e.status) label += ' [' + e.status + ']';
+                html += '<label><input type="checkbox" name="engagement_ids" value="' + e.id + '"> ' + label + '</label>';
+            });
+            container.innerHTML = html;
+        })
+        .catch(function() {
+            loading.style.display = 'none';
+            container.innerHTML = '<div style="color:#c0392b;font-size:13px;padding:10px;">Error al cargar engagements.</div>';
+        });
+});
+
+// ── Auto-generar resumen ──
+document.getElementById('btn-auto-summary').addEventListener('click', function() {
+    var pid = document.getElementById('er-product').value;
+    var pstart = document.getElementById('er-period-start').value;
+    var pend = document.getElementById('er-period-end').value;
+
+    if (!pid || !pstart || !pend) {
+        alert('Seleccione producto y período antes de auto-generar el resumen.');
+        return;
+    }
+
+    var btn = this;
+    var spinner = document.getElementById('summary-spinner');
+    btn.disabled = true;
+    spinner.style.display = 'inline';
+
+    var checkboxes = document.querySelectorAll('input[name="engagement_ids"]:checked');
+    var formData = new FormData();
+    formData.append('csrfmiddlewaretoken', CSRF_TOKEN);
+    formData.append('product_id', pid);
+    formData.append('period_start', pstart);
+    formData.append('period_end', pend);
+    checkboxes.forEach(function(cb) {
+        formData.append('engagement_ids[]', cb.value);
+    });
+
+    fetch(SUMMARY_URL, { method: 'POST', body: formData })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.summary) {
+                document.getElementById('er-summary').value = data.summary;
+            } else if (data.error) {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(function() {
+            alert('Error al comunicarse con el servidor.');
+        })
+        .finally(function() {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        });
+});
+
+// ── Auto-generar (recomendaciones, próximos pasos, conclusión) ──
+document.querySelectorAll('.btn-ia-section').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var pid = document.getElementById('er-product').value;
+        var pstart = document.getElementById('er-period-start').value;
+        var pend = document.getElementById('er-period-end').value;
+        var section = btn.getAttribute('data-section');
+        var targetId = btn.getAttribute('data-target');
+
+        if (!pid || !pstart || !pend) {
+            alert('Seleccione producto y período antes de generar con IA.');
+            return;
+        }
+
+        var spinner = btn.querySelector('.ia-spinner');
+        btn.disabled = true;
+        spinner.style.display = 'inline';
+
+        var checkboxes = document.querySelectorAll('input[name="engagement_ids"]:checked');
+        var formData = new FormData();
+        formData.append('csrfmiddlewaretoken', CSRF_TOKEN);
+        formData.append('section', section);
+        formData.append('product_id', pid);
+        formData.append('period_start', pstart);
+        formData.append('period_end', pend);
+        checkboxes.forEach(function(cb) {
+            formData.append('engagement_ids[]', cb.value);
+        });
+
+        fetch(IA_URL, { method: 'POST', body: formData })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data.text) {
+                    document.getElementById(targetId).value = data.text;
+                } else if (data.error) {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(function() {
+                alert('Error al comunicarse con el servidor.');
+            })
+            .finally(function() {
+                btn.disabled = false;
+                spinner.style.display = 'none';
+            });
+    });
+});
+
+// ── Seleccionar/deseleccionar todas las secciones ──
+document.getElementById('btn-all-sections').addEventListener('click', function() {
+    document.querySelectorAll('input[name="sections"]').forEach(function(cb) { cb.checked = true; });
+});
+document.getElementById('btn-none-sections').addEventListener('click', function() {
+    document.querySelectorAll('input[name="sections"]').forEach(function(cb) { cb.checked = false; });
+});
+</script>
+{% endblock %}

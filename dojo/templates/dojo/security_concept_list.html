@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}QustodIA — Historial de Conceptos de Seguridad{% endblock %}
+
+{% block add_styles %}
+{{ block.super }}
+.sqa-cs-header {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    border-radius: 8px;
+    padding: 20px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 14px rgba(50,68,88,0.18);
+}
+.sqa-cs-header h2 { color: #fff; margin: 0 0 4px 0; font-size: 20px; }
+.sqa-cs-header p  { color: #afc1d0; margin: 0; font-size: 13px; }
+.sqa-cs-header img { height: 40px; filter: none; }
+
+.risk-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+}
+.risk-Crítico   { background: #c0392b; }
+.risk-Alto      { background: #e67e22; }
+.risk-Medio     { background: #d4ac0d; }
+.risk-Bajo      { background: #2980b9; }
+.risk-Aceptable { background: #27ae60; }
+
+.concept-card {
+    background: #fff;
+    border: 1px solid #dde3ea;
+    border-left: 5px solid #324458;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+}
+.concept-card:hover { box-shadow: 0 3px 12px rgba(50,68,88,0.12); }
+.concept-card-title { font-size: 15px; font-weight: 700; color: #324458; margin-bottom: 4px; }
+.concept-card-meta  { font-size: 12px; color: #6c757d; }
+.concept-card-meta span { margin-right: 16px; }
+.concept-card-meta i { color: #ffb323; margin-right: 4px; }
+
+.btn-sqa { background: #324458; color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+.btn-sqa:hover { background: #3d5470; color: #fff; }
+.btn-sqa-orange { background: #ffb323; color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+.btn-sqa-orange:hover { background: #e09e1a; color: #fff; }
+.btn-sqa-danger { background: #c0392b; color: #fff; border: none; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 600; }
+.btn-sqa-danger:hover { background: #a93226; color: #fff; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #aab4be; }
+.empty-state i { font-size: 56px; margin-bottom: 16px; display: block; }
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+<!-- Header -->
+<div class="sqa-cs-header">
+    <div>
+        <h2><i class="fa-solid fa-clock-rotate-left" style="color:#ffb323;margin-right:10px;"></i>Historial de Conceptos de Seguridad</h2>
+        <p>QustodIA · Application Security Posture Management · SQA SA</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <a href="{% url 'security_concept' %}" class="btn-sqa-orange" style="text-decoration:none;padding:10px 20px;font-size:13px;">
+            <i class="fa-solid fa-plus" style="margin-right:6px;"></i>Nuevo Concepto
+        </a>
+        <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA" style="height:38px;">
+    </div>
+</div>
+
+<!-- Búsqueda -->
+<div style="margin-bottom:16px;">
+    <input type="text" id="search-concepts" class="form-control"
+        style="max-width:400px;" placeholder="&#128269; Buscar por título, referencia o cliente...">
+</div>
+
+<!-- Lista de conceptos -->
+{% if concepts %}
+    <div id="concepts-container">
+    {% for c in concepts %}
+    <div class="concept-card" data-search="{{ c.title|lower }} {{ c.reference|lower }} {{ c.client|lower }}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+                <div class="concept-card-title">
+                    {% if c.reference %}
+                    <span style="color:#ffb323;margin-right:8px;">{{ c.reference }}</span>
+                    {% endif %}
+                    {{ c.title }}
+                </div>
+                <div class="concept-card-meta" style="margin-top:6px;">
+                    <span><i class="fa-solid fa-building"></i>{{ c.client|default:"—" }}</span>
+                    <span><i class="fa-solid fa-user-shield"></i>{{ c.analyst_name|default:"—" }}</span>
+                    <span><i class="fa-solid fa-bug"></i>{{ c.findings.count }} hallazgo{{ c.findings.count|pluralize:"s" }}</span>
+                    <span><i class="fa-regular fa-calendar"></i>{{ c.created_at|date:"d/m/Y H:i" }}</span>
+                    {% if c.created_by %}
+                    <span><i class="fa-solid fa-user"></i>{{ c.created_by.get_full_name|default:c.created_by.username }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                <span class="risk-badge risk-{{ c.risk_level }}">{{ c.risk_level }}</span>
+                <a href="{% url 'security_concept_view' c.pk %}" target="_blank"
+                   class="btn-sqa" style="text-decoration:none;" title="Ver / Descargar PDF">
+                    <i class="fa-solid fa-file-pdf"></i> PDF
+                </a>
+                <form method="post" action="{% url 'security_concept_delete' c.pk %}"
+                      style="display:inline;"
+                      onsubmit="return confirm('¿Eliminar este concepto de seguridad?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-sqa-danger" title="Eliminar">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+
+{% else %}
+    <div class="empty-state">
+        <i class="fa-solid fa-file-shield" style="color:#dde3ea;"></i>
+        <p style="font-size:15px;font-weight:600;color:#324458;">No hay conceptos de seguridad emitidos aún</p>
+        <p style="font-size:13px;">Crea el primero usando el botón <strong>Nuevo Concepto</strong></p>
+        <a href="{% url 'security_concept' %}" class="btn-sqa-orange" style="text-decoration:none;padding:12px 28px;font-size:14px;display:inline-block;margin-top:12px;">
+            <i class="fa-solid fa-plus" style="margin-right:6px;"></i>Crear Concepto de Seguridad
+        </a>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block postscript %}
+{{ block.super }}
+<script>
+document.getElementById('search-concepts').addEventListener('input', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('.concept-card').forEach(function(card) {
+        card.style.display = card.dataset.search.includes(q) ? '' : 'none';
+    });
+});
+</script>
+{% endblock %}

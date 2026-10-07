@@ -1,0 +1,322 @@
+{% extends "report_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+{{ block.super }}
+<style>
+    /* ── Forzar colores de fondo al imprimir ── */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* ── Portada ── */
+    .cs-cover {
+        min-height: 96vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 40px 60px;
+        page-break-after: always;
+    }
+    .cs-cover-top { text-align: right; }
+    .cs-cover-top img { height: 60px; }
+
+    .cs-cover-center { text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .cs-cover-line {
+        width: 80px; height: 5px;
+        background: #ffb323;
+        margin: 20px auto;
+        border-radius: 3px;
+    }
+    .cs-cover-type {
+        color: #6c757d;
+        font-size: 13px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+    .cs-cover-title {
+        color: #324458;
+        font-size: 30px;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 6px;
+    }
+    .cs-cover-ref {
+        color: #ffb323;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .cs-risk-box {
+        display: inline-block;
+        padding: 10px 32px;
+        border-radius: 6px;
+        margin-top: 24px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 0.5px;
+    }
+
+    .cs-cover-meta {
+        background: #f4f6f9;
+        border-radius: 6px;
+        padding: 16px 24px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #324458;
+    }
+    .cs-cover-meta strong { display: block; color: #6c757d; font-weight: 400; font-size: 10px; text-transform: uppercase; }
+
+    .cs-cover-bottom {
+        border-top: 3px solid #ffb323;
+        padding-top: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 11px;
+        color: #6c757d;
+    }
+    .cs-cover-bottom strong { color: #324458; }
+
+    /* ── Secciones del documento ── */
+    .cs-section { margin-bottom: 30px; page-break-inside: avoid; }
+
+    .cs-section-heading {
+        background: #324458;
+        color: #fff;
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        border-left: 5px solid #ffb323;
+        border-radius: 0 4px 4px 0;
+        margin-bottom: 0;
+    }
+    .cs-section-heading i { color: #ffb323; margin-right: 8px; }
+
+    .cs-section-body {
+        border: 1px solid #dde3ea;
+        border-top: none;
+        padding: 16px 18px;
+        border-radius: 0 0 4px 4px;
+        background: #fff;
+    }
+    .cs-section-body p { margin: 0; white-space: pre-wrap; line-height: 1.7; color: #2c3e50; }
+
+    /* ── Tabla hallazgos ── */
+    .cs-findings-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .cs-findings-table thead th {
+        background: #324458;
+        color: #fff;
+        padding: 8px 10px;
+        text-align: left;
+        font-weight: 600;
+    }
+    .cs-findings-table tbody tr:nth-child(even) { background: #f8f9fa; }
+    .cs-findings-table tbody td { padding: 7px 10px; border-bottom: 1px solid #eee; vertical-align: top; }
+
+    .sev-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 10px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+    }
+    .sev-Critical { background: #c0392b; }
+    .sev-High     { background: #e67e22; }
+    .sev-Medium   { background: #d4ac0d; }
+    .sev-Low      { background: #2980b9; }
+    .sev-Info     { background: #6c757d; }
+
+    /* ── Bloque de firma ── */
+    .cs-signature {
+        margin-top: 50px;
+        page-break-inside: avoid;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .cs-signature-box {
+        border-top: 2px solid #324458;
+        padding-top: 10px;
+        text-align: center;
+        min-width: 260px;
+    }
+    .cs-signature-name { font-weight: 700; color: #324458; font-size: 13px; }
+    .cs-signature-title { color: #6c757d; font-size: 11px; }
+    .cs-signature-org { color: #ffb323; font-weight: 700; font-size: 11px; margin-top: 4px; }
+
+    /* ── Watermark confidencial ── */
+    .cs-confidential {
+        position: fixed;
+        bottom: 60px;
+        right: 30px;
+        color: rgba(50,68,88,0.07);
+        font-size: 48px;
+        font-weight: 900;
+        transform: rotate(-30deg);
+        pointer-events: none;
+        letter-spacing: 2px;
+        z-index: 0;
+    }
+
+    @media print {
+        .cs-cover { page-break-after: always; }
+        .cs-section { page-break-inside: avoid; }
+    }
+</style>
+
+<div class="container">
+
+    <!-- ══ PORTADA ══ -->
+    <div class="cs-cover">
+        <div class="cs-cover-top">
+            <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA" style="filter:none;">
+        </div>
+
+        <div class="cs-cover-center">
+            <div class="cs-cover-type">Concepto de Seguridad</div>
+            <div class="cs-cover-line"></div>
+            <div class="cs-cover-title">{{ title }}</div>
+            {% if reference %}
+            <div class="cs-cover-ref">{{ reference }}</div>
+            {% endif %}
+            <div>
+                <span class="cs-risk-box" style="background-color: {{ risk_color }};">
+                    Riesgo: {{ risk_level }}
+                </span>
+            </div>
+
+            <div class="cs-cover-meta">
+                {% if client %}
+                <div><strong>Cliente</strong>{{ client }}</div>
+                {% endif %}
+                {% if scope %}
+                <div><strong>Alcance</strong>{{ scope }}</div>
+                {% endif %}
+                <div><strong>Fecha</strong>{{ generated_date|date:"d/m/Y" }}</div>
+                <div><strong>Analista</strong>{{ analyst_name }}</div>
+            </div>
+        </div>
+
+        <div class="cs-cover-bottom">
+            <div><strong>SQA SA</strong> · QustodIA · Application Security Posture Management</div>
+            <div>Documento <strong>Confidencial</strong> · Solo uso interno</div>
+        </div>
+    </div>
+
+    <!-- ══ CUERPO DEL DOCUMENTO ══ -->
+
+    <!-- 1. Contexto -->
+    {% if context_text %}
+    <div class="cs-section">
+        <div class="cs-section-heading">
+            <i class="fa-solid fa-circle-info"></i>1. Contexto y Antecedentes
+        </div>
+        <div class="cs-section-body">
+            <p>{{ context_text }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 2. Hallazgos -->
+    {% if findings %}
+    <div class="cs-section">
+        <div class="cs-section-heading">
+            <i class="fa-solid fa-bug"></i>2. Hallazgos Identificados
+        </div>
+        <div class="cs-section-body" style="padding: 0;">
+            <table class="cs-findings-table">
+                <thead>
+                    <tr>
+                        <th style="width:50px;">#</th>
+                        <th style="width:60px;">ID</th>
+                        <th>Hallazgo</th>
+                        <th style="width:90px;">Severidad</th>
+                        <th style="width:160px;">Producto</th>
+                        <th style="width:70px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in findings %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ f.id }}</td>
+                        <td>{{ f.title }}</td>
+                        <td><span class="sev-badge sev-{{ f.severity }}">{{ f.severity }}</span></td>
+                        <td>{{ f.test.engagement.product.name }}</td>
+                        <td>{% if f.active %}Activo{% else %}Cerrado{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 3. Análisis -->
+    {% if analysis %}
+    <div class="cs-section">
+        <div class="cs-section-heading">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>3. Análisis y Concepto de Seguridad
+        </div>
+        <div class="cs-section-body">
+            <p>{{ analysis }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 4. Nivel de riesgo -->
+    <div class="cs-section" style="page-break-inside:avoid;">
+        <div class="cs-section-heading">
+            <i class="fa-solid fa-gauge-high"></i>4. Nivel de Riesgo General
+        </div>
+        <div class="cs-section-body" style="display:flex;align-items:center;gap:20px;">
+            <div style="background:{{ risk_color }};color:#fff;padding:16px 40px;border-radius:8px;font-size:22px;font-weight:700;letter-spacing:1px;">
+                {{ risk_level }}
+            </div>
+            <div style="color:#6c757d;font-size:12px;">
+                Nivel de riesgo determinado con base en los hallazgos identificados,<br>
+                su severidad e impacto potencial sobre los activos evaluados.
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Conclusión -->
+    {% if conclusion %}
+    <div class="cs-section">
+        <div class="cs-section-heading">
+            <i class="fa-solid fa-circle-check"></i>5. Conclusión y Recomendaciones
+        </div>
+        <div class="cs-section-body">
+            <p>{{ conclusion }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Firma -->
+    <div class="cs-signature">
+        <div class="cs-signature-box">
+            <div style="height:40px;"></div>
+            <div class="cs-signature-name">{{ analyst_name }}</div>
+            {% if analyst_title %}
+            <div class="cs-signature-title">{{ analyst_title }}</div>
+            {% endif %}
+            <div class="cs-signature-org">SQA SA · QustodIA</div>
+            <div style="color:#999;font-size:10px;margin-top:4px;">{{ generated_date|date:"d/m/Y" }}</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Marca de agua -->
+<div class="cs-confidential">CONFIDENCIAL</div>
+
+{% endblock %}

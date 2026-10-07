@@ -1,0 +1,682 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}QustodIA — Métricas SQA{% endblock %}
+
+{% block add_styles %}
+{{ block.super }}
+/* ── Layout ── */
+.sqa-m-header {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    border-radius: 10px;
+    padding: 22px 28px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 18px rgba(50,68,88,0.22);
+}
+.sqa-m-header h2 { color:#fff; margin:0 0 4px 0; font-size:21px; font-weight:700; }
+.sqa-m-header p  { color:#afc1d0; margin:0; font-size:13px; }
+.sqa-m-header img { height:42px; filter:none; }
+
+/* Barra de filtros */
+.sqa-filters {
+    background:#fff;
+    border:1px solid #dde3ea;
+    border-radius:8px;
+    padding:14px 20px;
+    margin-bottom:22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+    box-shadow:0 2px 8px rgba(50,68,88,0.06);
+}
+.sqa-filters label { font-size:12px; font-weight:700; color:#324458; margin:0; }
+.sqa-filters select { font-size:12px; border-radius:5px; border:1px solid #c8d0da; padding:5px 10px; color:#324458; cursor:pointer; }
+.sqa-filters select:focus { outline:none; border-color:#ffb323; box-shadow:0 0 0 2px rgba(255,179,35,0.2); }
+.btn-filter {
+    background:#324458; color:#fff; border:none; border-radius:5px;
+    padding:7px 18px; font-size:12px; font-weight:700; cursor:pointer;
+    transition:background 0.15s;
+}
+.btn-filter:hover { background:#3d5470; }
+.btn-export {
+    background:#ffb323; color:#fff; border:none; border-radius:5px;
+    padding:7px 18px; font-size:12px; font-weight:700; cursor:pointer;
+    transition:background 0.15s; margin-left:auto;
+}
+.btn-export:hover { background:#e09e1a; }
+.btn-export i { margin-right:5px; }
+
+/* KPI cards */
+.sqa-kpi-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(160px,1fr));
+    gap:14px;
+    margin-bottom:22px;
+}
+.sqa-kpi {
+    background:#fff;
+    border-radius:8px;
+    border-left:5px solid #324458;
+    padding:18px 16px 14px;
+    box-shadow:0 2px 10px rgba(50,68,88,0.08);
+    position:relative;
+    overflow:hidden;
+    transition:transform 0.15s, box-shadow 0.15s;
+}
+.sqa-kpi:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(50,68,88,0.14); }
+.sqa-kpi-icon {
+    position:absolute; right:14px; top:14px;
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px;
+}
+.sqa-kpi-num { font-size:38px; font-weight:800; color:#324458; line-height:1; }
+.sqa-kpi-label { font-size:11px; font-weight:700; color:#8898aa; margin-top:4px; text-transform:uppercase; letter-spacing:.5px; }
+.sqa-kpi-sub { font-size:11px; color:#aab4be; margin-top:6px; }
+
+/* Postura de riesgo */
+.sqa-postura {
+    background:#fff; border-radius:8px; padding:20px 24px;
+    margin-bottom:22px; box-shadow:0 2px 10px rgba(50,68,88,0.08);
+    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
+}
+.sqa-postura-label { font-size:12px; font-weight:700; color:#8898aa; text-transform:uppercase; letter-spacing:.5px; }
+.sqa-postura-badge {
+    font-size:22px; font-weight:800; padding:8px 24px;
+    border-radius:30px; color:#fff;
+    letter-spacing:.5px;
+}
+.sqa-postura-score { font-size:13px; color:#8898aa; }
+.sqa-postura-bar-wrap { flex:1; min-width:200px; }
+.sqa-postura-bar-bg { background:#eef1f5; border-radius:8px; height:12px; overflow:hidden; }
+.sqa-postura-bar-fill { height:100%; border-radius:8px; transition:width 1s ease; }
+
+/* Panels de gráficas */
+.sqa-grid-2 {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:18px;
+}
+@media (max-width:900px) { .sqa-grid-2 { grid-template-columns:1fr; } }
+
+.sqa-panel {
+    background:#fff; border-radius:8px;
+    box-shadow:0 2px 10px rgba(50,68,88,0.08);
+    overflow:hidden;
+}
+.sqa-panel-head {
+    background:linear-gradient(90deg, #324458 0%, #3d5470 100%);
+    padding:12px 18px;
+    display:flex; align-items:center; gap:10px;
+}
+.sqa-panel-head h4 { color:#fff; margin:0; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+.sqa-panel-head i { color:#ffb323; }
+.sqa-panel-body { padding:18px; }
+.chart-wrap { position:relative; height:240px; }
+
+/* SLA progress */
+.sla-row { margin-bottom:14px; }
+.sla-row-head { display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:#324458; margin-bottom:5px; }
+.sla-bar-bg { background:#eef1f5; border-radius:6px; height:10px; overflow:hidden; }
+.sla-bar-fill { height:100%; border-radius:6px; transition:width 1s ease; }
+.sla-meta { font-size:11px; color:#aab4be; margin-top:3px; }
+
+/* Top productos tabla */
+.prod-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #f0f3f6; }
+.prod-row:last-child { border-bottom:none; }
+.prod-name { font-size:13px; font-weight:600; color:#324458; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.prod-sev-pills { display:flex; gap:4px; }
+.sev-pill { font-size:10px; font-weight:700; color:#fff; padding:2px 7px; border-radius:10px; }
+.prod-score-bar { width:80px; }
+.prod-score-bg { background:#eef1f5; border-radius:4px; height:8px; overflow:hidden; }
+.prod-score-fill { height:100%; border-radius:4px; }
+.prod-badge { font-size:10px; font-weight:700; color:#fff; padding:2px 9px; border-radius:10px; }
+
+/* ── Print ── */
+@media print {
+    /* 1. Forzar colores en TODOS los elementos — crítico para fondos azules */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+
+    /* 2. Ocultar navegación */
+    .sqa-filters, .btn-export, .navbar, .navbar-default.sidebar,
+    #footer-wrapper, .breadcrumb, .page-header { display: none !important; }
+
+    /* 3. Cuerpo: espacio para header y footer fijos */
+    body {
+        padding-top: 0 !important;
+        margin-top: 74px !important;
+        margin-bottom: 36px !important;
+        background: #fff !important;
+    }
+
+    /* 4. Quitar margen del sidebar */
+    #page-wrapper { margin-left: 0 !important; padding: 0 15px !important; }
+
+    /* 5. Header fijo — color SÓLIDO (no gradient: Chrome no imprime gradients en fixed) */
+    .sqa-m-header {
+        position: fixed !important;
+        top: 0 !important; left: 0 !important; right: 0 !important;
+        z-index: 1000 !important;
+        margin-bottom: 0 !important;
+        border-radius: 0 !important;
+        padding: 10px 24px !important;
+        background: #324458 !important;          /* sólido, no gradient */
+        border-bottom: 4px solid #ffb323 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    .sqa-m-header h2 { color: #fff !important; font-size: 16px !important; }
+    .sqa-m-header p  { color: #afc1d0 !important; }
+
+    /* 6. Footer fijo */
+    .sqa-print-footer {
+        display: flex !important;
+        position: fixed !important;
+        bottom: 0 !important; left: 0 !important; right: 0 !important;
+        z-index: 1000 !important;
+        background: #324458 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* 7. Panel headings — color sólido */
+    .sqa-panel-head {
+        background: #324458 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* 8. Canvas / gráficas — tamaño fijo para no cortarse */
+    .chart-wrap {
+        height: 180px !important;
+        width: 100% !important;
+        overflow: visible !important;
+        break-inside: avoid !important;
+    }
+    .chart-wrap canvas {
+        max-width: 100% !important;
+        height: 180px !important;
+    }
+
+    /* 9. Evitar cortes entre páginas */
+    .sqa-kpi, .sqa-panel, .sla-row, .prod-row { break-inside: avoid; page-break-inside: avoid; }
+    .sqa-kpi-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    .sqa-grid-2   { grid-template-columns: 1fr 1fr !important; }
+
+    /* 10. Sin sombras en impresión */
+    .sqa-kpi, .sqa-panel { box-shadow: none !important; }
+}
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+<!-- Header -->
+<div class="sqa-m-header">
+    <div>
+        <h2><i class="fa-solid fa-chart-line" style="color:#ffb323;margin-right:10px;"></i>Métricas SQA</h2>
+        <p>Panel ejecutivo · QustodIA · Application Security Posture Management · SQA SA</p>
+    </div>
+    <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA">
+</div>
+
+<!-- Filtros -->
+<form method="get" id="filter-form">
+    <div class="sqa-filters">
+        <div>
+            <label>Período</label><br>
+            <select name="period" onchange="this.form.submit()">
+                {% for val, lbl in period_options %}
+                <option value="{{ val }}" {% if period == val %}selected{% endif %}>{{ lbl }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Producto</label><br>
+            <select name="product_id" onchange="this.form.submit()">
+                <option value="">— Todos —</option>
+                {% for p in products %}
+                <option value="{{ p.id }}" {% if selected_product_id == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="button" class="btn-export" onclick="window.print()">
+            <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+        </button>
+    </div>
+</form>
+
+<!-- KPIs -->
+<div class="sqa-kpi-grid">
+
+    <div class="sqa-kpi" style="border-left-color:#c0392b;">
+        <div class="sqa-kpi-icon" style="background:#fdecea;color:#c0392b;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="sqa-kpi-num" style="color:#c0392b;">{{ critical_count }}</div>
+        <div class="sqa-kpi-label">Críticos activos</div>
+        <div class="sqa-kpi-sub">Requieren atención inmediata</div>
+    </div>
+
+    <div class="sqa-kpi" style="border-left-color:#e67e22;">
+        <div class="sqa-kpi-icon" style="background:#fef3e2;color:#e67e22;">
+            <i class="fa-solid fa-fire"></i>
+        </div>
+        <div class="sqa-kpi-num" style="color:#e67e22;">{{ high_count }}</div>
+        <div class="sqa-kpi-label">Altos activos</div>
+        <div class="sqa-kpi-sub">Prioridad alta</div>
+    </div>
+
+    <div class="sqa-kpi" style="border-left-color:#324458;">
+        <div class="sqa-kpi-icon" style="background:#eaf0f8;color:#324458;">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="sqa-kpi-num">{{ total_active }}</div>
+        <div class="sqa-kpi-label">Total activos</div>
+        <div class="sqa-kpi-sub">En el período seleccionado</div>
+    </div>
+
+    <div class="sqa-kpi" style="border-left-color:#27ae60;">
+        <div class="sqa-kpi-icon" style="background:#e8f8ee;color:#27ae60;">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="sqa-kpi-num" style="color:#27ae60;">{{ closed_count }}</div>
+        <div class="sqa-kpi-label">Remediados</div>
+        <div class="sqa-kpi-sub">{{ new_count }} nuevos en el período</div>
+    </div>
+
+    <div class="sqa-kpi" style="border-left-color:#ffb323;">
+        <div class="sqa-kpi-icon" style="background:#fff8e1;color:#ffb323;">
+            <i class="fa-solid fa-percent"></i>
+        </div>
+        <div class="sqa-kpi-num" style="color:#ffb323; font-size:30px;">{{ remediation_rate }}%</div>
+        <div class="sqa-kpi-label">Tasa de remediación</div>
+        <div class="sqa-kpi-sub">Cerrados vs total descubiertos</div>
+    </div>
+
+    <div class="sqa-kpi" style="border-left-color:#8e44ad;">
+        <div class="sqa-kpi-icon" style="background:#f3e8fb;color:#8e44ad;">
+            <i class="fa-solid fa-rotate-right"></i>
+        </div>
+        <div class="sqa-kpi-num" style="color:#8e44ad;">{{ reopened_count }}</div>
+        <div class="sqa-kpi-label">Reactivados</div>
+        <div class="sqa-kpi-sub">Activos con fecha de mitigación</div>
+    </div>
+
+</div>
+
+<!-- Postura de riesgo -->
+<div class="sqa-postura">
+    <div>
+        <div class="sqa-postura-label">Postura de riesgo global</div>
+        <div class="sqa-postura-badge" style="background:{{ risk_color }}; margin-top:6px;">
+            {{ risk_label }}
+        </div>
+    </div>
+    <div class="sqa-postura-bar-wrap">
+        <div class="sqa-postura-label" style="margin-bottom:6px;">Score ponderado: <strong>{{ risk_score }}</strong></div>
+        <div class="sqa-postura-bar-bg">
+            <div class="sqa-postura-bar-fill" id="risk-bar"
+                 style="width:0%; background:{{ risk_color }};"
+                 data-pct="{% widthratio risk_score 200 100 %}"></div>
+        </div>
+        <div style="font-size:11px;color:#aab4be;margin-top:4px;">
+            Crítico×10 · Alto×5 · Medio×2 · Bajo×1
+        </div>
+    </div>
+    <div>
+        <div class="sqa-postura-label">Distribución activos</div>
+        <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
+            {% for item in sev_postura %}
+            <span class="sev-pill" style="background:{{ item.color }};">{{ item.label }}: {{ item.count }}</span>
+            {% empty %}
+            <span style="color:#aab4be;font-size:12px;">Sin hallazgos activos</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Fila 1: Donut severidad + Tendencia mensual -->
+<div class="sqa-grid-2">
+    <div class="sqa-panel">
+        <div class="sqa-panel-head">
+            <i class="fa-solid fa-chart-pie"></i>
+            <h4>Distribución por Severidad</h4>
+        </div>
+        <div class="sqa-panel-body">
+            <div class="chart-wrap">
+                <canvas id="sevChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="sqa-panel">
+        <div class="sqa-panel-head">
+            <i class="fa-solid fa-chart-line"></i>
+            <h4>Tendencia Mensual (6 meses)</h4>
+        </div>
+        <div class="sqa-panel-body">
+            <div class="chart-wrap">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fila 2: MTTR + SLA -->
+<div class="sqa-grid-2">
+    <div class="sqa-panel">
+        <div class="sqa-panel-head">
+            <i class="fa-solid fa-stopwatch"></i>
+            <h4>MTTR — Tiempo Medio de Remediación (días)</h4>
+        </div>
+        <div class="sqa-panel-body">
+            <div class="chart-wrap" style="height:200px;">
+                <canvas id="mttrChart"></canvas>
+            </div>
+            <div style="margin-top:12px;font-size:11px;color:#8898aa;">
+                <i class="fa-solid fa-circle-info" style="color:#ffb323;"></i>
+                Línea naranja = umbral SLA por severidad
+            </div>
+        </div>
+    </div>
+
+    <div class="sqa-panel">
+        <div class="sqa-panel-head">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <h4>Cumplimiento de SLA</h4>
+        </div>
+        <div class="sqa-panel-body">
+            {% for item in sla_data %}
+            <div class="sla-row">
+                <div class="sla-row-head">
+                    <span><span class="sev-pill" style="background:{{ item.color }};">{{ item.severity }}</span>
+                    — {{ item.threshold }} días</span>
+                    <span style="color:{% if item.pct >= 80 %}#27ae60{% elif item.pct >= 50 %}#e67e22{% else %}#c0392b{% endif %}; font-size:14px;">
+                        {{ item.pct }}%
+                    </span>
+                </div>
+                <div class="sla-bar-bg">
+                    <div class="sla-bar-fill sla-animated"
+                         style="width:0%; background:{{ item.color }};"
+                         data-pct="{{ item.pct }}"></div>
+                </div>
+                <div class="sla-meta">{{ item.within }} de {{ item.total }} dentro del SLA</div>
+            </div>
+            {% empty %}
+            <p style="color:#aab4be;text-align:center;padding:20px 0;">Sin datos de remediación en el período</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Fila 3: Top productos + Por herramienta -->
+<div class="sqa-grid-2" style="margin-bottom:22px;">
+    <div class="sqa-panel">
+        <div class="sqa-panel-head">
+            <i class="fa-solid fa-ranking-star"></i>
+            <h4>Top Productos por Riesgo</h4>
+        </div>
+        <div class="sqa-panel-body">
+            {% if top_products %}
+                {% for p in top_products %}
+                <div class="prod-row">
+                    <div class="prod-name" title="{{ p.name }}">{{ p.name }}</div>
+                    <div class="prod-sev-pills">
+                        {% if p.counts.Critical %}<span class="sev-pill" style="background:#c0392b;">{{ p.counts.Critical }}C</span>{% endif %}
+                        {% if p.counts.High %}<span class="sev-pill" style="background:#e67e22;">{{ p.counts.High }}A</span>{% endif %}
+                        {% if p.counts.Medium %}<span class="sev-pill" style="background:#d4ac0d;">{{ p.counts.Medium }}M</span>{% endif %}
+                        {% if p.counts.Low %}<span class="sev-pill" style="background:#2980b9;">{{ p.counts.Low }}B</span>{% endif %}
+                    </div>
+                    <span class="prod-badge" style="background:{{ p.color }};">{{ p.label }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#aab4be;text-align:center;padding:30px 0;">Sin hallazgos activos</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="sqa-panel">
+        <div class="sqa-panel-head">
+            <i class="fa-solid fa-wrench"></i>
+            <h4>Hallazgos por Herramienta / Scanner</h4>
+        </div>
+        <div class="sqa-panel-body">
+            <div class="chart-wrap" style="height:220px;">
+                <canvas id="toolChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer corporativo — solo visible al imprimir -->
+<div class="sqa-print-footer" style="display:none; background:#324458; border-top:3px solid #ffb323; padding:6px 24px; align-items:center; justify-content:space-between; color:#afc1d0; font-size:10px;">
+    <span style="color:#ffb323; font-weight:700;">SQA SA</span>&nbsp;·&nbsp;QustodIA · Application Security Posture Management
+    <span style="color:#afc1d0;">Documento confidencial — solo para uso interno</span>
+    <span style="color:#ffb323; font-weight:700;">sqasa.co</span>
+</div>
+
+{% endblock %}
+
+{% block postscript %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+(function() {
+    // Datos desde Django
+    var sevData    = {{ sev_chart_json|safe }};
+    var trendData  = {{ trend_chart_json|safe }};
+    var mttrData   = {{ mttr_chart_json|safe }};
+    var topData    = {{ top_products_chart_json|safe }};
+    var toolData   = {{ tool_chart_json|safe }};
+
+    // Opciones comunes
+    var fontFamily = "'Helvetica Neue', Arial, sans-serif";
+    Chart.defaults.font.family = fontFamily;
+    Chart.defaults.color = '#8898aa';
+
+    // ── Donut severidad ──────────────────────────────────────────────────
+    new Chart(document.getElementById('sevChart'), {
+        type: 'doughnut',
+        data: {
+            labels: sevData.labels,
+            datasets: [{
+                data: sevData.data,
+                backgroundColor: sevData.colors,
+                borderWidth: 2,
+                borderColor: '#fff',
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '65%',
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { padding: 16, font: { size: 12 }, usePointStyle: true }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            var total = ctx.dataset.data.reduce(function(a,b){return a+b;},0);
+                            var pct = total ? Math.round(ctx.parsed/total*100) : 0;
+                            return ' ' + ctx.label + ': ' + ctx.parsed + ' (' + pct + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // ── Tendencia mensual ────────────────────────────────────────────────
+    new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+            labels: trendData.labels,
+            datasets: [
+                {
+                    label: 'Nuevos',
+                    data: trendData.new,
+                    borderColor: '#c0392b',
+                    backgroundColor: 'rgba(192,57,43,0.08)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#c0392b',
+                    pointRadius: 4,
+                    borderWidth: 2
+                },
+                {
+                    label: 'Remediados',
+                    data: trendData.closed,
+                    borderColor: '#27ae60',
+                    backgroundColor: 'rgba(39,174,96,0.08)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#27ae60',
+                    pointRadius: 4,
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { position: 'top', labels: { usePointStyle: true, font: { size: 12 } } }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f0f3f6' }, ticks: { precision: 0 } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ── MTTR ─────────────────────────────────────────────────────────────
+    new Chart(document.getElementById('mttrChart'), {
+        type: 'bar',
+        data: {
+            labels: mttrData.labels,
+            datasets: [
+                {
+                    label: 'MTTR (días)',
+                    data: mttrData.data,
+                    backgroundColor: mttrData.colors,
+                    borderRadius: 6,
+                    barPercentage: 0.5
+                },
+                {
+                    label: 'Umbral SLA',
+                    data: mttrData.sla,
+                    type: 'line',
+                    borderColor: '#ffb323',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 4],
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ffb323',
+                    tension: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { usePointStyle: true, font: { size: 11 } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            return ' ' + ctx.dataset.label + ': ' + ctx.parsed.y + ' días';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#f0f3f6' }, ticks: { precision: 0 } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // ── Por herramienta ──────────────────────────────────────────────────
+    if (toolData.labels.length > 0) {
+        new Chart(document.getElementById('toolChart'), {
+            type: 'bar',
+            data: {
+                labels: toolData.labels,
+                datasets: [{
+                    label: 'Hallazgos',
+                    data: toolData.data,
+                    backgroundColor: '#324458',
+                    hoverBackgroundColor: '#ffb323',
+                    borderRadius: 5,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, grid: { color: '#f0f3f6' }, ticks: { precision: 0 } },
+                    y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+                }
+            }
+        });
+    }
+
+    // ── Animaciones SLA bars ─────────────────────────────────────────────
+    setTimeout(function() {
+        document.querySelectorAll('.sla-animated').forEach(function(el) {
+            el.style.width = el.dataset.pct + '%';
+        });
+        var riskBar = document.getElementById('risk-bar');
+        if (riskBar) riskBar.style.width = Math.min(riskBar.dataset.pct, 100) + '%';
+    }, 300);
+
+    // ── Redimensionar gráficas antes de imprimir ─────────────────────────
+    // Chart.js usa canvas con tamaño dinámico; al imprimir el layout cambia
+    // y los canvas quedan cortados. Forzamos resize antes del print.
+    var allCharts = Chart.instances ? Object.values(Chart.instances) : [];
+
+    function resizeChartsForPrint() {
+        // Recolectar todas las instancias activas de Chart.js
+        var instances = [];
+        document.querySelectorAll('canvas').forEach(function(c) {
+            if (c.__chartjs_chart__) instances.push(c.__chartjs_chart__);
+        });
+        // Chart.js v4: las instancias están en Chart.instances (objeto)
+        try {
+            Object.values(Chart.instances).forEach(function(chart) {
+                chart.resize();
+                chart.update('none'); // 'none' = sin animación
+            });
+        } catch(e) {}
+    }
+
+    window.addEventListener('beforeprint', resizeChartsForPrint);
+    // matchMedia fallback para Firefox/Safari
+    if (window.matchMedia) {
+        window.matchMedia('print').addEventListener('change', function(mq) {
+            if (mq.matches) resizeChartsForPrint();
+        });
+    }
+
+})();
+</script>
+{% endblock %}

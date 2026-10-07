@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block add_styles %}
+.glr-header {
+    background: linear-gradient(135deg, #324458 0%, #1e2d3a 100%);
+    color: #fff; padding: 28px 32px 22px;
+    border-radius: 6px 6px 0 0; margin-bottom: 0;
+}
+.glr-header .brand-tag { font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: #ffb323; margin-bottom: 10px; }
+.glr-header h2 { font-size: 20px; font-weight: 700; margin: 0 0 4px; color: #fff; }
+.glr-header .subtitle { font-size: 13px; color: #b8c8d8; }
+.glr-header .meta-row { margin-top: 16px; display: flex; gap: 24px; flex-wrap: wrap; }
+.glr-header .meta-item .key { font-size: 9px; text-transform: uppercase; color: #ffb323; letter-spacing: 1px; }
+.glr-header .meta-item .val { font-size: 12px; color: #d0dce8; font-weight: 600; }
+
+.glr-spinner-box {
+    text-align: center; padding: 60px 20px;
+    background: #152230; border: 1px solid #1e3244;
+    border-radius: 0 0 6px 6px;
+}
+.glr-spinner-box .spinner-title { font-size: 16px; font-weight: 600; color: #dce8f0; margin-bottom: 8px; }
+.glr-spinner-box .spinner-sub { font-size: 13px; color: #7e9fb5; margin-bottom: 28px; }
+.glr-spinner { width: 50px; height: 50px; border: 5px solid #1e3347; border-top-color: #ffb323; border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 20px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.glr-steps { display: inline-block; text-align: left; margin-top: 12px; }
+.glr-steps li { font-size: 12px; color: #4e6a80; margin-bottom: 5px; list-style: none; padding-left: 20px; position: relative; }
+.glr-steps li::before { content: "○"; position: absolute; left: 0; color: #2e4a62; }
+.glr-steps li.done::before { content: "✓"; color: #27ae60; }
+.glr-steps li.active::before { content: "●"; color: #ffb323; }
+
+#glr-result { display: none; }
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+
+    <div class="glr-header">
+      <div class="brand-tag">SQA SA · Security Quality Assurance</div>
+      <h2><i class="fa-solid fa-robot"></i> Release Manager</h2>
+      <div class="subtitle">{{ product.name }}</div>
+      <div class="meta-row">
+        <div class="meta-item">
+          <div class="key">Engagement</div>
+          <div class="val">{{ eng.name }}</div>
+        </div>
+        <div class="meta-item">
+          <div class="key">Fecha objetivo Go-Live</div>
+          <div class="val">{% if eng.target_end %}{{ eng.target_end|date:"d/m/Y" }}{% else %}No definida{% endif %}</div>
+        </div>
+        <div class="meta-item" style="margin-left:auto">
+          <button type="button" class="btn btn-sm" id="glr-refresh-btn"
+                  style="background:#ffb323;color:#1e2d3a;font-weight:600;border:none">
+            <i class="fa fa-refresh"></i> Regenerar análisis
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal confirmación regenerar (JS puro, sin depender de Bootstrap JS) -->
+    <div id="glr-refresh-overlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center">
+      <div style="background:#152230;border:1px solid #1e3244;border-radius:8px;overflow:hidden;width:360px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+        <div style="background:linear-gradient(135deg,#324458 0%,#1e2d3a 100%);padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
+          <span style="color:#fff;font-size:14px;font-weight:700">
+            <i class="fa fa-refresh" style="color:#ffb323;margin-right:7px"></i>Regenerar análisis
+          </span>
+          <button id="glr-refresh-close" style="background:none;border:none;color:rgba(255,255,255,.7);font-size:18px;cursor:pointer;line-height:1;padding:0">&times;</button>
+        </div>
+        <div style="padding:20px;font-size:13px;color:#b8c8d8;line-height:1.7">
+          Se descartará el análisis en caché y el agente consultará nuevamente todos los hallazgos aplicando inteligencia artificial.
+          <div style="margin-top:10px;font-size:12px;color:#4e6a80">Este proceso puede tomar entre 1 y 5 minutos.</div>
+        </div>
+        <div style="padding:12px 16px;border-top:1px solid #1e3244;display:flex;justify-content:flex-end;gap:8px">
+          <button id="glr-refresh-cancel" class="btn btn-sm btn-default">Cancelar</button>
+          <a id="glr-refresh-confirm" href="?refresh=1" class="btn btn-sm"
+             style="background:#ffb323;color:#1e2d3a;font-weight:700;border:none">
+            <i class="fa fa-refresh"></i> Regenerar
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div id="glr-loading" class="glr-spinner-box">
+      <div class="glr-spinner"></div>
+      <div class="spinner-title">Generando análisis de seguridad...</div>
+      <div class="spinner-sub">El agente está consultando los hallazgos y aplicando inteligencia artificial.<br>Este proceso puede tomar entre 1 y 5 minutos.</div>
+      <ul class="glr-steps">
+        <li id="step-1" class="active">Consultando hallazgos en QustodIA</li>
+        <li id="step-2">Clasificando por reglas determinísticas</li>
+        <li id="step-3">Enriqueciendo con inteligencia artificial</li>
+        <li id="step-4">Compilando reporte final</li>
+      </ul>
+    </div>
+
+    <!-- Resultado (se llena via JS) -->
+    <div id="glr-result"></div>
+
+  </div>
+</div>
+
+<script>
+// Modal regenerar análisis
+(function() {
+  const overlay = document.getElementById('glr-refresh-overlay');
+  function openModal() { overlay.style.display = 'flex'; }
+  function closeModal() { overlay.style.display = 'none'; }
+  document.getElementById('glr-refresh-btn').addEventListener('click', openModal);
+  document.getElementById('glr-refresh-close').addEventListener('click', closeModal);
+  document.getElementById('glr-refresh-cancel').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) closeModal(); });
+})();
+
+(function() {
+  const refresh = new URLSearchParams(window.location.search).get('refresh') === '1';
+  const dataUrl = "{% url 'go_live_readiness_data' eng.id %}" + (refresh ? '?refresh=1' : '');
+  const steps = [
+    document.getElementById('step-1'),
+    document.getElementById('step-2'),
+    document.getElementById('step-3'),
+    document.getElementById('step-4'),
+  ];
+  let stepIdx = 0;
+
+  const stepTimer = setInterval(function() {
+    if (stepIdx < steps.length) {
+      if (stepIdx > 0) steps[stepIdx - 1].classList.replace('active', 'done');
+      steps[stepIdx].classList.add('active');
+      stepIdx++;
+    }
+  }, 15000);
+
+  fetch(dataUrl)
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      clearInterval(stepTimer);
+      steps.forEach(function(s) { s.classList.remove('active'); s.classList.add('done'); });
+      document.getElementById('glr-loading').style.display = 'none';
+      const result = document.getElementById('glr-result');
+      result.innerHTML = html;
+      result.style.display = 'block';
+    })
+    .catch(function(err) {
+      clearInterval(stepTimer);
+      document.getElementById('glr-loading').innerHTML =
+        '<div class="alert alert-danger" style="margin:20px"><strong>Error:</strong> No se pudo conectar con el agente. ' + err + '</div>';
+    });
+})();
+</script>
+{% endblock %}

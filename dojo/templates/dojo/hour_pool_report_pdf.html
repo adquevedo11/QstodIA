@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reporte de Horas — {{ pool.name }}</title>
+<style>
+* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
+
+@page { size: A4; margin: 22mm 12mm 18mm 12mm; }
+
+body { font-size: 11px; color: #222; background: #fff; padding-top: 54px; padding-bottom: 38px; }
+
+.rpt-header {
+    position: fixed; top: 0; left: 0; right: 0; height: 50px;
+    background: #324458; padding: 0 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 3px solid #ffb323; z-index: 9999;
+}
+.rpt-header img { height: 32px; }
+.rpt-header-center { flex: 1; margin: 0 12px; }
+.rpt-header-title { color: #fff; font-size: 11px; font-weight: 700; }
+.rpt-header-sub { color: #ffb323; font-size: 8px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+.rpt-header-meta { text-align: right; color: #afc1d0; font-size: 8px; line-height: 1.5; white-space: nowrap; }
+
+.rpt-footer {
+    position: fixed; bottom: 0; left: 0; right: 0; height: 34px;
+    background: #324458; border-top: 2px solid #ffb323; padding: 0 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 9px; color: #afc1d0;
+}
+.rpt-footer span { color: #ffb323; font-weight: 600; }
+
+/* Portada */
+.cover { background: #324458; border-radius: 6px; padding: 24px 32px; margin-bottom: 22px; }
+.cover-label { color: #afc1d0; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+.cover-line { width: 50px; height: 3px; background: #ffb323; margin: 8px 0; border-radius: 2px; }
+.cover-title { color: #fff; font-size: 18px; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
+.cover-sub { color: #afc1d0; font-size: 11px; margin-bottom: 14px; }
+.cover-meta-row { display: flex; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 12px; margin-top: 4px; }
+.cover-meta-cell { flex: 1; text-align: center; border-right: 1px solid rgba(255,255,255,0.12); padding: 0 8px; }
+.cover-meta-cell:last-child { border-right: none; }
+.cover-meta-label { color: #ffb323; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+.cover-meta-val { color: #e0e8f0; font-size: 12px; font-weight: 700; }
+
+/* KPI cards */
+.kpi-row { display: flex; gap: 12px; margin-bottom: 20px; }
+.kpi-box { flex: 1; border-radius: 5px; padding: 14px 10px; text-align: center; border: 1px solid #dde3ea; }
+.kpi-num { font-size: 28px; font-weight: 700; line-height: 1; }
+.kpi-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; color: #666; }
+
+/* Barra de progreso */
+.progress-wrap { margin-bottom: 20px; }
+.progress-bar-outer { background: #eee; border-radius: 6px; height: 18px; overflow: hidden; }
+.progress-bar-inner { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+
+/* Secciones */
+.section-title { font-size: 15px; font-weight: 700; color: #324458; border-bottom: 3px solid #ffb323; padding-bottom: 5px; margin: 22px 0 12px; }
+.section-sub { font-size: 12px; font-weight: 700; color: #324458; border-left: 3px solid #ffb323; padding-left: 8px; margin: 14px 0 8px; }
+
+/* Tablas */
+.tbl { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 10px; }
+.tbl th { background: #324458; color: #fff; padding: 6px 8px; text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; }
+.tbl td { padding: 5px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+.tbl tr:nth-child(even) td { background: #f4f6f9; }
+.tbl tfoot td { background: #f0f4f8; font-weight: 700; border-top: 2px solid #324458; }
+
+@media screen {
+    body { background: #f0f4f8; padding-top: 80px; }
+    .page-wrap { background: #fff; max-width: 820px; margin: 0 auto; padding: 30px 40px 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.12); }
+    .print-btn { position: fixed; bottom: 24px; right: 24px; background: #324458; color: #fff; border: none; padding: 10px 22px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 9998; }
+}
+@media print {
+    .print-btn { display: none !important; }
+    .page-wrap { padding: 0; }
+    html, body { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+}
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">&#128424; Descargar / Imprimir PDF</button>
+
+<div class="page-wrap">
+
+<!-- HEADER -->
+<div class="rpt-header">
+    <img src="{% static 'dojo/img/logo.png' %}" alt="SQA SA">
+    <div class="rpt-header-center">
+        <div class="rpt-header-title">QustodIA — Application Security Posture Management</div>
+        <div class="rpt-header-sub">Reporte de Consumo de Horas — {{ pool.name }}</div>
+    </div>
+    <div class="rpt-header-meta">SQA SA · sqasa.co<br>Generado: {{ today|date:"d/m/Y" }}</div>
+</div>
+
+<!-- FOOTER -->
+<div class="rpt-footer">
+    <span>SQA SA</span> &nbsp;·&nbsp; QustodIA · Application Security Posture Management
+    <span style="color:#afc1d0;font-weight:400;">Documento confidencial</span>
+    <span>sqasa.co</span>
+</div>
+
+<!-- PORTADA -->
+<div class="cover">
+    <div class="cover-label">Reporte de Consumo de Horas</div>
+    <div class="cover-line"></div>
+    <div class="cover-title">{{ pool.name }}</div>
+    <div class="cover-sub">{{ pool.product.name }}</div>
+    <div class="cover-meta-row">
+        <div class="cover-meta-cell">
+            <div class="cover-meta-label">Total</div>
+            <div class="cover-meta-val">{{ pool.total_hours }}h</div>
+        </div>
+        <div class="cover-meta-cell">
+            <div class="cover-meta-label">Usadas</div>
+            <div class="cover-meta-val">{{ pool.used_hours }}h</div>
+        </div>
+        <div class="cover-meta-cell">
+            <div class="cover-meta-label">Restantes</div>
+            <div class="cover-meta-val">{{ pool.remaining_hours }}h</div>
+        </div>
+        <div class="cover-meta-cell">
+            <div class="cover-meta-label">Consumo</div>
+            <div class="cover-meta-val">{{ pool.consumption_pct }}%</div>
+        </div>
+        <div class="cover-meta-cell">
+            <div class="cover-meta-label">Estado</div>
+            <div class="cover-meta-val">{{ pool.get_status_display }}</div>
+        </div>
+        <div class="cover-meta-cell">
+            <div class="cover-meta-label">Fecha</div>
+            <div class="cover-meta-val">{{ today|date:"d/m/Y" }}</div>
+        </div>
+    </div>
+</div>
+
+<!-- 1. RESUMEN -->
+<div class="section-title">1. Resumen de Consumo</div>
+
+<div class="kpi-row">
+    <div class="kpi-box" style="border-color:#324458;">
+        <div class="kpi-num" style="color:#324458;">{{ pool.total_hours }}</div>
+        <div class="kpi-label">Horas Totales</div>
+    </div>
+    <div class="kpi-box" style="border-color:#e67e22;">
+        <div class="kpi-num" style="color:#e67e22;">{{ pool.used_hours }}</div>
+        <div class="kpi-label">Horas Usadas</div>
+    </div>
+    <div class="kpi-box" style="border-color:{% if pool.is_alert %}#c0392b{% else %}#27ae60{% endif %};">
+        <div class="kpi-num" style="color:{% if pool.is_alert %}#c0392b{% else %}#27ae60{% endif %};">{{ pool.remaining_hours }}</div>
+        <div class="kpi-label">Horas Restantes</div>
+    </div>
+    <div class="kpi-box" style="border-color:#7f8c8d;">
+        <div class="kpi-num" style="color:#7f8c8d;">{{ pool.consumption_pct }}%</div>
+        <div class="kpi-label">% Consumido</div>
+    </div>
+</div>
+
+<div class="progress-wrap">
+    <div class="progress-bar-outer">
+        <div class="progress-bar-inner" style="width:{{ pool.consumption_pct }}%;background:{% if pool.consumption_pct >= 90 %}#c0392b{% elif pool.consumption_pct >= 70 %}#e67e22{% else %}#27ae60{% endif %};">
+            {% if pool.consumption_pct > 5 %}{{ pool.consumption_pct }}%{% endif %}
+        </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:9px;color:#888;margin-top:3px;">
+        <span>0h</span><span>{{ pool.total_hours }}h</span>
+    </div>
+</div>
+
+{% if pool.valid_from or pool.valid_until %}
+<table class="tbl" style="width:auto;margin-bottom:20px;">
+    <tbody>
+        {% if pool.valid_from %}<tr><td style="color:#666;font-size:10px;padding-right:20px;">Válida desde</td><td><strong>{{ pool.valid_from|date:"d/m/Y" }}</strong></td></tr>{% endif %}
+        {% if pool.valid_until %}<tr><td style="color:#666;font-size:10px;">Válida hasta</td><td><strong>{{ pool.valid_until|date:"d/m/Y" }}</strong></td></tr>{% endif %}
+    </tbody>
+</table>
+{% endif %}
+
+<!-- 2. POR ACTIVIDAD -->
+{% if by_activity %}
+<div class="section-title">2. Consumo por Tipo de Actividad</div>
+<table class="tbl">
+    <thead><tr><th>Actividad</th><th style="width:100px;text-align:right;">Horas</th><th style="width:120px;">% del total</th></tr></thead>
+    <tbody>
+    {% for row in by_activity %}
+    <tr>
+        <td>{{ row.activity_type__name|default:"Sin categoría" }}</td>
+        <td style="text-align:right;font-weight:700;">{{ row.total }}h</td>
+        <td>
+            {% if pool.used_hours > 0 %}
+            {% widthratio row.total pool.used_hours 100 as pct_act %}
+            <div style="background:#eee;border-radius:3px;height:8px;overflow:hidden;display:inline-block;width:80px;vertical-align:middle;">
+                <div style="background:#324458;height:100%;width:{{ pct_act }}%;"></div>
+            </div>
+            <span style="margin-left:4px;font-size:9px;color:#666;">{{ pct_act }}%</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr><td><strong>Total</strong></td><td style="text-align:right;"><strong>{{ pool.used_hours }}h</strong></td><td></td></tr></tfoot>
+</table>
+{% endif %}
+
+<!-- 3. POR ANALISTA -->
+{% if by_analyst %}
+<div class="section-title">3. Consumo por Analista</div>
+<table class="tbl">
+    <thead><tr><th>Analista</th><th style="width:100px;text-align:right;">Horas</th><th style="width:120px;">% del total</th></tr></thead>
+    <tbody>
+    {% for row in by_analyst %}
+    <tr>
+        <td>{{ row.analyst__username|default:"—" }}</td>
+        <td style="text-align:right;font-weight:700;">{{ row.total }}h</td>
+        <td>
+            {% if pool.used_hours > 0 %}
+            {% widthratio row.total pool.used_hours 100 as pct_ana %}
+            <div style="background:#eee;border-radius:3px;height:8px;overflow:hidden;display:inline-block;width:80px;vertical-align:middle;">
+                <div style="background:#e67e22;height:100%;width:{{ pct_ana }}%;"></div>
+            </div>
+            <span style="margin-left:4px;font-size:9px;color:#666;">{{ pct_ana }}%</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot><tr><td><strong>Total</strong></td><td style="text-align:right;"><strong>{{ pool.used_hours }}h</strong></td><td></td></tr></tfoot>
+</table>
+{% endif %}
+
+<!-- 4. DETALLE DE REGISTROS -->
+<div class="section-title">4. Detalle de Registros</div>
+{% if entries %}
+<table class="tbl">
+    <thead>
+        <tr>
+            <th style="width:80px;">Fecha</th>
+            <th>Analista</th>
+            <th>Actividad</th>
+            <th>Proyecto Pentest</th>
+            <th style="width:55px;text-align:right;">Horas</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entry in entries %}
+    <tr>
+        <td>{{ entry.date|date:"d/m/Y" }}</td>
+        <td>{{ entry.analyst.username|default:"—" }}</td>
+        <td>{{ entry.activity_type.name|default:"—" }}</td>
+        <td>{{ entry.pentest_project.title|default:"—"|truncatechars:25 }}</td>
+        <td style="text-align:right;font-weight:700;">{{ entry.hours }}h</td>
+        <td style="color:#555;">{{ entry.description|default:"—"|truncatechars:50 }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr><td colspan="4"><strong>Total</strong></td><td style="text-align:right;"><strong>{{ pool.used_hours }}h</strong></td><td></td></tr>
+    </tfoot>
+</table>
+{% else %}
+<p style="color:#888;font-style:italic;">Sin registros de horas.</p>
+{% endif %}
+
+</div><!-- /page-wrap -->
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{{ block.super }}
+
+<h3>Eliminar Bolsa de Horas: {{ pool.name }}</h3>
+<p>Al eliminar esta bolsa de horas se eliminarán también todos los registros de horas asociados.</p>
+<p>
+    <strong>Horas totales:</strong> {{ pool.total_hours }}h &nbsp;|&nbsp;
+    <strong>Usadas:</strong> {{ pool.used_hours }}h &nbsp;|&nbsp;
+    <strong>Registros:</strong> {{ pool.time_entries.count }}
+</p>
+
+<div class="danger-zone panel panel-danger">
+    <div class="panel-heading">
+        <h3>Danger Zone</h3>
+    </div>
+    <form class="form-horizontal" method="post">
+        {% csrf_token %}
+        <div class="form-group" style="padding: 15px;">
+            <button class="btn btn-danger" type="submit">
+                <i class="fa-solid fa-trash"></i> Eliminar Bolsa de Horas
+            </button>
+            &nbsp;
+            <a href="{% url 'view_product' pool.product.id %}" class="btn btn-default">Cancelar</a>
+        </div>
+    </form>
+</div>
+<br/><br/>
+{% endblock %}

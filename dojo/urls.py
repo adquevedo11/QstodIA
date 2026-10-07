@@ -87,6 +87,13 @@ from dojo.tool_type.ui.urls import urlpatterns as tool_type_urls
 from dojo.url.api.urls import add_url_urls
 from dojo.url.ui.urls import urlpatterns as url_patterns
 from dojo.user.api.urls import add_user_urls
+# QustodIA custom modules
+from dojo.security_concept.urls import urlpatterns as security_concept_urls
+from dojo.executive_report.urls import urlpatterns as executive_report_urls
+from dojo.pentest.urls import urlpatterns as pentest_urls
+from dojo.hour_pool.urls import urlpatterns as hour_pool_urls
+from dojo.go_live_readiness.urls import urlpatterns as go_live_readiness_urls
+from dojo.sqa_metrics.urls import urlpatterns as sqa_metrics_urls
 from dojo.user.api.views import ForcedResetObtainAuthToken, RevokeApiTokenView, UserProfileView
 from dojo.user.ui.urls import urlpatterns as user_urls
 from dojo.utils import get_system_setting
@@ -198,6 +205,13 @@ ur += banner_urls
 ur += component_urls
 ur += regulations
 ur += announcement_urls
+# QustodIA custom modules
+ur += security_concept_urls
+ur += executive_report_urls
+ur += pentest_urls
+ur += hour_pool_urls
+ur += go_live_readiness_urls
+ur += sqa_metrics_urls
 
 # Module-level Classic UI route wiring: fixed at URLConf build time on
 # settings.V3_FEATURE_LOCATIONS (a stored-flag toggle cannot re-mount these

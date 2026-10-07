@@ -1,0 +1,460 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}QustodIA — {{ pool.name }}{% endblock %}
+
+{% block add_styles %}
+.pt-header {
+    background: linear-gradient(135deg, #324458 0%, #1e2d3a 100%);
+    color: #fff;
+    padding: 24px 28px 20px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+.pt-header .brand-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffb323;
+    margin-bottom: 8px;
+}
+.pt-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    color: #fff;
+}
+.pt-header .meta-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+.pt-header .meta-item .key {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #ffb323;
+    letter-spacing: 1px;
+}
+.pt-header .meta-item .val {
+    font-size: 13px;
+    color: #d0dce8;
+    font-weight: 600;
+}
+.kpi-card {
+    border: 1px solid #dde3ea;
+    border-radius: 6px;
+    padding: 16px;
+    text-align: center;
+    background: #fff;
+    margin-bottom: 16px;
+}
+.kpi-card .kpi-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #999;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+.kpi-card .kpi-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #324458;
+    line-height: 1;
+}
+.kpi-card .kpi-sub {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 4px;
+}
+.kpi-card.kpi-alert .kpi-value { color: #e74c3c; }
+.kpi-card.kpi-warn .kpi-value  { color: #e67e22; }
+.kpi-card.kpi-ok .kpi-value    { color: #27ae60; }
+.progress-container {
+    margin-bottom: 24px;
+}
+.progress-container .progress-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #324458;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+.progress { height: 18px; border-radius: 9px; background: #e9ecef; }
+.progress-bar-ok     { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.progress-bar-warn   { background: linear-gradient(90deg, #e67e22, #ffb323); }
+.progress-bar-danger { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.alert-banner {
+    background: #fff3cd;
+    border: 1px solid #ffb323;
+    border-left: 4px solid #ffb323;
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    color: #856404;
+    font-size: 13px;
+}
+.table > thead > tr > th {
+    background-color: #324458;
+    color: #fff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.inline-form-panel {
+    border: 1px solid #dde3ea;
+    border-top: 3px solid #ffb323;
+    border-radius: 4px;
+    padding: 16px 20px 8px;
+    background: #fafbfc;
+    margin-top: 16px;
+}
+.inline-form-panel h5 {
+    color: #324458;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+.inline-form-panel .form-group {
+    margin-bottom: 12px;
+}
+.inline-form-panel .form-group label {
+    font-weight: 600;
+    color: #324458;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.inline-form-panel .form-control {
+    font-size: 12px;
+    height: 32px;
+    padding: 4px 8px;
+}
+.inline-form-panel textarea.form-control {
+    height: auto;
+}
+/* Fuerza que todas las columnas del panel no expandan por su contenido */
+.inline-form-panel [class*="col-"] {
+    overflow: hidden;
+}
+.inline-form-panel select.form-control {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: block;
+}
+.btn-sqa {
+    background-color: #324458;
+    border-color: #253344;
+    color: #fff;
+}
+.btn-sqa:hover { background-color: #253344; color: #fff; }
+.badge-active   { background-color: #27ae60; color: #fff; }
+.badge-inactive { background-color: #95a5a6; color: #fff; }
+.badge-expired  { background-color: #c0392b; color: #fff; }
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+
+        <!-- HEADER -->
+        <div class="pt-header">
+            <div class="brand-tag">QustodIA · Bolsa de Horas</div>
+            <h2><i class="fa-solid fa-clock"></i> {{ pool.name }}</h2>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                {% if pool.status == 'active' %}
+                    <span class="badge badge-active" style="font-size:12px; padding:5px 10px;">Activa</span>
+                {% elif pool.status == 'inactive' %}
+                    <span class="badge badge-inactive" style="font-size:12px; padding:5px 10px;">Inactiva</span>
+                {% elif pool.status == 'expired' %}
+                    <span class="badge badge-expired" style="font-size:12px; padding:5px 10px;">Expirada</span>
+                {% endif %}
+                {% if pool.is_alert %}
+                <span class="badge" style="background:#e67e22; font-size:12px; padding:5px 10px;">
+                    <i class="fa-solid fa-bell"></i> Alerta de Consumo
+                </span>
+                {% endif %}
+            </div>
+            <div class="meta-row">
+                {% if pool.product %}
+                <div class="meta-item">
+                    <div class="key">Producto</div>
+                    <div class="val">{{ pool.product.name }}</div>
+                </div>
+                {% endif %}
+                {% if pool.start_date %}
+                <div class="meta-item">
+                    <div class="key">Inicio</div>
+                    <div class="val">{{ pool.start_date|date:"d/m/Y" }}</div>
+                </div>
+                {% endif %}
+                {% if pool.end_date %}
+                <div class="meta-item">
+                    <div class="key">Vencimiento</div>
+                    <div class="val">{{ pool.end_date|date:"d/m/Y" }}</div>
+                </div>
+                {% endif %}
+                <div class="meta-item">
+                    <div class="key">Umbral Alerta</div>
+                    <div class="val">{{ pool.alert_threshold_pct|default:75 }}%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ALERTA BANNER -->
+        {% if pool.is_alert %}
+        <div class="alert-banner">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <strong>Alerta:</strong> El consumo de esta bolsa ha superado el umbral del {{ pool.alert_threshold_pct|default:75 }}%.
+            Quedan <strong>{{ pool.remaining_hours|default:0 }}h</strong> disponibles.
+        </div>
+        {% endif %}
+
+        <!-- ACCIONES -->
+        <div style="margin-bottom:20px;">
+            <a href="{% url 'hour_pool_edit' pool.pk %}" class="btn btn-sqa">
+                <i class="fa-solid fa-pen-to-square"></i> Editar Bolsa
+            </a>
+            <a href="{% url 'hour_pool_report_pdf' pool.pk %}" class="btn btn-default" style="margin-left:8px;" target="_blank">
+                <i class="fa-solid fa-file-pdf"></i> Reporte PDF
+            </a>
+            {% if pool.product %}
+            <a href="{% url 'view_product' pool.product.id %}" class="btn btn-default pull-right">
+                <i class="fa-solid fa-arrow-left"></i> Volver al Producto
+            </a>
+            {% endif %}
+            <a href="{% url 'hour_pool_delete' pool.pk %}" class="btn btn-danger pull-right" style="margin-right:8px;">
+                <i class="fa-solid fa-trash"></i> Eliminar
+            </a>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="kpi-card">
+                    <div class="kpi-label"><i class="fa-solid fa-database"></i> Horas Totales</div>
+                    <div class="kpi-value">{{ pool.total_hours }}</div>
+                    <div class="kpi-sub">horas contratadas</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card {% if pool.is_alert %}kpi-warn{% endif %}">
+                    <div class="kpi-label"><i class="fa-solid fa-check-double"></i> Horas Usadas</div>
+                    <div class="kpi-value">{{ pool.used_hours|default:0 }}</div>
+                    <div class="kpi-sub">horas consumidas</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card {% if pool.remaining_hours <= 0 %}kpi-alert{% elif pool.is_alert %}kpi-warn{% else %}kpi-ok{% endif %}">
+                    <div class="kpi-label"><i class="fa-solid fa-hourglass-half"></i> Horas Restantes</div>
+                    <div class="kpi-value">{{ pool.remaining_hours|default:0 }}</div>
+                    <div class="kpi-sub">disponibles</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="kpi-card {% if pool.consumption_pct >= 90 %}kpi-alert{% elif pool.is_alert %}kpi-warn{% else %}kpi-ok{% endif %}">
+                    <div class="kpi-label"><i class="fa-solid fa-chart-pie"></i> % Consumo</div>
+                    <div class="kpi-value">{{ pool.consumption_pct|default:0|floatformat:0 }}%</div>
+                    <div class="kpi-sub">del total</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA DE PROGRESO VISUAL -->
+        {% with pct=pool.consumption_pct|default:0 %}
+        <div class="progress-container panel panel-default" style="padding:16px;">
+            <div class="progress-label">
+                <span>Consumo de la Bolsa</span>
+                <span>{{ pool.used_hours|default:0 }}h / {{ pool.total_hours }}h ({{ pct|floatformat:0 }}%)</span>
+            </div>
+            <div class="progress" style="height:22px; border-radius:11px;">
+                <div class="progress-bar
+                    {% if pct >= 90 %}progress-bar-danger
+                    {% elif pct >= pool.alert_threshold_pct|default:75 %}progress-bar-warn
+                    {% else %}progress-bar-ok{% endif %}"
+                     role="progressbar"
+                     style="width:{{ pct|floatformat:0 }}%; min-width:2px; line-height:22px; font-size:12px; font-weight:700;">
+                    {% if pct > 10 %}{{ pct|floatformat:0 }}%{% endif %}
+                </div>
+            </div>
+            {% if pool.alert_threshold_pct %}
+            <div style="font-size:11px; color:#999; margin-top:6px;">
+                Umbral de alerta: {{ pool.alert_threshold_pct }}% &nbsp;|&nbsp;
+                {% if pct >= 90 %}
+                <span style="color:#e74c3c; font-weight:700;">Zona crítica</span>
+                {% elif pct >= pool.alert_threshold_pct %}
+                <span style="color:#e67e22; font-weight:700;">En zona de alerta</span>
+                {% else %}
+                <span style="color:#27ae60;">En rango normal</span>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        {% endwith %}
+
+        <!-- TABLA DE REGISTROS DE HORAS -->
+        <div class="panel panel-default">
+            <div class="panel-heading" style="background:#f8f9fa; border-bottom:2px solid #dde3ea;">
+                <div class="clearfix">
+                    <h4 class="pull-left" style="margin:0; color:#324458; font-size:15px;">
+                        <i class="fa-solid fa-list-check"></i> Registros de Horas ({{ entries|length }})
+                    </h4>
+                </div>
+            </div>
+            <div class="panel-body" style="padding:0;">
+                {% if entries %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" style="margin:0;">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Analista</th>
+                                <th>Proyecto Pentest</th>
+                                <th>Actividad</th>
+                                <th style="text-align:right;">Horas</th>
+                                <th>Descripción</th>
+                                <th style="width:60px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in entries %}
+                            <tr>
+                                <td style="white-space:nowrap;">{{ entry.date|date:"d/m/Y" }}</td>
+                                <td>
+                                    {% if entry.analyst %}
+                                        {{ entry.analyst.get_full_name|default:entry.analyst.username }}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if entry.pentest_project %}
+                                        <a href="{% url 'pentest_detail' entry.pentest_project.pk %}" style="color:#324458;">
+                                            {{ entry.pentest_project.title }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if entry.activity_type %}
+                                        <span class="label label-default">{{ entry.activity_type.name }}</span>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td style="text-align:right; font-weight:700; color:#324458;">{{ entry.hours }}h</td>
+                                <td style="font-size:12px; color:#666;">{{ entry.description|default:"—"|truncatechars:60 }}</td>
+                                <td>
+                                    <a href="{% url 'time_entry_delete' entry.pk %}"
+                                       class="btn btn-xs btn-danger"
+                                       title="Eliminar registro">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr style="background:#f4f6f9;">
+                                <td colspan="4" style="text-align:right; font-weight:700; color:#324458;">Total:</td>
+                                <td style="text-align:right; font-weight:700; color:#324458; font-size:15px;">{{ pool.used_hours|default:0 }}h</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                {% else %}
+                <div style="text-align:center; padding:40px; color:#aaa;">
+                    <i class="fa-solid fa-list-check" style="font-size:32px; color:#dde3ea;"></i>
+                    <p style="margin-top:12px;">No hay registros de horas.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- FORMULARIO INLINE PARA REGISTRAR HORAS -->
+        <div class="inline-form-panel">
+            <h5><i class="fa-solid fa-plus"></i> Registrar Horas</h5>
+            <form method="post" action="{% url 'time_entry_add' pool.pk %}" novalidate>
+                {% csrf_token %}
+                {% if form %}
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger alert-sm">{{ form.non_field_errors }}</div>
+                    {% endif %}
+                    <!-- Fila 1: campos cortos y sin riesgo de overflow -->
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Fecha *</label>
+                                {{ form.date }}
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>Horas *</label>
+                                {{ form.hours }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Actividad</label>
+                                {{ form.activity_type }}
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>Analista *</label>
+                                {{ form.analyst }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Fila 2: proyecto (con espacio para texto largo), descripción y botón -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Proyecto</label>
+                                {{ form.pentest_project }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                {{ form.description }}
+                            </div>
+                        </div>
+                        <div class="col-md-2" style="display:flex;align-items:flex-end;padding-bottom:15px;">
+                            <button type="submit" class="btn btn-sqa btn-block">
+                                <i class="fa-solid fa-plus"></i> Registrar
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+                <p class="text-muted">Formulario de registro no disponible.</p>
+                {% endif %}
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block postscript %}
+<script>
+$(document).ready(function() {
+    $('form input[type="text"], form input[type="number"], form input[type="date"], form select, form textarea').addClass('form-control');
+    $('.inline-form-panel select').css({'width':'100%','max-width':'100%'});
+    // Fecha por defecto: hoy
+    var today = new Date().toISOString().split('T')[0];
+    $('input[name="date"]').val(today);
+});
+</script>
+{% endblock %}
