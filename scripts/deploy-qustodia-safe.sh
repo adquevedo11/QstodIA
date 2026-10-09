@@ -140,7 +140,7 @@ fi
 if [[ "${DRY_RUN}" == "true" ]]; then
   info "3/7  [DRY-RUN] Se ejecutaría: git fetch + git reset --hard origin/${BRANCH}"
 else
-  info "3/7  Actualizando código en el servidor (rama: ${BRANCH})..."
+  info "3/8  Actualizando código en el servidor (rama: ${BRANCH})..."
   ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_CODE
 set -euo pipefail
 cd "${REMOTE_DIR}"
@@ -152,8 +152,20 @@ REMOTE_CODE
   ok "Código actualizado"
 fi
 
+# ── Step 3.5: manage.py check (captura errores de imports/modelos antes del build) ──
+info "3.5/8  Ejecutando manage.py check en el servidor..."
+ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_CHECK_DJANGO
+set -euo pipefail
+cd "${REMOTE_DIR}"
+docker compose ${COMPOSE_FILES} run --rm --no-deps uwsgi \
+  python manage.py check --deploy 2>&1 \
+  || { echo "ERROR: manage.py check falló — abortando deploy antes de aplicar cambios" >&2; exit 1; }
+echo "  manage.py check OK"
+REMOTE_CHECK_DJANGO
+ok "Django check OK"
+
 # ── Step 4: Plan de migraciones (siempre, incluso en dry-run) ─────────────────
-info "4/7  Verificando plan de migraciones..."
+info "4/8  Verificando plan de migraciones..."
 ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_MIGRATE_PLAN
 set -euo pipefail
 cd "${REMOTE_DIR}"
@@ -169,7 +181,7 @@ if [[ "${DRY_RUN}" == "true" ]]; then
 fi
 
 # ── Step 5: Construir imagen ──────────────────────────────────────────────────
-info "5/7  Construyendo imagen Docker (puede tardar varios minutos)..."
+info "5/8  Construyendo imagen Docker (puede tardar varios minutos)..."
 ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_BUILD
 set -euo pipefail
 cd "${REMOTE_DIR}"
@@ -179,7 +191,7 @@ REMOTE_BUILD
 ok "Imagen construida"
 
 # ── Step 6: Aplicar migraciones y reiniciar ───────────────────────────────────
-info "6/7  Aplicando migraciones y reiniciando servicios..."
+info "6/8  Aplicando migraciones y reiniciando servicios..."
 ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_DEPLOY
 set -euo pipefail
 cd "${REMOTE_DIR}"
@@ -210,7 +222,7 @@ REMOTE_DEPLOY
 ok "Servicios reiniciados"
 
 # ── Step 7: Health check ──────────────────────────────────────────────────────
-info "7/7  Verificando que la aplicación responde (health check)..."
+info "7/8  Verificando que la aplicación responde (health check)..."
 ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_HEALTH
 set -euo pipefail
 cd "${REMOTE_DIR}"
