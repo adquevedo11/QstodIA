@@ -175,8 +175,8 @@ info "5/8  Construyendo imágenes Docker (uwsgi + nginx) con el nuevo código...
 ssh ${SSH_OPTS} "${PROD_USER}@${PROD_HOST}" bash << REMOTE_BUILD
 set -euo pipefail
 cd "${REMOTE_DIR}"
-echo "  Construyendo uwsgi..."
-docker compose ${COMPOSE_FILES} build uwsgi 2>&1 | tail -3
+echo "  Construyendo uwsgi (--no-cache para garantizar código actualizado)..."
+docker compose ${COMPOSE_FILES} build --no-cache uwsgi 2>&1 | tail -5
 echo "  Construyendo nginx (incluye collectstatic + Tailwind CSS)..."
 docker compose ${COMPOSE_FILES} build nginx 2>&1 | tail -3
 echo "  Build OK"
