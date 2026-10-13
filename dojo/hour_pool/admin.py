@@ -11,15 +11,15 @@ class ActivityTypeAdmin(admin.ModelAdmin):
 
 @admin.register(HourPool)
 class HourPoolAdmin(admin.ModelAdmin):
-    list_display = ["name", "product", "total_hours", "start_date", "end_date", "is_active", "created_by"]
-    list_filter = ["is_active"]
+    list_display = ["name", "product", "total_hours", "valid_from", "valid_until", "status", "created_by"]
+    list_filter = ["status"]
     search_fields = ["name", "product__name"]
     date_hierarchy = "created_at"
 
 
 @admin.register(TimeEntry)
 class TimeEntryAdmin(admin.ModelAdmin):
-    list_display = ["date", "hours", "hour_pool", "pentest_project", "activity_type", "created_by"]
+    list_display = ["date", "hours", "pool", "pentest_project", "activity_type", "analyst"]
     list_filter = ["activity_type"]
-    search_fields = ["description", "hour_pool__name"]
+    search_fields = ["description", "pool__name"]
     date_hierarchy = "date"
