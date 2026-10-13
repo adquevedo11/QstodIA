@@ -18,6 +18,16 @@ services:
 
   # nginx sirve los archivos estáticos (CSS, imágenes)
   nginx:
+    depends_on:
+      uwsgi:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -so /dev/null -w '%{http_code}' http://localhost:8080/ | grep -qE '^(200|301|302|401|403)$'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     networks:
       - default
       - sqasa
