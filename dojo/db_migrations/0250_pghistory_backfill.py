@@ -73,6 +73,12 @@ def backfill_pghistory_tables(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
+    # Must run outside a transaction: the per-model COPY operations can fail
+    # individually (event tables created by later migrations may not exist yet).
+    # Without atomic=False, the first failed COPY leaves the PostgreSQL
+    # connection in an aborted-transaction state, causing every subsequent
+    # query to fail even though the Python try/except catches the exception.
+    atomic = False
 
     dependencies = [
         ("dojo", "0249_findingreviewers_findingreviewersevent_and_more"),
