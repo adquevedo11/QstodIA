@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, render
 
 from dojo.models import Engagement
 
-AGENT_URL = os.environ.get("GOLIVE_AGENT_URL", "http://localhost:8001")
+AGENT_URL = os.environ.get("GOLIVE_AGENT_URL", "http://go-live-agent:8001")
 
 
 def _go_live_date(eng: Engagement) -> str:
