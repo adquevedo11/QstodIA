@@ -225,6 +225,30 @@ header.sticky button:not([type="submit"]):hover {
   background: rgba(255,255,255,0.08) !important;
 }
 
+/* Dropdown de usuario: fondo claro → texto oscuro (override del * del topbar) */
+#user-dropdown,
+#alerts-dropdown {
+  color: var(--text) !important;
+  background: #ffffff !important;
+}
+#user-dropdown *,
+#alerts-dropdown * {
+  color: var(--text) !important;
+}
+#user-dropdown a,
+#alerts-dropdown a {
+  color: var(--text) !important;
+  text-decoration: none;
+}
+#user-dropdown a:hover,
+#alerts-dropdown a:hover {
+  background: var(--hover) !important;
+  color: var(--text) !important;
+}
+#user-dropdown .border-t {
+  border-color: var(--border) !important;
+}
+
 /* ══════════════════════════════════════════════════════════════
    ÁREA DE CONTENIDO PRINCIPAL
    ══════════════════════════════════════════════════════════════ */
