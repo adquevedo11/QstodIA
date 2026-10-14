@@ -4,119 +4,447 @@
 {% load static %}
 
 {% block add_styles %}
-    {{ block.super }}
-    /* ── QustodIA Login — diseño estable ────────────────────── */
-    body { background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%) !important; }
-    /* Ocultar sidebar y topbar en la página de login */
-    #dd-sidebar, header.sticky { display: none !important; }
-    .min-h-screen.flex.flex-col { padding-left: 0 !important; }
-    .login-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem 1rem;
-    }
-    .sqa-login-card {
-        width: 100%;
-        max-width: 460px;
-        background: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-        overflow: hidden;
-    }
-    .sqa-login-header {
-        background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
-        padding: 36px 40px 28px;
-        text-align: center;
-        border-bottom: 4px solid #ffb323;
-    }
-    .sqa-login-header img { height: 100px; max-width: 260px; margin-bottom: 10px; }
-    .sqa-login-header p {
-        color: #cdd8e3; font-size: 12px; font-weight: 400;
-        letter-spacing: 1.5px; text-transform: uppercase; margin: 0;
-    }
-    .sqa-login-body { padding: 32px 40px 36px; }
-    .sqa-login-body label {
-        font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
-        text-transform: uppercase; color: #324458; margin-bottom: 5px; display: block;
-    }
-    .sqa-login-body .form-control {
-        height: 44px; font-size: 15px; border: 1.5px solid #dde3ea;
-        border-radius: 6px; transition: border-color 150ms, box-shadow 150ms;
-        width: 100%; padding: 0 12px; box-sizing: border-box;
-    }
-    .sqa-login-body .form-control:focus { border-color: #ffb323; box-shadow: 0 0 0 3px rgba(255,179,35,0.15); outline: none; }
-    .sqa-show-btn {
-        width: 100%; padding: 10px; border: 1.5px solid #dde3ea; border-radius: 6px;
-        background: #f8f9fb; color: #324458; font-size: 14px; cursor: pointer;
-        transition: background 150ms; margin-bottom: 16px;
-    }
-    .sqa-show-btn:hover { background: #eef1f5; }
-    .sqa-login-btn {
-        width: 100%; height: 48px; font-size: 16px; font-weight: 700;
-        border-radius: 8px; background: #ffb323; color: #1e2d3a; border: none;
-        cursor: pointer; transition: background 150ms, box-shadow 150ms;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .sqa-login-btn:hover { background: #e09e1a; box-shadow: 0 4px 12px rgba(255,179,35,0.4); }
-    .sqa-login-links {
-        display: flex; justify-content: center; gap: 16px;
-        margin-top: 16px; font-size: 13px;
-    }
-    .sqa-login-links a { color: #5a7595; }
-    .sqa-login-links a:hover { color: #324458; text-decoration: underline; }
-    .sqa-login-footer {
-        background: #f8f9fb; border-top: 1px solid #edf0f4;
-        padding: 12px 40px; text-align: center; font-size: 12px; color: #8896a7;
-    }
-    .sqa-login-footer span { color: #ffb323; font-weight: 600; }
+/* ── SQA Login Page ─────────────────────────────────────── */
+body {
+    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%);
+    min-height: 100vh;
+    padding-top: 0 !important;
+}
+
+/* Hide navbar (Bootstrap compat) and core-vnext topbar */
+nav.navbar.navbar-default.navbar-fixed-top,
+header.sticky {
+    display: none !important;
+}
+
+#wrapper {
+    padding-top: 0 !important;
+}
+
+#page-wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+#footer-wrapper {
+    display: none !important;
+}
+
+.sqa-login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 15px;
+}
+
+/* Card principal */
+.sqa-login-card {
+    width: 100%;
+    max-width: 460px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+/* Header del card */
+.sqa-login-header {
+    background: linear-gradient(135deg, #324458 0%, #3d5470 100%);
+    padding: 36px 40px 28px;
+    text-align: center;
+    border-bottom: 4px solid #ffb323;
+}
+
+.sqa-login-header img {
+    height: 110px;
+    max-width: 280px;
+    filter: none;
+    margin-bottom: 10px;
+}
+
+.sqa-login-header h4 {
+    color: #cdd8e3;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Body del card */
+.sqa-login-body {
+    padding: 32px 40px 36px;
+}
+
+/* Banner */
+.sqa-banner {
+    background: #fff8e6;
+    border-left: 4px solid #ffb323;
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #4B4F58;
+}
+
+/* Labels */
+.sqa-login-body label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #324458;
+    margin-bottom: 5px;
+}
+
+/* Inputs */
+.sqa-login-body .form-control,
+.sqa-login-body input[type="text"],
+.sqa-login-body input[type="password"] {
+    width: 100% !important;
+    height: 44px;
+    border: 1.5px solid #dde3ea;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #324458;
+    padding: 0 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: #f9fafc;
+}
+
+.sqa-login-body .form-control:focus,
+.sqa-login-body input[type="text"]:focus,
+.sqa-login-body input[type="password"]:focus {
+    border-color: #ffb323 !important;
+    box-shadow: 0 0 0 3px rgba(255, 179, 35, 0.15) !important;
+    outline: none;
+    background: #ffffff;
+}
+
+/* Botón login principal */
+.sqa-btn-login {
+    width: 100%;
+    height: 46px;
+    background: #ffb323 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px;
+}
+
+.sqa-btn-login:hover {
+    background: #e09e1a !important;
+    transform: translateY(-1px);
+}
+
+.sqa-btn-login:active {
+    transform: translateY(0);
+}
+
+/* Botón show password — override del position:absolute global de dojo.css */
+#toggleBox,
+.sqa-btn-toggle {
+    position: relative !important;
+    left: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: 38px !important;
+    background: transparent !important;
+    border: 1.5px solid #dde3ea !important;
+    border-radius: 6px !important;
+    color: #324458 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin-bottom: 14px !important;
+    margin-top: 4px !important;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+#toggleBox:hover,
+.sqa-btn-toggle:hover {
+    border-color: #324458 !important;
+    background: #f0f4f8 !important;
+}
+
+/* Links recuperar contraseña */
+.sqa-forgot-links {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.sqa-forgot-links a {
+    color: #324458 !important;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.sqa-forgot-links a:hover {
+    color: #ffb323 !important;
+    text-decoration: underline;
+}
+
+/* Divider "o continuar con" */
+.sqa-divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0 20px;
+    color: #a0aab4;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.sqa-divider::before,
+.sqa-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+.sqa-divider::before { margin-right: 12px; }
+.sqa-divider::after  { margin-left:  12px; }
+
+/* Botones OAuth */
+.sqa-oauth-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sqa-oauth-btn {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 120px;
+    height: 40px;
+    background: #f5f7fa !important;
+    border: 1.5px solid #dde3ea !important;
+    border-radius: 6px !important;
+    color: #324458 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.sqa-oauth-btn:hover {
+    background: #324458 !important;
+    border-color: #324458 !important;
+    color: #ffffff !important;
+}
+
+/* Footer del card */
+.sqa-login-footer {
+    background: #f5f7fa;
+    border-top: 1px solid #e0e6ed;
+    padding: 14px 40px;
+    text-align: center;
+    font-size: 11px;
+    color: #a0aab4;
+}
+
+.sqa-login-footer a {
+    color: #ffb323 !important;
+}
+
+/* ── Corrección del layout horizontal de form_fields.html ── */
+/* form_fields.html usa col-sm-2 + col-sm-10; dentro del card
+   forzamos todo a ancho completo vertical */
+.sqa-login-body .form-group {
+    margin-bottom: 18px !important;
+}
+.sqa-login-body .col-sm-2.control-label,
+.sqa-login-body label.control-label {
+    width: 100% !important;
+    float: none !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin-bottom: 6px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+    text-transform: uppercase !important;
+    color: #324458 !important;
+}
+.sqa-login-body .col-sm-10,
+.sqa-login-body [class*="col-sm-"] {
+    width: 100% !important;
+    float: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+}
+.sqa-login-body .col-sm-offset-2 {
+    margin-left: 0 !important;
+}
+
+/* Errores de formulario */
+.sqa-login-body .errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0;
+}
+.sqa-login-body .errorlist li {
+    color: #d9534f;
+    font-size: 12px;
+}
+.sqa-login-body .has-error .form-control {
+    border-color: #d9534f !important;
+}
+.sqa-login-body .help-block {
+    font-size: 11px;
+    color: #d9534f;
+    margin-top: 3px;
+}
 {% endblock %}
 
+{% block navigation %}{% endblock %}
+
 {% block content %}
-    {# Fondo navy — posición fija para cubrir toda la pantalla sin depender del CSS del body #}
-    <div style="position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#1e2d3a 0%,#324458 60%,#3d5470 100%);"></div>
-    <div class="login-wrapper" style="position:relative;z-index:1;">
-        <div class="sqa-login-card">
-            <div class="sqa-login-header">
-                <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA">
-                <p>Application Security Posture Management</p>
-            </div>
-            <div class="sqa-login-body">
-                {% if "banner_enable"|get_banner_conf %}
-                    <div style="background:#fff8e6;border-left:4px solid #ffb323;border-radius:4px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#4B4F58;">
-                        {{ "banner_message"|get_banner_conf }}
+<div style="position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#1e2d3a 0%,#324458 60%,#3d5470 100%);"></div>
+<div class="sqa-login-wrapper" style="position:relative;z-index:1;">
+    <div class="sqa-login-card">
+
+        <!-- Header -->
+        <div class="sqa-login-header">
+            <img src="{% static 'dojo/img/qustodIA_logo.png' %}" alt="QustodIA Logo"/>
+            <h4>{% trans "Application Security Posture Management" %}</h4>
+        </div>
+
+        <!-- Body -->
+        <div class="sqa-login-body">
+
+            {% if "banner_enable"|get_banner_conf %}
+                <div class="sqa-banner">
+                    {{ "banner_message"|get_banner_conf }}
+                </div>
+            {% endif %}
+
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+
+                {% if SHOW_LOGIN_FORM or 'force_login_form' in request.GET %}
+                    {% include "dojo/form_fields.html" with form=form %}
+
+                    <button class="sqa-btn-toggle" id="toggleBox" onclick="togglePassVisibility()" type="button">
+                        <i class="fa-solid fa-eye" style="margin-right: 6px;"></i>
+                        {% trans "Mostrar contraseña" %}
+                    </button>
+                {% endif %}
+
+                {% if CLASSIC_AUTH_ENABLED and SHOW_LOGIN_FORM or 'force_login_form' in request.GET %}
+                    <button class="btn sqa-btn-login" type="submit">
+                        <i class="fa-solid fa-right-to-bracket" style="margin-right: 8px;"></i>
+                        {% trans "Iniciar Sesión" %}
+                    </button>
+
+                    {% if FORGOT_PASSWORD or FORGOT_USERNAME %}
+                        <div class="sqa-forgot-links">
+                            {% if FORGOT_PASSWORD %}
+                                <a id="reset-password" href="{% url 'password_reset' %}">{% trans "Olvidé mi contraseña" %}</a>
+                            {% endif %}
+                            {% if FORGOT_PASSWORD and FORGOT_USERNAME %}
+                                &nbsp;·&nbsp;
+                            {% endif %}
+                            {% if FORGOT_USERNAME %}
+                                <a id="forgot-username" href="{% url 'forgot_username' %}">{% trans "Olvidé mi usuario" %}</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <!-- Botones OAuth/SSO -->
+                {% if OIDC_ENABLED or GOOGLE_ENABLED or OKTA_ENABLED or AZUREAD_TENANT_OAUTH2_ENABLED or GITLAB_ENABLED or AUTH0_ENABLED or KEYCLOAK_ENABLED or GITHUB_ENTERPRISE_ENABLED or SAML2_ENABLED %}
+                    <div class="sqa-divider">{% trans "o continuar con" %}</div>
+                    <div class="sqa-oauth-grid">
+
+                        {% if OIDC_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'oidc' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-solid fa-shield-halved" style="margin-right: 6px;"></i>
+                                {{ SOCIAL_AUTH_OIDC_LOGIN_BUTTON_TEXT }}
+                            </a>
+                        {% endif %}
+
+                        {% if GOOGLE_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-brands fa-google" style="margin-right: 6px;"></i>
+                                Google
+                            </a>
+                        {% endif %}
+
+                        {% if OKTA_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'okta-oauth2' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-solid fa-lock" style="margin-right: 6px;"></i>
+                                OKTA
+                            </a>
+                        {% endif %}
+
+                        {% if AZUREAD_TENANT_OAUTH2_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'azuread-tenant-oauth2' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-brands fa-microsoft" style="margin-right: 6px;"></i>
+                                Azure AD
+                            </a>
+                        {% endif %}
+
+                        {% if GITLAB_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'gitlab' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-brands fa-gitlab" style="margin-right: 6px;"></i>
+                                GitLab
+                            </a>
+                        {% endif %}
+
+                        {% if AUTH0_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'auth0' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-solid fa-key" style="margin-right: 6px;"></i>
+                                Auth0
+                            </a>
+                        {% endif %}
+
+                        {% if KEYCLOAK_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'keycloak' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-solid fa-shield" style="margin-right: 6px;"></i>
+                                {{ SOCIAL_AUTH_KEYCLOAK_LOGIN_BUTTON_TEXT }}
+                            </a>
+                        {% endif %}
+
+                        {% if GITHUB_ENTERPRISE_ENABLED is True %}
+                            <a href="{% url 'social:begin' 'github-enterprise' %}?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-brands fa-github" style="margin-right: 6px;"></i>
+                                GitHub Enterprise
+                            </a>
+                        {% endif %}
+
+                        {% if SAML2_ENABLED is True %}
+                            <a id="oauth-login-saml" rel="nofollow" data-method="post"
+                               href="/saml2/login?next={{ request.GET.next }}" class="sqa-oauth-btn">
+                                <i class="fa-solid fa-id-badge" style="margin-right: 6px;"></i>
+                                {{ SAML2_LOGIN_BUTTON_TEXT }}
+                            </a>
+                        {% endif %}
+
                     </div>
                 {% endif %}
 
-                <form method="POST" autocomplete="off"> {% csrf_token %}
-                    {% include "dojo/form_fields.html" with form=form %}
-
-                    {% if CLASSIC_AUTH_ENABLED %}
-                        <button class="sqa-show-btn" id="toggleBox" onclick="togglePassVisibility()" type="button">
-                            <i class="fa-solid fa-eye"></i> {% trans "Mostrar contraseña" %}
-                        </button>
-                        <button class="sqa-login-btn" type="submit">
-                            <i class="fa-solid fa-right-to-bracket"></i> {% trans "Iniciar Sesión" %}
-                        </button>
-
-                        {% if FORGOT_PASSWORD or FORGOT_USERNAME %}
-                            <div class="sqa-login-links">
-                                {% if FORGOT_PASSWORD %}
-                                    <a id="reset-password" href="{% url 'password_reset' %}">{% trans "Olvidé mi contraseña" %}</a>
-                                {% endif %}
-                                {% if FORGOT_PASSWORD and FORGOT_USERNAME %}&middot;{% endif %}
-                                {% if FORGOT_USERNAME %}
-                                    <a id="forgot-username" href="{% url 'forgot_username' %}">{% trans "Olvidé mi usuario" %}</a>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                </form>
-            </div>
-            <div class="sqa-login-footer">
-                &copy; 2026 <span>SQA SA</span> &middot; QustodIA
-            </div>
+            </form>
         </div>
+
+        <!-- Footer del card -->
+        <div class="sqa-login-footer">
+            &copy; {% now "Y" %} <a href="https://sqasa.co/" target="_blank">SQA SA</a>
+            &nbsp;·&nbsp; QustodIA
+        </div>
+
     </div>
+</div>
 {% endblock %}
