@@ -6,18 +6,14 @@
 {% block add_styles %}
 /* ── SQA Login Page ─────────────────────────────────────── */
 body {
-    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%) !important;
-    background-color: #1e2d3a !important;
+    background: #1e2d3a !important;
     min-height: 100vh;
     padding-top: 0 !important;
 }
-/* Fondo navy garantizado vía pseudo-element (no afectado por transforms de Alpine) */
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%);
+/* El #wrapper cubre toda la pantalla — aplicar el gradiente aquí garantiza el fondo navy */
+#wrapper {
+    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%) !important;
+    min-height: 100vh !important;
 }
 
 /* Hide navbar (Bootstrap compat) and core-vnext topbar */
@@ -348,7 +344,7 @@ header.sticky {
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
 
-                {% if SHOW_LOGIN_FORM or 'force_login_form' in request.GET %}
+                {% if CLASSIC_AUTH_ENABLED %}
                     {% include "dojo/form_fields.html" with form=form %}
 
                     <button class="sqa-btn-toggle" id="toggleBox" onclick="togglePassVisibility()" type="button">
@@ -357,7 +353,7 @@ header.sticky {
                     </button>
                 {% endif %}
 
-                {% if CLASSIC_AUTH_ENABLED and SHOW_LOGIN_FORM or 'force_login_form' in request.GET %}
+                {% if CLASSIC_AUTH_ENABLED %}
                     <button class="btn sqa-btn-login" type="submit">
                         <i class="fa-solid fa-right-to-bracket" style="margin-right: 8px;"></i>
                         {% trans "Iniciar Sesión" %}
