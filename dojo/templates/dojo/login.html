@@ -5,15 +5,11 @@
 
 {% block add_styles %}
 /* ── SQA Login Page ─────────────────────────────────────── */
+/* body_class block quita bg-gray-50 — el gradiente se aplica limpio */
 body {
-    background: #1e2d3a !important;
+    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%);
     min-height: 100vh;
     padding-top: 0 !important;
-}
-/* El #wrapper cubre toda la pantalla — aplicar el gradiente aquí garantiza el fondo navy */
-#wrapper {
-    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%) !important;
-    min-height: 100vh !important;
 }
 
 /* Hide navbar (Bootstrap compat) and core-vnext topbar */
@@ -320,6 +316,7 @@ header.sticky {
 }
 {% endblock %}
 
+{% block body_class %}sqa-login-page{% endblock %}
 {% block navigation %}{% endblock %}
 
 {% block content %}

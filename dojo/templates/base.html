@@ -148,7 +148,7 @@
 
     <body x-data="{ mobileMenu: false }"
           hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-          class="bg-gray-50 antialiased">
+          class="{% block body_class %}bg-gray-50{% endblock %} antialiased">
 
         {% block pre_wrapper %}
         {% endblock pre_wrapper %}
