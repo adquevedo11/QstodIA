@@ -6,14 +6,29 @@
 {% block add_styles %}
 /* ── SQA Login Page ─────────────────────────────────────── */
 body {
-    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%);
+    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%) !important;
+    background-color: #1e2d3a !important;
     min-height: 100vh;
     padding-top: 0 !important;
+}
+/* Fondo navy garantizado vía pseudo-element (no afectado por transforms de Alpine) */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, #1e2d3a 0%, #324458 60%, #3d5470 100%);
 }
 
 /* Hide navbar (Bootstrap compat) and core-vnext topbar */
 nav.navbar.navbar-default.navbar-fixed-top,
 header.sticky {
+    display: none !important;
+}
+
+/* Ocultar aviso de accesibilidad que no aparecía en azure/main */
+.sqa-login-body .col-sm-offset-2.col-sm-10 p.help-block:first-child,
+.sqa-login-body p.help-block em {
     display: none !important;
 }
 
@@ -312,8 +327,7 @@ header.sticky {
 {% block navigation %}{% endblock %}
 
 {% block content %}
-<div style="position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#1e2d3a 0%,#324458 60%,#3d5470 100%);"></div>
-<div class="sqa-login-wrapper" style="position:relative;z-index:1;">
+<div class="sqa-login-wrapper">
     <div class="sqa-login-card">
 
         <!-- Header -->
