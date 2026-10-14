@@ -582,6 +582,215 @@ h1.page-title,
 .sqa-risk-stat .sev-info .n { color: var(--sev-info) !important; }
 
 /* ══════════════════════════════════════════════════════════════
+   BOTONES — variantes completas
+   ══════════════════════════════════════════════════════════════ */
+.btn-danger {
+  background-color: var(--sev-crit) !important;
+  border-color: #c02020 !important;
+  color: #ffffff !important;
+}
+.btn-danger:hover, .btn-danger:focus {
+  background-color: #c02020 !important;
+  border-color: #a01a1a !important;
+  color: #ffffff !important;
+}
+
+.btn-success {
+  background-color: var(--sev-low) !important;
+  border-color: #1e8040 !important;
+  color: #ffffff !important;
+}
+.btn-success:hover, .btn-success:focus {
+  background-color: #1e8040 !important;
+  border-color: #166032 !important;
+  color: #ffffff !important;
+}
+
+.btn-info {
+  background-color: var(--sev-info) !important;
+  border-color: #1456c0 !important;
+  color: #ffffff !important;
+}
+.btn-info:hover, .btn-info:focus {
+  background-color: #1456c0 !important;
+  border-color: #0e3e9a !important;
+  color: #ffffff !important;
+}
+
+.btn-default {
+  background-color: var(--elevated) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+.btn-default:hover, .btn-default:focus {
+  background-color: var(--hover) !important;
+  border-color: #bbc5d4 !important;
+  color: var(--text) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGINACIÓN
+   ══════════════════════════════════════════════════════════════ */
+.pagination > li > a,
+.pagination > li > span {
+  color: var(--sidebar-bg) !important;
+  border-color: var(--border) !important;
+  background: var(--surface) !important;
+}
+.pagination > li > a:hover,
+.pagination > li > span:hover {
+  background: var(--hover) !important;
+  color: var(--sidebar-bg) !important;
+}
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover {
+  background: var(--sidebar-bg) !important;
+  border-color: var(--sidebar-bg) !important;
+  color: #ffffff !important;
+}
+.pagination > .disabled > a,
+.pagination > .disabled > span {
+  color: var(--text-mute) !important;
+  background: var(--elevated) !important;
+  border-color: var(--border) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DROPDOWN MENU (menús contextuales Bootstrap .dropdown-menu)
+   ══════════════════════════════════════════════════════════════ */
+.dropdown-menu {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+}
+.dropdown-menu > li > a {
+  color: var(--text) !important;
+  padding: 7px 16px !important;
+  font-size: 13px !important;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  background: var(--hover) !important;
+  color: var(--text) !important;
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover {
+  background: var(--sidebar-bg) !important;
+  color: #ffffff !important;
+}
+.dropdown-menu .divider {
+  background: var(--border) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABLAS — variantes adicionales
+   ══════════════════════════════════════════════════════════════ */
+.table-condensed td,
+.table-condensed th {
+  padding: 4px 8px !important;
+}
+.table-bordered,
+.table-bordered td,
+.table-bordered th {
+  border-color: var(--border) !important;
+}
+.table-hover tbody tr:hover {
+  background: var(--hover) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL BODY
+   ══════════════════════════════════════════════════════════════ */
+.modal-body {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BADGE GENÉRICO
+   ══════════════════════════════════════════════════════════════ */
+.badge {
+  border-radius: 10px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+.badge:not([class*="critical"]):not([class*="high"]):not([class*="medium"]):not([class*="low"]):not([class*="info"]) {
+  background-color: var(--sidebar-bg) !important;
+  color: #ffffff !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ÍCONO FA-TRASH — color corporativo en lugar de red puro
+   ══════════════════════════════════════════════════════════════ */
+.fa-trash,
+.fa-trash-alt {
+  color: var(--sev-crit) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COLORES DE SEVERIDAD en métricas de producto
+   (override de dojo.css .bg-vuln-* para usar tokens SQA)
+   ══════════════════════════════════════════════════════════════ */
+.bg-vuln-critical { background-color: var(--sev-crit) !important; }
+.bg-vuln-high     { background-color: var(--sev-high) !important; }
+.bg-vuln-medium   { background-color: var(--sev-med)  !important; }
+.bg-vuln-low      { background-color: var(--sev-low)  !important; }
+.bg-vuln-info     { background-color: var(--sev-info) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   MÉTRICAS DE PRODUCTO — links en celdas de severidad
+   ══════════════════════════════════════════════════════════════ */
+.bg-vuln-critical a,
+.bg-vuln-high a,
+.bg-vuln-medium a,
+.bg-vuln-low a,
+.bg-vuln-info a {
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+.bg-vuln-critical a:hover,
+.bg-vuln-high a:hover,
+.bg-vuln-medium a:hover,
+.bg-vuln-low a:hover,
+.bg-vuln-info a:hover {
+  color: rgba(255,255,255,0.85) !important;
+  text-decoration: underline !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GO-LIVE READINESS — modal de confirmación (reemplaza inline styles)
+   ══════════════════════════════════════════════════════════════ */
+.sqa-modal-confirm-header {
+  background: var(--sidebar-deep) !important;
+  color: #ffffff !important;
+  border-bottom: 2px solid var(--amber) !important;
+  padding: 16px 20px !important;
+  border-radius: var(--radius) var(--radius) 0 0 !important;
+}
+.sqa-modal-confirm-header .modal-title {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+}
+.sqa-modal-confirm-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--amber-glow);
+  border: 2px solid var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.sqa-modal-confirm-icon i {
+  color: var(--amber) !important;
+  font-size: 22px;
+}
+
+/* ══════════════════════════════════════════════════════════════
    RESPONSIVE
    ══════════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
