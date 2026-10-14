@@ -262,6 +262,42 @@
                         </div>
                     </div>
 
+                    <!-- ── QustodIA Modules ──────────────────────── -->
+                    <div style="margin:.5rem 1rem .25rem; border-top:1px solid rgba(255,255,255,0.12);"></div>
+
+                    <!-- Pentest -->
+                    <a href="{% url 'pentest_list' %}" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-shield-halved w-5 text-center flex-shrink-0"></i>
+                        <span class="truncate">Pentest</span>
+                    </a>
+
+                    <!-- Bolsa de Horas -->
+                    <a href="{% url 'hour_pool_list' %}" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-clock w-5 text-center flex-shrink-0"></i>
+                        <span class="truncate">Bolsa de Horas</span>
+                    </a>
+
+                    <!-- Concepto de Seguridad -->
+                    <a href="{% url 'security_concept_list' %}" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-lock w-5 text-center flex-shrink-0"></i>
+                        <span class="truncate">Concepto Seguridad</span>
+                    </a>
+
+                    <!-- Informe Ejecutivo -->
+                    <a href="{% url 'executive_report_list' %}" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-file-contract w-5 text-center flex-shrink-0"></i>
+                        <span class="truncate">Informe Ejecutivo</span>
+                    </a>
+
+                    <!-- Métricas SQA -->
+                    <a href="{% url 'sqa_metrics' %}" class="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-white hover:bg-white/10 transition-colors">
+                        <i class="fa-solid fa-chart-line w-5 text-center flex-shrink-0"></i>
+                        <span class="truncate">Métricas SQA</span>
+                    </a>
+
+                    <div style="margin:.25rem 1rem .5rem; border-top:1px solid rgba(255,255,255,0.12);"></div>
+                    <!-- ── End QustodIA Modules ───────────────────── -->
+
                     <!-- Reports -->
                     {% block reports_tab %}
                     <div x-data="{ open: false }">

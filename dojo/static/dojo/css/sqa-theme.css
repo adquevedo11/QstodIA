@@ -5,7 +5,7 @@
  *  CQASA · Security Quality Assurance
  *
  *  Layout base: Tailwind (#dd-sidebar fixed, topbar sticky)
- *  Sidebar oscuro: #1a2736 / #243850
+ *  Sidebar oscuro: #324458 / #1e2d3a
  *  Topbar claro:   #ffffff / #f3f6fa
  *  Acento:         #ffb323
  * ============================================================
@@ -28,9 +28,9 @@
   --text-mute:  #8898ae;
 
   /* Sidebar oscuro (CQASA navy) */
-  --sidebar-bg:    #1a2736;
-  --sidebar-deep:  #131f2d;
-  --sidebar-hov:   #243850;
+  --sidebar-bg:    #324458;
+  --sidebar-deep:  #1e2d3a;
+  --sidebar-hov:   #3d5470;
   --sidebar-act:   rgba(255,179,35,0.14);
   --sidebar-bdr:   rgba(255,255,255,0.07);
 
@@ -179,23 +179,50 @@ pre {
    ══════════════════════════════════════════════════════════════ */
 header.sticky,
 .dd-topbar {
-  background: var(--surface) !important;
-  border-bottom: 1px solid var(--border) !important;
+  background: #324458 !important;
+  border-bottom: 3px solid var(--amber) !important;
+  color: #e8edf3 !important;
 }
+
+/* Textos e íconos en topbar oscuro */
+header.sticky *,
+.dd-topbar * {
+  color: #e8edf3;
+}
+
+/* Input de búsqueda en topbar */
+header.sticky input,
+header.sticky .form-control {
+  background: rgba(255,255,255,0.12) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+  color: #fff !important;
+}
+header.sticky input::placeholder { color: rgba(255,255,255,0.5); }
 
 /* Botón de búsqueda en topbar */
 header .btn-primary,
 header button[type="submit"] {
-  background: var(--sidebar-bg) !important;
-  border-color: var(--sidebar-bg) !important;
-  color: white !important;
+  background: var(--amber) !important;
+  border-color: var(--amber) !important;
+  color: #1e2d3a !important;
 }
 
 header .btn-primary:hover,
 header button[type="submit"]:hover {
-  background: var(--amber) !important;
-  border-color: var(--amber) !important;
-  color: var(--sidebar-bg) !important;
+  background: #e09e1a !important;
+  border-color: #e09e1a !important;
+  color: #1e2d3a !important;
+}
+
+/* Iconos de alerta y usuario en topbar */
+header.sticky .btn,
+header.sticky button:not([type="submit"]) {
+  color: #e8edf3 !important;
+}
+header.sticky .btn:hover,
+header.sticky button:not([type="submit"]):hover {
+  color: var(--amber) !important;
+  background: rgba(255,255,255,0.08) !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
