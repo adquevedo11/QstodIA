@@ -74,7 +74,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="login-wrapper">
+    {# Fondo navy — posición fija para cubrir toda la pantalla sin depender del CSS del body #}
+    <div style="position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#1e2d3a 0%,#324458 60%,#3d5470 100%);"></div>
+    <div class="login-wrapper" style="position:relative;z-index:1;">
         <div class="sqa-login-card">
             <div class="sqa-login-header">
                 <img src="{% static "dojo/img/qustodIA_logo.png" %}" alt="QustodIA">
