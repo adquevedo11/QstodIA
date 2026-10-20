@@ -1,0 +1,19 @@
+services:
+  agent:
+    build: .
+    ports:
+      - "8001:8001"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      qustodia-net:
+        aliases:
+          - go-live-agent
+
+networks:
+  qustodia-net:
+    name: qustodia-net
+    external: true

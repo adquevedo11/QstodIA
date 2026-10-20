@@ -85,6 +85,7 @@ dojo/uploads/threat/*
 celerybeat.pid
 *.env*
 !docker/environments/*.env
+!go-live-agent/.env.example
 
 weekly.txt
 Monthly.txt
