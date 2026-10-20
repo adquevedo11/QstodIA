@@ -195,15 +195,20 @@ create_config() {
 version: '3'
 
 services:
+  # initializer crea el admin user — las credenciales van AQUÍ
+  initializer:
+    environment:
+      DD_SECRET_KEY: "${SECRET_KEY}"
+      DD_ADMIN_USER: "admin"
+      DD_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      DD_ADMIN_MAIL: "${ADMIN_EMAIL}"
+
   uwsgi:
     restart: unless-stopped
     environment:
       DD_SECRET_KEY: "${SECRET_KEY}"
       DD_ALLOWED_HOSTS: "localhost,127.0.0.1,${SERVER_IP}"
-      DD_ADMIN_USER: "admin"
-      DD_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
-      DD_ADMIN_MAIL: "${ADMIN_EMAIL}"
-      DD_OS_MESSAGE_ENABLED: "false"
+      DD_CREATE_CLOUD_BANNER: "False"
       GOLIVE_AGENT_URL: "http://go-live-agent:8001"
     networks:
       - default
@@ -217,13 +222,16 @@ services:
       - default
       - ${NETWORK_NAME}
 
-  celery:
+  celeryworker:
     restart: unless-stopped
 
   celerybeat:
     restart: unless-stopped
 
-  postgresql:
+  postgres:
+    restart: unless-stopped
+
+  valkey:
     restart: unless-stopped
 
 networks:
@@ -273,31 +281,51 @@ start_platform() {
   docker compose --project-name "${PROJECT_NAME}" up -d
 
   ok "Contenedores iniciados"
-  info "Esperando inicialización de la base de datos..."
+  info "Esperando que el inicializador configure la base de datos (puede tomar 5-10 min)..."
 
-  local max_wait=300
+  # Esperar a que el contenedor initializer termine de ejecutarse
+  local max_init=600
   local waited=0
-  local ready=false
-
-  while [[ $waited -lt $max_wait ]]; do
-    if docker exec "${PROJECT_NAME}-uwsgi-1" \
-        python manage.py check --database default \
-        >/dev/null 2>&1; then
-      ready=true
+  while docker ps \
+      --filter "name=${PROJECT_NAME}-initializer-1" \
+      --filter "status=running" \
+      --format "{{.Names}}" 2>/dev/null | grep -q initializer; do
+    printf "."
+    sleep 5
+    waited=$((waited + 5))
+    if [[ $waited -ge $max_init ]]; then
+      warn "Tiempo de espera agotado para el inicializador"
       break
     fi
-    printf "."
-    sleep 6
-    waited=$((waited + 6))
   done
   echo ""
 
-  if $ready; then
-    ok "QustodIA listo y respondiendo"
+  # Verificar código de salida del initializer
+  local init_exit
+  init_exit=$(docker inspect "${PROJECT_NAME}-initializer-1" \
+    --format "{{.State.ExitCode}}" 2>/dev/null || echo "0")
+  if [[ "$init_exit" != "0" ]]; then
+    warn "El inicializador terminó con error (código ${init_exit})"
+    warn "Revisar: docker logs ${PROJECT_NAME}-initializer-1"
   else
-    warn "Inicialización lenta — la app puede aún estar cargando"
-    warn "Verifica con: docker compose -f ${APP_DIR}/docker-compose.yml logs uwsgi"
+    ok "Base de datos inicializada y usuario admin creado"
   fi
+
+  # Esperar a que uwsgi responda por HTTP
+  info "Esperando que la plataforma responda..."
+  waited=0
+  while ! curl -sf http://localhost:8080/ >/dev/null 2>&1; do
+    printf "."
+    sleep 5
+    waited=$((waited + 5))
+    if [[ $waited -ge 120 ]]; then
+      warn "La plataforma puede aún estar iniciando"
+      warn "Verificar con: docker ps --filter name=${PROJECT_NAME}"
+      return 0
+    fi
+  done
+  echo ""
+  ok "QustodIA listo y respondiendo"
 }
 
 # ── 8. Bridge de red ──────────────────────────────────────────
