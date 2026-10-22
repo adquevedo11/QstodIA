@@ -46,6 +46,14 @@ services:
         source: ./dojo/static/dojo/img/favicon.png
         target: /usr/share/nginx/html/static/dojo/img/favicon.png
         read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/qustodIA_logo.png
+        target: /usr/share/nginx/html/static/dojo/img/qustodIA_logo.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/sqa_logo.png
+        target: /usr/share/nginx/html/static/dojo/img/sqa_logo.png
+        read_only: true
     networks:
       - default
       - qustodia-net
