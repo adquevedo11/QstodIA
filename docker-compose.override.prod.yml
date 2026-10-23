@@ -1,0 +1,276 @@
+# docker-compose.override.yml — Producción SQA SA (pcs.sqasa.co)
+# Red: sqasa (externa). Generado limpiamente el 2026-10-23.
+---
+services:
+
+  nginx:
+    restart: unless-stopped
+    volumes:
+      - defectdojo_media:/usr/share/nginx/html/media
+      # CSS corporativo SQA SA
+      - type: bind
+        source: ./dojo/static/dojo/css/sqa-theme.css
+        target: /usr/share/nginx/html/static/dojo/css/sqa-theme.css
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/css/dojo.css
+        target: /usr/share/nginx/html/static/dojo/css/dojo.css
+        read_only: true
+      # Imágenes corporativas SQA SA
+      - type: bind
+        source: ./dojo/static/dojo/img/logo.png
+        target: /usr/share/nginx/html/static/dojo/img/logo.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/chop.png
+        target: /usr/share/nginx/html/static/dojo/img/chop.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/favicon.png
+        target: /usr/share/nginx/html/static/dojo/img/favicon.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/qustodIA_logo.png
+        target: /usr/share/nginx/html/static/dojo/img/qustodIA_logo.png
+        read_only: true
+      - type: bind
+        source: ./dojo/static/dojo/img/sqa_logo.png
+        target: /usr/share/nginx/html/static/dojo/img/sqa_logo.png
+        read_only: true
+    networks:
+      - default
+      - sqasa
+
+  uwsgi:
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: ./docker/extra_settings
+        target: /app/docker/extra_settings
+      - "defectdojo_media:${DD_MEDIA_ROOT:-/app/media}"
+
+      # ── Código Python principal ──────────────────────────────────────────
+      - type: bind
+        source: ./dojo/models.py
+        target: /app/dojo/models.py
+        read_only: true
+      - type: bind
+        source: ./dojo/urls.py
+        target: /app/dojo/urls.py
+        read_only: true
+
+      # ── Módulo Pentest ───────────────────────────────────────────────────
+      - type: bind
+        source: ./dojo/pentest
+        target: /app/dojo/pentest
+        read_only: true
+
+      # ── Módulo Bolsa de Horas ────────────────────────────────────────────
+      - type: bind
+        source: ./dojo/hour_pool
+        target: /app/dojo/hour_pool
+        read_only: true
+
+      # ── Módulo Concepto de Seguridad ─────────────────────────────────────
+      - type: bind
+        source: ./dojo/security_concept
+        target: /app/dojo/security_concept
+        read_only: true
+
+      # ── Módulo Informe Ejecutivo ──────────────────────────────────────────
+      - type: bind
+        source: ./dojo/executive_report
+        target: /app/dojo/executive_report
+        read_only: true
+
+      # ── Módulo Métricas SQA ───────────────────────────────────────────────
+      - type: bind
+        source: ./dojo/sqa_metrics
+        target: /app/dojo/sqa_metrics
+        read_only: true
+
+      # ── Módulo Go-Live Readiness ─────────────────────────────────────────
+      - type: bind
+        source: ./dojo/go_live_readiness
+        target: /app/dojo/go_live_readiness
+        read_only: true
+
+      # ── Templates personalizados SQA SA ─────────────────────────────────
+      - type: bind
+        source: ./dojo/templates/base.html
+        target: /app/dojo/templates/base.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/login.html
+        target: /app/dojo/templates/dojo/login.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/dashboard.html
+        target: /app/dojo/templates/dojo/dashboard.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/report_base.html
+        target: /app/dojo/templates/report_base.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/view_eng.html
+        target: /app/dojo/templates/dojo/view_eng.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/view_product_details.html
+        target: /app/dojo/templates/dojo/view_product_details.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/finding_pdf_report.html
+        target: /app/dojo/templates/dojo/finding_pdf_report.html
+        read_only: true
+      # Pentest templates
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_list.html
+        target: /app/dojo/templates/dojo/pentest_list.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_form.html
+        target: /app/dojo/templates/dojo/pentest_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_detail.html
+        target: /app/dojo/templates/dojo/pentest_detail.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_confirm_delete.html
+        target: /app/dojo/templates/dojo/pentest_confirm_delete.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_form_standalone.html
+        target: /app/dojo/templates/dojo/pentest_form_standalone.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_finding_detail.html
+        target: /app/dojo/templates/dojo/pentest_finding_detail.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_finding_form.html
+        target: /app/dojo/templates/dojo/pentest_finding_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_report_form.html
+        target: /app/dojo/templates/dojo/pentest_report_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_report_pdf.html
+        target: /app/dojo/templates/dojo/pentest_report_pdf.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/pentest_type_list.html
+        target: /app/dojo/templates/dojo/pentest_type_list.html
+        read_only: true
+      # Bolsa de Horas templates
+      - type: bind
+        source: ./dojo/templates/dojo/hour_pool_list.html
+        target: /app/dojo/templates/dojo/hour_pool_list.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/hour_pool_form.html
+        target: /app/dojo/templates/dojo/hour_pool_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/hour_pool_detail.html
+        target: /app/dojo/templates/dojo/hour_pool_detail.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/hour_pool_confirm_delete.html
+        target: /app/dojo/templates/dojo/hour_pool_confirm_delete.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/hour_pool_report_pdf.html
+        target: /app/dojo/templates/dojo/hour_pool_report_pdf.html
+        read_only: true
+      # Concepto de Seguridad templates
+      - type: bind
+        source: ./dojo/templates/dojo/security_concept_form.html
+        target: /app/dojo/templates/dojo/security_concept_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/security_concept_list.html
+        target: /app/dojo/templates/dojo/security_concept_list.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/security_concept_report.html
+        target: /app/dojo/templates/dojo/security_concept_report.html
+        read_only: true
+      # Informe Ejecutivo templates
+      - type: bind
+        source: ./dojo/templates/dojo/executive_report_form.html
+        target: /app/dojo/templates/dojo/executive_report_form.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/executive_report_list.html
+        target: /app/dojo/templates/dojo/executive_report_list.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/executive_report_pdf.html
+        target: /app/dojo/templates/dojo/executive_report_pdf.html
+        read_only: true
+      # Métricas SQA templates
+      - type: bind
+        source: ./dojo/templates/dojo/sqa_metrics.html
+        target: /app/dojo/templates/dojo/sqa_metrics.html
+        read_only: true
+      # Go-Live Readiness templates
+      - type: bind
+        source: ./dojo/templates/dojo/go_live_readiness.html
+        target: /app/dojo/templates/dojo/go_live_readiness.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/go_live_readiness_card.html
+        target: /app/dojo/templates/dojo/go_live_readiness_card.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/dojo/go_live_readiness_content.html
+        target: /app/dojo/templates/dojo/go_live_readiness_content.html
+        read_only: true
+      # Error pages
+      - type: bind
+        source: ./dojo/templates/400.html
+        target: /app/dojo/templates/400.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/403.html
+        target: /app/dojo/templates/403.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/404.html
+        target: /app/dojo/templates/404.html
+        read_only: true
+      - type: bind
+        source: ./dojo/templates/500.html
+        target: /app/dojo/templates/500.html
+        read_only: true
+
+    environment:
+      GOLIVE_AGENT_URL: "http://go-live-agent:8001"
+      DD_CREATE_CLOUD_BANNER: "False"
+      DD_OS_MESSAGE_ENABLED: "false"
+    networks:
+      - default
+      - sqasa
+
+  celeryworker:
+    restart: unless-stopped
+
+  celerybeat:
+    restart: unless-stopped
+
+  postgres:
+    restart: unless-stopped
+    environment:
+      PGDATA: /var/lib/postgresql/data/18/docker
+
+  valkey:
+    restart: unless-stopped
+
+networks:
+  sqasa:
+    name: sqasa
+    external: true
