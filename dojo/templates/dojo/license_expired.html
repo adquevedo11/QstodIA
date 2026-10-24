@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Acceso no disponible — QustodIA</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, 'Inter', sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px rgba(0,0,0,.08);
+            max-width: 480px;
+            width: 100%;
+            padding: 48px 40px;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 32px;
+        }
+        .logo img {
+            height: 48px;
+        }
+        .icon {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: #fef2f2;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1d23;
+            margin-bottom: 12px;
+        }
+        p {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.65;
+            margin-bottom: 8px;
+        }
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 28px 0;
+        }
+        .contact-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+        .contact-email {
+            font-size: 16px;
+            font-weight: 600;
+            color: #002a4d;
+        }
+        .footer {
+            margin-top: 32px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">
+            <img src="{% static 'dojo/img/qustodIA_logo.png' %}" alt="QustodIA" onerror="this.style.display='none'">
+        </div>
+        <div class="icon">🔒</div>
+        <h1>Período de prueba finalizado</h1>
+        <p>El acceso a <strong>QustodIA</strong> para su organización ha expirado o ha sido suspendido.</p>
+        <p>Para renovar la licencia o adquirir el servicio completo, contacte al equipo de SQA SA.</p>
+        <hr class="divider">
+        <div class="contact-label">Contacto comercial</div>
+        <div class="contact-email">comercial@sqasa.co</div>
+        <div class="footer">
+            QustodIA · Application Security Posture Management<br>
+            © SQA SA. Todos los derechos reservados.
+        </div>
+    </div>
+</body>
+</html>

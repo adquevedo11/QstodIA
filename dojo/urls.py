@@ -93,6 +93,7 @@ from dojo.executive_report.ui.urls import urlpatterns as executive_report_urls
 from dojo.pentest.ui.urls import urlpatterns as pentest_urls
 from dojo.hour_pool.ui.urls import urlpatterns as hour_pool_urls
 from dojo.go_live_readiness.ui.urls import urlpatterns as go_live_readiness_urls
+from dojo.license_manager.views import license_expired
 from dojo.sqa_metrics.ui.urls import urlpatterns as sqa_metrics_urls
 # QustodIA custom modules — API
 from dojo.pentest.api.urls import add_pentest_urls
@@ -222,6 +223,7 @@ ur += pentest_urls
 ur += hour_pool_urls
 ur += go_live_readiness_urls
 ur += sqa_metrics_urls
+ur += [path('license-expired/', license_expired, name='license_expired')]
 
 # Module-level Classic UI route wiring: fixed at URLConf build time on
 # settings.V3_FEATURE_LOCATIONS (a stored-flag toggle cannot re-mount these
