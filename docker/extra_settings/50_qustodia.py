@@ -3,3 +3,4 @@
 # MIDDLEWARE ya está definido y puede modificarse directamente.
 
 MIDDLEWARE = list(MIDDLEWARE) + ["dojo.license_manager.middleware.LicenseMiddleware"]  # noqa: F821
+INSTALLED_APPS = list(INSTALLED_APPS) + ["dojo.license_manager"]  # noqa: F821

@@ -25,7 +25,9 @@ class ClientLicense(models.Model):
     updated_at   = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['expires_at']
+        app_label = "license_manager"
+        db_table = "dojo_clientlicense"
+        ordering = ["expires_at"]
         verbose_name = "Licencia de cliente"
         verbose_name_plural = "Licencias de clientes"
 
