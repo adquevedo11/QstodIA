@@ -4,6 +4,10 @@ from django.utils import timezone
 
 from dojo.license_manager.models import ClientLicense
 
+admin.site.site_header = "QustodIA"
+admin.site.site_title = "QustodIA"
+admin.site.index_title = "Panel de administración"
+
 
 @admin.register(ClientLicense)
 class ClientLicenseAdmin(admin.ModelAdmin):
