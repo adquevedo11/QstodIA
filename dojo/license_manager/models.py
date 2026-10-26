@@ -37,6 +37,8 @@ class ClientLicense(models.Model):
 
     @property
     def is_expired(self):
+        if not self.expires_at:
+            return False
         return timezone.now() > self.expires_at
 
     @property
@@ -45,5 +47,7 @@ class ClientLicense(models.Model):
 
     @property
     def days_remaining(self):
+        if not self.expires_at:
+            return 0
         delta = self.expires_at - timezone.now()
         return max(0, delta.days)

@@ -15,6 +15,12 @@ class ClientLicenseAdmin(admin.ModelAdmin):
     list_filter   = ('is_active',)
     search_fields = ('client_name', 'notes')
     readonly_fields = ('created_at', 'updated_at', 'status_badge', 'days_remaining_display')
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj is None:
+            # No mostrar estado calculado en el formulario de creación
+            return ('created_at', 'updated_at')
+        return self.readonly_fields
     list_editable = ('is_active',)
 
     fieldsets = (
