@@ -128,6 +128,7 @@ docker/extra_fixtures/*
 !docker/extra_fixtures/readme.txt
 docker/extra_settings/*
 !docker/extra_settings/README.md
+!docker/extra_settings/50_qustodia.py
 dojo/settings/pro_settings.py
 
 

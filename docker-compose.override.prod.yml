@@ -58,6 +58,16 @@ services:
         source: ./dojo/urls.py
         target: /app/dojo/urls.py
         read_only: true
+      - type: bind
+        source: ./dojo/apps.py
+        target: /app/dojo/apps.py
+        read_only: true
+
+      # ── Módulo License Manager ───────────────────────────────────────────
+      - type: bind
+        source: ./dojo/license_manager
+        target: /app/dojo/license_manager
+        read_only: true
 
       # ── Módulo Pentest ───────────────────────────────────────────────────
       - type: bind
@@ -229,6 +239,11 @@ services:
       - type: bind
         source: ./dojo/templates/dojo/go_live_readiness_content.html
         target: /app/dojo/templates/dojo/go_live_readiness_content.html
+        read_only: true
+      # License expired page
+      - type: bind
+        source: ./dojo/templates/dojo/license_expired.html
+        target: /app/dojo/templates/dojo/license_expired.html
         read_only: true
       # Error pages
       - type: bind
