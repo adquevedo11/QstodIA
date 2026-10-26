@@ -99,7 +99,7 @@ gather_config() {
   echo -e "  • Proyecto:    ${Y}${PROJECT_NAME}${N}"
   echo ""
   read -rp "  ¿Iniciar instalación? [S/n]: " _in
-  [[ "${_in,,}" == "n" ]] && { echo "Cancelado."; exit 0; }
+  if [[ "${_in,,}" == "n" ]]; then echo "Cancelado."; exit 0; fi
 }
 
 # ── 1. Actualizar sistema ─────────────────────────────────────
