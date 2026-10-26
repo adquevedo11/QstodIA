@@ -223,7 +223,7 @@ ur += pentest_urls
 ur += hour_pool_urls
 ur += go_live_readiness_urls
 ur += sqa_metrics_urls
-ur += [path('license-expired/', license_expired, name='license_expired')]
+ur += [re_path(r'^license-expired/$', license_expired, name='license_expired')]
 
 # Module-level Classic UI route wiring: fixed at URLConf build time on
 # settings.V3_FEATURE_LOCATIONS (a stored-flag toggle cannot re-mount these
