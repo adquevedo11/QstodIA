@@ -18,9 +18,19 @@ class ClientLicenseAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         if obj is None:
-            # No mostrar estado calculado en el formulario de creación
             return ('created_at', 'updated_at')
         return self.readonly_fields
+
+    def get_fieldsets(self, request, obj=None):
+        if obj is None:
+            return (
+                ('Cliente', {'fields': ('client_name', 'product_type', 'notes')}),
+                ('Control de acceso', {
+                    'fields': ('is_active', 'expires_at'),
+                    'description': 'Desactivar "Activa" bloquea el acceso inmediatamente.',
+                }),
+            )
+        return self.fieldsets
     list_editable = ('is_active',)
 
     fieldsets = (
