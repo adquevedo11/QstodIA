@@ -9,9 +9,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     initial = True
-    dependencies = [
-        ("dojo", "0306_qustodia_v2"),
-    ]
+    dependencies = []
     operations = [
         migrations.SeparateDatabaseAndState(
             state_operations=[
