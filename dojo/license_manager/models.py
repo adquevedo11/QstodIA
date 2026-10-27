@@ -7,14 +7,14 @@ class ClientLicense(models.Model):
     Controla el acceso de un cliente al sistema QustodIA.
     Gestionado desde /admin/ por el superadmin de SQA SA.
     """
-    client_name  = models.CharField(max_length=200, verbose_name="Nombre del cliente")
-    product_type = models.OneToOneField(
-        'dojo.Product_Type',
+    client_name = models.CharField(max_length=200, verbose_name="Nombre del cliente")
+    product     = models.OneToOneField(
+        'dojo.Product',
         on_delete=models.CASCADE,
         null=True, blank=True,
         related_name='license',
-        verbose_name="Product Type asociado",
-        help_text="Si se asigna, solo los usuarios de ese Product Type son afectados por esta licencia.",
+        verbose_name="Producto (activo) asociado",
+        help_text="Producto/activo del cliente. Solo los usuarios con acceso a este producto son afectados.",
     )
     is_active    = models.BooleanField(default=True, verbose_name="Activa",
                                        help_text="Desactivar bloquea inmediatamente el acceso del cliente.")
@@ -33,7 +33,8 @@ class ClientLicense(models.Model):
 
     def __str__(self):
         status = "ACTIVA" if self.is_active and not self.is_expired else "BLOQUEADA"
-        return f"{self.client_name} [{status}] — expira {self.expires_at.strftime('%Y-%m-%d')}"
+        expiry = self.expires_at.strftime('%Y-%m-%d') if self.expires_at else "sin fecha"
+        return f"{self.client_name} [{status}] — expira {expiry}"
 
     @property
     def is_expired(self):

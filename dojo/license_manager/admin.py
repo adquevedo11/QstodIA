@@ -11,7 +11,7 @@ admin.site.index_title = "Panel de administración"
 
 @admin.register(ClientLicense)
 class ClientLicenseAdmin(admin.ModelAdmin):
-    list_display  = ('client_name', 'product_type', 'status_badge', 'expires_at', 'days_remaining_display', 'is_active')
+    list_display  = ('client_name', 'product', 'status_badge', 'expires_at', 'days_remaining_display', 'is_active')
     list_filter   = ('is_active',)
     search_fields = ('client_name', 'notes')
     readonly_fields = ('created_at', 'updated_at', 'status_badge', 'days_remaining_display')
@@ -24,7 +24,7 @@ class ClientLicenseAdmin(admin.ModelAdmin):
     def get_fieldsets(self, request, obj=None):
         if obj is None:
             return (
-                ('Cliente', {'fields': ('client_name', 'product_type', 'notes')}),
+                ('Cliente', {'fields': ('client_name', 'product', 'notes')}),
                 ('Control de acceso', {
                     'fields': ('is_active', 'expires_at'),
                     'description': 'Desactivar "Activa" bloquea el acceso inmediatamente.',
@@ -35,7 +35,7 @@ class ClientLicenseAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Cliente', {
-            'fields': ('client_name', 'product_type', 'notes'),
+            'fields': ('client_name', 'product', 'notes'),
         }),
         ('Control de acceso', {
             'fields': ('is_active', 'expires_at'),
