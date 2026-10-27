@@ -34,27 +34,19 @@ class LicenseMiddleware:
         try:
             from dojo.license_manager.models import ClientLicense  # noqa: PLC0415 -- lazy import
 
-            # Autorizaciones a nivel Product → obtener el Product Type del producto
-            pt_ids = set(
-                user.authorization_set
-                    .filter(product__isnull=False)
-                    .values_list('product__product_type_id', flat=True)
-            )
-            # Autorizaciones a nivel Product Type directo
-            pt_ids |= set(
-                user.authorization_set
-                    .filter(product_type__isnull=False, product__isnull=True)
-                    .values_list('product_type_id', flat=True)
-            )
+            # PT IDs desde productos autorizados directamente
+            pt_ids = set(user.authorized_products.values_list('prod_type_id', flat=True))
+            # PT IDs desde Product Types autorizados directamente
+            pt_ids |= set(user.authorized_product_types.values_list('id', flat=True))
+
             if not pt_ids:
-                return False
+                return False  # sin productos → acceso libre
 
             licenses = ClientLicense.objects.filter(product_type_id__in=pt_ids)
             if not licenses.exists():
                 return False  # sin licencia configurada → acceso libre
 
             now = timezone.now()
-            # Bloqueado si ninguna licencia activa+vigente cubre sus Product Types
             valid = licenses.filter(is_active=True, expires_at__gt=now)
             return not valid.exists()
 
