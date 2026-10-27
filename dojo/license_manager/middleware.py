@@ -3,7 +3,7 @@ Middleware que bloquea el acceso a clientes con licencia expirada o desactivada.
 
 Flujo:
   1. Superuser (SQA SA) → siempre pasa.
-  2. Usuario con Product_Type que tiene ClientLicense inválida → redirige a /license-expired/.
+  2. Usuario con Product que tiene ClientLicense inválida → redirige a /license-expired/.
   3. Sin licencia configurada → pasa (sin restricción).
 
 Rutas excluidas: login, logout, admin, static, media y la propia página de expiración.
@@ -33,9 +33,20 @@ class LicenseMiddleware:
     def _license_blocked(user):
         try:
             from dojo.license_manager.models import ClientLicense  # noqa: PLC0415 -- lazy import
+            from dojo.models import Product  # noqa: PLC0415
+            from django.db.models import Q  # noqa: PLC0415
 
-            # Productos a los que el usuario tiene acceso
-            product_ids = set(user.authorized_products.values_list('id', flat=True))
+            # user.pk fuerza la evaluación del SimpleLazyObject de Django
+            user_pk = user.pk
+            if not user_pk:
+                return False
+
+            # Productos a los que el usuario tiene acceso (mismo criterio que get_authorized_products)
+            product_ids = set(
+                Product.objects.filter(
+                    Q(authorized_users__id=user_pk) | Q(prod_type__authorized_users__id=user_pk)
+                ).values_list('id', flat=True)
+            )
             if not product_ids:
                 return False  # sin productos → acceso libre
 
