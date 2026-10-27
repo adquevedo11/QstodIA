@@ -32,14 +32,19 @@ class LicenseMiddleware:
     @staticmethod
     def _license_blocked(user):
         try:
-            from dojo.license_manager.models import ClientLicense  # noqa: PLC0415
-            from dojo.models import Product_Type  # noqa: PLC0415
+            from dojo.license_manager.models import ClientLicense  # noqa: PLC0415 -- lazy import
 
-            # Product Types a los que el usuario tiene acceso
+            # Autorizaciones a nivel Product → obtener el Product Type del producto
             pt_ids = set(
                 user.authorization_set
                     .filter(product__isnull=False)
                     .values_list('product__product_type_id', flat=True)
+            )
+            # Autorizaciones a nivel Product Type directo
+            pt_ids |= set(
+                user.authorization_set
+                    .filter(product_type__isnull=False, product__isnull=True)
+                    .values_list('product_type_id', flat=True)
             )
             if not pt_ids:
                 return False
