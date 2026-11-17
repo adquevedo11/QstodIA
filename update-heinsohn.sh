@@ -92,6 +92,24 @@ cd "$APP_DIR"
 docker compose --project-name "$PROJECT_NAME" up -d --force-recreate --no-deps uwsgi
 ok "uwsgi reiniciado"
 
+# Esperar a que el contenedor esté corriendo (no Django, solo el proceso)
+sleep 5
+for i in $(seq 1 12); do
+  STATUS=$(docker inspect --format='{{.State.Status}}' "$UWSGI_CONTAINER" 2>/dev/null || echo "unknown")
+  if [[ "$STATUS" == "running" ]]; then break; fi
+  printf "."
+  sleep 5
+done
+echo ""
+
+# Copiar módulos personalizados dentro del contenedor (el volumen puede no ser bind-mount)
+step "Sincronizando módulos en el contenedor"
+for module in license_manager llm_config; do
+  docker cp "$APP_DIR/dojo/$module/." "$UWSGI_CONTAINER:/app/dojo/$module/" 2>/dev/null \
+    && ok "$module sincronizado" \
+    || echo -e "  ${Y}⚠${N} No se pudo sincronizar $module (puede que no exista aún)"
+done
+
 info "Esperando que Django arranque..."
 for i in $(seq 1 30); do
   if docker exec "$UWSGI_CONTAINER" python manage.py check --verbosity=0 >/dev/null 2>&1; then
