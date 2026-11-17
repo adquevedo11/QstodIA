@@ -63,6 +63,7 @@ files=(
   "dojo/templates/dojo/pentest_list.html"
   "dojo/templates/dojo/view_eng.html"
   "dojo/settings/settings.py"
+  "dojo/settings/50_qustodia.py"
   "dojo/apps.py"
 )
 
@@ -126,6 +127,7 @@ echo -e "  ${B}Novedades en esta versión:${N}"
 echo -e "  • Bloqueo de acceso por licencia expirada/inactiva"
 echo -e "  • Página /license-expired/ con logo y contacto qustodia@sqasa.co"
 echo -e "  • Botón 'Nuevo Pentest' en /pentest/ y en el menú del Engagement"
+echo -e "  • Sesión expira a las 8 horas y al cerrar el navegador (antes: 14 días)"
 echo ""
 echo -e "  ${B}Próximos pasos:${N}"
 echo -e "  1. Entrar al admin → /admin/license_manager/clientlicense/"
