@@ -3,5 +3,10 @@
 # MIDDLEWARE ya está definido y puede modificarse directamente.
 
 MIDDLEWARE = list(MIDDLEWARE) + ["dojo.license_manager.middleware.LicenseMiddleware"]  # noqa: F821
-INSTALLED_APPS = list(INSTALLED_APPS) + ["dojo.license_manager"]  # noqa: F821
+INSTALLED_APPS = list(INSTALLED_APPS) + ["dojo.license_manager", "dojo.llm_config"]  # noqa: F821
 DJANGO_ADMIN_ENABLED = True
+
+# Sesión expira a las 8 horas y al cerrar el navegador.
+# El default de DefectDojo es 14 días sin caducidad.
+SESSION_COOKIE_AGE = 28800          # 8 horas en segundos
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True

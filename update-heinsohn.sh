@@ -48,7 +48,9 @@ step "Copiando archivos al directorio de instalación"
 
 mkdir -p \
   "$APP_DIR/dojo/license_manager/migrations" \
-  "$APP_DIR/dojo/templates/dojo"
+  "$APP_DIR/dojo/llm_config/migrations" \
+  "$APP_DIR/dojo/templates/dojo" \
+  "$APP_DIR/docker/extra_settings"
 
 files=(
   "dojo/license_manager/__init__.py"
@@ -59,11 +61,17 @@ files=(
   "dojo/license_manager/migrations/__init__.py"
   "dojo/license_manager/migrations/0001_initial.py"
   "dojo/license_manager/migrations/0002_product_fk.py"
+  "dojo/llm_config/__init__.py"
+  "dojo/llm_config/apps.py"
+  "dojo/llm_config/models.py"
+  "dojo/llm_config/admin.py"
+  "dojo/llm_config/migrations/__init__.py"
+  "dojo/llm_config/migrations/0001_initial.py"
   "dojo/templates/dojo/license_expired.html"
   "dojo/templates/dojo/pentest_list.html"
   "dojo/templates/dojo/view_eng.html"
   "dojo/settings/settings.py"
-  "dojo/settings/50_qustodia.py"
+  "docker/extra_settings/50_qustodia.py"
   "dojo/apps.py"
 )
 
@@ -97,6 +105,8 @@ ok "Django listo"
 step "Aplicando migraciones"
 docker exec "$UWSGI_CONTAINER" python manage.py migrate license_manager --verbosity=1
 ok "license_manager migrada"
+docker exec "$UWSGI_CONTAINER" python manage.py migrate llm_config --verbosity=1
+ok "llm_config migrada"
 
 PENDING=$(docker exec "$UWSGI_CONTAINER" python manage.py showmigrations dojo --plan 2>/dev/null \
   | grep -c '^\[ \]' || true)
@@ -128,9 +138,11 @@ echo -e "  • Bloqueo de acceso por licencia expirada/inactiva"
 echo -e "  • Página /license-expired/ con logo y contacto qustodia@sqasa.co"
 echo -e "  • Botón 'Nuevo Pentest' en /pentest/ y en el menú del Engagement"
 echo -e "  • Sesión expira a las 8 horas y al cerrar el navegador (antes: 14 días)"
+echo -e "  • Módulo LLM Config: configurar proveedor IA desde el admin sin terminal"
 echo ""
 echo -e "  ${B}Próximos pasos:${N}"
 echo -e "  1. Entrar al admin → /admin/license_manager/clientlicense/"
 echo -e "  2. Crear la licencia del cliente con fecha de vencimiento del PoC"
 echo -e "  3. Asignar el Producto (activo) correspondiente a la licencia"
+echo -e "  4. Configurar LLM → /admin/llm_config/llmconfig/ (cuando tenga las credenciales)"
 echo ""
