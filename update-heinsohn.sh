@@ -58,6 +58,7 @@ files=(
   "dojo/license_manager/models.py"
   "dojo/license_manager/admin.py"
   "dojo/license_manager/middleware.py"
+  "dojo/license_manager/views.py"
   "dojo/license_manager/migrations/__init__.py"
   "dojo/license_manager/migrations/0001_initial.py"
   "dojo/license_manager/migrations/0002_product_fk.py"
