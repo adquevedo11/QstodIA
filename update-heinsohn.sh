@@ -67,12 +67,14 @@ files=(
   "dojo/llm_config/admin.py"
   "dojo/llm_config/migrations/__init__.py"
   "dojo/llm_config/migrations/0001_initial.py"
+  "dojo/llm_config/api.py"
   "dojo/templates/dojo/license_expired.html"
   "dojo/templates/dojo/pentest_list.html"
   "dojo/templates/dojo/view_eng.html"
   "dojo/settings/settings.py"
   "docker/extra_settings/50_qustodia.py"
   "dojo/apps.py"
+  "dojo/urls.py"
 )
 
 for f in "${files[@]}"; do
